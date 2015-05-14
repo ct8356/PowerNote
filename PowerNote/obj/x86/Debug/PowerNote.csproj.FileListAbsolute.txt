@@ -1,0 +1,28 @@
+C:\Users\Chris\AppData\Local\Temporary Projects\PowerNote\bin\Debug\PowerNote.exe
+C:\Users\Chris\AppData\Local\Temporary Projects\PowerNote\bin\Debug\PowerNote.pdb
+C:\Users\Chris\AppData\Local\Temporary Projects\PowerNote\obj\x86\Debug\MainWindow.baml
+C:\Users\Chris\AppData\Local\Temporary Projects\PowerNote\obj\x86\Debug\MainWindow.g.cs
+C:\Users\Chris\AppData\Local\Temporary Projects\PowerNote\obj\x86\Debug\App.g.cs
+C:\Users\Chris\AppData\Local\Temporary Projects\PowerNote\obj\x86\Debug\PowerNote_MarkupCompile.cache
+C:\Users\Chris\AppData\Local\Temporary Projects\PowerNote\obj\x86\Debug\PowerNote.g.resources
+C:\Users\Chris\AppData\Local\Temporary Projects\PowerNote\obj\x86\Debug\PowerNote.Properties.Resources.resources
+C:\Users\Chris\AppData\Local\Temporary Projects\PowerNote\obj\x86\Debug\PowerNote.csproj.GenerateResource.Cache
+C:\Users\Chris\AppData\Local\Temporary Projects\PowerNote\obj\x86\Debug\PowerNote.exe
+C:\Users\Chris\AppData\Local\Temporary Projects\PowerNote\obj\x86\Debug\PowerNote.pdb
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PowerNote.exe
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PowerNote.pdb
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\bin\Debug\PowerNote.exe
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\bin\Debug\PowerNote.pdb
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\MainWindow.baml
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\MainWindow.g.cs
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\App.g.cs
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PowerNote_MarkupCompile.cache
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PowerNote.g.resources
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PowerNote.Properties.Resources.resources
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PowerNote.csproj.GenerateResource.Cache
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PowerNote.csprojResolveAssemblyReference.cache
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\bin\Debug\EntityFramework.dll
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\bin\Debug\System.Windows.Controls.Input.Toolkit.dll
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\bin\Debug\WPFToolkit.dll
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\bin\Debug\System.Windows.Controls.Input.Toolkit.pdb
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\bin\Debug\WPFToolkit.pdb
