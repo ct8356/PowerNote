@@ -7,18 +7,17 @@ namespace PowerNote.DAL { //DAL stands for Data Access layer.
     //NOTE: what you cannot see here,
     //is that when this class is instantiated, a connection is made.
     //The "namespace + class name" are used to identify the database.
-    //If database does not exist, is it created?
+    //If database does not exist, is it created? yes!
     //NOTE, it also has a Database property.
     //Apparently, if call database.Create, creates a database that matches this schema.
-    //SO, don't even need InitialCreate file???
-    public class SchoolContext : DbContext {
+    //SO, don't even need InitialCreate file??? No, you don't.
+    public class MyContext : DbContext {
         public DbSet<Student> Students { get; set; }
-        public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Course> Courses { get; set; }
 
         public delegate PropertyChangedEventHandler Handler(PropertyChangedEventArgs args);
 
-        public SchoolContext() : base() {
+        public MyContext() : base() {
             //Problem is, I want it to handle prop changed every time ANY student changes.
             //which means, subscribing to EVERY student.
             //AND don't just want to save database,

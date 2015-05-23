@@ -6,43 +6,93 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Data.Entity;
 using PowerNote.DAL;
+using PowerNote.Models;
 using PowerNote.Migrations;
 using System.Windows.Data;
+using System.Windows.Input;
 
 namespace PowerNote {
 
     class DisplayPanel : DockPanel {
-            Label label1;
+            Label title;
             Label label2;
-            TextBox textBox1;
-            TextBox textBox2;
-            SchoolContext schoolContext;
+            MyContext context;
+            public FilterPanel FilterPanel {get; set;}
+            ICollection<Student> filteredStudents;
+            List<Entry> entryList;
+            Entry newEntryEntry;
 
-            public DisplayPanel(SchoolContext schoolContext) {
-                this.schoolContext = schoolContext;
+            public DisplayPanel(MyContext context) {
+                this.context = context;
                 //PANEL
-                label1 = new Label();
-                label1.Content = "Display panel";
-                label1.FontWeight = FontWeights.Bold;
-                textBox1 = new TextBox();
-                textBox1.Text = schoolContext.Database.Connection.ConnectionString;
-                textBox2 = new TextBox();
-                Children.Add(label1);
-                //Children.Add(textBox1);
-                SetDock(label1, Dock.Top);
+                title = new Label();
+                title.Content = "Display panel";
+                title.FontWeight = FontWeights.Bold;
+                Children.Add(title);
+                SetDock(title, Dock.Top);
+                //FILTER PANEL
+                FilterPanel = new FilterPanel(context);
+                Children.Add(FilterPanel);
+                SetDock(FilterPanel, Dock.Top);
                 //ADD ENTRIES
-                for (int i = 0; i < schoolContext.Students.ToList().Count; i++) {
-                    Entry entry = new Entry(schoolContext.Students.ToList()[i], schoolContext);
-                    Children.Add(entry);
-                    SetDock(entry, Dock.Top);
-                }
-                label2 = new Label();
-                //label2.Content = schoolContext.Students.ToList()[0].FirstMidName;
-                Binding binding = new Binding("FirstMidName"); //This is the MODEL property it binds to.
-                binding.Source = schoolContext.Students.ToList()[0]; // the binding source (which must fire a PROP CHANGED event).
-                label2.SetBinding(Label.ContentProperty, binding);
-                Children.Add(label2);
+                entryList = new List<Entry>();
+                addEntries();
+                //OTHER
+                //label2 = new Label();
+                //Binding binding = new Binding("FirstMidName"); //This is the MODEL property it binds to.
+                //binding.Source = context.Students.ToList()[0]; // the binding source (which must fire a PROP CHANGED event).
+                //label2.SetBinding(Label.ContentProperty, binding);
+                //Children.Add(label2);
                 LastChildFill = false;
+            }
+
+            public void addEntries() {
+                TaggedObject filter = FilterPanel.Filter;
+                IQueryable<Student> filteredStudents = context.Students;
+                foreach (Course course in filter.Courses) {
+                    if (course != null) {
+                        Course tempCourse = course;
+                        filteredStudents = filteredStudents.Where(s => s.Courses.Select(c => c.CourseID).Contains(tempCourse.CourseID)); 
+                        //Can only use LINQ Contains(), with PRIMITIVE values! (i.e. strings and ints etc!)
+                    }
+                }
+                List<Student> studentList = filteredStudents.ToList<Student>();
+                foreach (Student student in studentList) { //AHAH, so query not fired until THIS BIT! i.e. we actually ACCESS the nav property, filteredStudents!
+                    Entry entry = new Entry(student, context, this);
+                    //Entry entry = new Entry(context.Students.ToList()[i], context, FilterPanel.Filter);
+                    SetDock(entry, Dock.Top);
+                    entryList.Add(entry);
+                    Children.Add(entry);
+                }
+                //NEW ENTRY ENTRY
+                newEntryEntry = new Entry();  
+                SetDock(newEntryEntry, Dock.Top);
+                entryList.Add(newEntryEntry);
+                Children.Add(newEntryEntry);
+                newEntryEntry.LostFocus += new RoutedEventHandler(newEntryEntry_LostFocus);
+                newEntryEntry.KeyUp += new KeyEventHandler(newEntryEntry_KeyUp);
+            }
+
+            public void newEntryEntry_KeyUp(object sender, KeyEventArgs e) {
+                if (e.Key == Key.Return) {
+                    newEntryEntry_LostFocus(sender, e);
+                }
+            }
+
+            public void newEntryEntry_LostFocus(object sender, RoutedEventArgs e) {
+                if (newEntryEntry.textBox.Text != null && newEntryEntry.textBox.Text != "") {
+                    Student newStudent = new Student(newEntryEntry.textBox.Text);
+                    context.Students.Add(newStudent);
+                    context.SaveChanges();
+                    updateEntries(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.   
+                }
+            }
+
+            public void updateEntries() {
+                foreach (Entry entry in entryList) {
+                    Children.Remove(entry);
+                }
+                addEntries();
             }
 
     }

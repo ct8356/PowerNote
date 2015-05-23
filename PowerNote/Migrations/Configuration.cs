@@ -7,16 +7,16 @@ using PowerNote.DAL;
 
 namespace PowerNote.Migrations {
 
-    internal sealed class Configuration : DbMigrationsConfiguration<PowerNote.DAL.SchoolContext> {
+    internal sealed class Configuration : DbMigrationsConfiguration<MyContext> {
         public Configuration() {
             AutomaticMigrationsEnabled = false;
         }
 
-        public void callSeed(SchoolContext context) {
+        public void callSeed(MyContext context) {
             Seed(context);
         }
 
-        protected override void Seed(SchoolContext context) {
+        protected override void Seed(MyContext context) {
 
             var students = new List<Student> {
                 new Student { FirstMidName = "Carson",   LastName = "Alexander", 
@@ -36,7 +36,8 @@ namespace PowerNote.Migrations {
                 new Student { FirstMidName = "Nino",     LastName = "Olivetto",  
                     EnrollmentDate = DateTime.Parse("2005-08-11") }
             };
-            students.ForEach(s => context.Students.AddOrUpdate(p => p.LastName, s));
+            students.ForEach(student => context.Students.AddOrUpdate(s => s.LastName, student));
+            //wow, it does not like this line...
             context.SaveChanges();
 
             var courses = new List<Course> {
@@ -48,65 +49,85 @@ namespace PowerNote.Migrations {
                 new Course {CourseID = 2021, Title = "Composition",    Credits = 3, },
                 new Course {CourseID = 2042, Title = "Literature",     Credits = 4, }
             };
-            courses.ForEach(s => context.Courses.AddOrUpdate(p => p.Title, s));
+            courses.ForEach(course => context.Courses.AddOrUpdate(c => c.Title, course));
             context.SaveChanges();
 
-            var enrollments = new List<Enrollment>{
-                new Enrollment { 
-                    StudentID = students.Single(s => s.LastName == "Alexander").StudentID, 
-                    CourseID = courses.Single(c => c.Title == "Chemistry" ).CourseID, 
-                    Grade = Grade.A },
-                 new Enrollment { 
-                    StudentID = students.Single(s => s.LastName == "Alexander").StudentID,
-                    CourseID = courses.Single(c => c.Title == "Microeconomics" ).CourseID, 
-                    Grade = Grade.C },                            
-                 new Enrollment { 
-                    StudentID = students.Single(s => s.LastName == "Alexander").StudentID,
-                    CourseID = courses.Single(c => c.Title == "Macroeconomics" ).CourseID, 
-                    Grade = Grade.B},
-                 new Enrollment { 
-                     StudentID = students.Single(s => s.LastName == "Alonso").StudentID,
-                    CourseID = courses.Single(c => c.Title == "Calculus" ).CourseID, 
-                    Grade = Grade.B },
-                 new Enrollment { 
-                     StudentID = students.Single(s => s.LastName == "Alonso").StudentID,
-                    CourseID = courses.Single(c => c.Title == "Trigonometry" ).CourseID, 
-                    Grade = Grade.B },
-                 new Enrollment {
-                    StudentID = students.Single(s => s.LastName == "Alonso").StudentID,
-                    CourseID = courses.Single(c => c.Title == "Composition" ).CourseID, 
-                    Grade = Grade.B },
-                 new Enrollment { 
-                    StudentID = students.Single(s => s.LastName == "Anand").StudentID,
-                    CourseID = courses.Single(c => c.Title == "Chemistry" ).CourseID},
-                 new Enrollment { 
-                    StudentID = students.Single(s => s.LastName == "Anand").StudentID,
-                    CourseID = courses.Single(c => c.Title == "Microeconomics").CourseID,
-                    Grade = Grade.B         },
-                new Enrollment { 
-                    StudentID = students.Single(s => s.LastName == "Barzdukas").StudentID,
-                    CourseID = courses.Single(c => c.Title == "Chemistry").CourseID,
-                    Grade = Grade.B         },
-                 new Enrollment { 
-                    StudentID = students.Single(s => s.LastName == "Li").StudentID,
-                    CourseID = courses.Single(c => c.Title == "Composition").CourseID,
-                    Grade = Grade.B         },
-                 new Enrollment { 
-                    StudentID = students.Single(s => s.LastName == "Justice").StudentID,
-                    CourseID = courses.Single(c => c.Title == "Literature").CourseID,
-                    Grade = Grade.B         }
-            };
+            //var enrollments = new List<Enrollment>{
+            //    new Enrollment { 
+            //        StudentID = students.Single(s => s.LastName == "Alexander").StudentID, 
+            //        CourseID = courses.Single(c => c.Title == "Chemistry" ).CourseID, 
+            //        Grade = Grade.A },
+            //     new Enrollment { 
+            //        StudentID = students.Single(s => s.LastName == "Alexander").StudentID,
+            //        CourseID = courses.Single(c => c.Title == "Microeconomics" ).CourseID, 
+            //        Grade = Grade.C },                            
+            //     new Enrollment { 
+            //        StudentID = students.Single(s => s.LastName == "Alexander").StudentID,
+            //        CourseID = courses.Single(c => c.Title == "Macroeconomics" ).CourseID, 
+            //        Grade = Grade.B},
+            //     new Enrollment { 
+            //         StudentID = students.Single(s => s.LastName == "Alonso").StudentID,
+            //        CourseID = courses.Single(c => c.Title == "Calculus" ).CourseID, 
+            //        Grade = Grade.B },
+            //     new Enrollment { 
+            //         StudentID = students.Single(s => s.LastName == "Alonso").StudentID,
+            //        CourseID = courses.Single(c => c.Title == "Trigonometry" ).CourseID, 
+            //        Grade = Grade.B },
+            //     new Enrollment {
+            //        StudentID = students.Single(s => s.LastName == "Alonso").StudentID,
+            //        CourseID = courses.Single(c => c.Title == "Composition" ).CourseID, 
+            //        Grade = Grade.B },
+            //     new Enrollment { 
+            //        StudentID = students.Single(s => s.LastName == "Anand").StudentID,
+            //        CourseID = courses.Single(c => c.Title == "Chemistry" ).CourseID},
+            //     new Enrollment { 
+            //        StudentID = students.Single(s => s.LastName == "Anand").StudentID,
+            //        CourseID = courses.Single(c => c.Title == "Microeconomics").CourseID,
+            //        Grade = Grade.B         },
+            //    new Enrollment { 
+            //        StudentID = students.Single(s => s.LastName == "Barzdukas").StudentID,
+            //        CourseID = courses.Single(c => c.Title == "Chemistry").CourseID,
+            //        Grade = Grade.B         },
+            //     new Enrollment { 
+            //        StudentID = students.Single(s => s.LastName == "Li").StudentID,
+            //        CourseID = courses.Single(c => c.Title == "Composition").CourseID,
+            //        Grade = Grade.B         },
+            //     new Enrollment { 
+            //        StudentID = students.Single(s => s.LastName == "Justice").StudentID,
+            //        CourseID = courses.Single(c => c.Title == "Literature").CourseID,
+            //        Grade = Grade.B         }
+            //};
 
-            foreach (Enrollment e in enrollments) {
-                var enrollmentInDataBase = context.Enrollments.Where(
-                    s =>
-                         s.Student.StudentID == e.StudentID &&
-                         s.Course.CourseID == e.CourseID).SingleOrDefault();
-                if (enrollmentInDataBase == null) {
-                    context.Enrollments.Add(e);
-                }
-            }
-            context.SaveChanges();
+            //foreach (Enrollment enrollment in enrollments) {
+            //    var enrollmentInDataBase = context.Enrollments.Where(
+            //        e =>
+            //             e.Student.StudentID == enrollment.StudentID &&
+            //             e.Course.CourseID == enrollment.CourseID).SingleOrDefault();
+            //    if (enrollmentInDataBase == null) {
+            //        context.Enrollments.Add(enrollment);
+            //    }
+            //}
+            //context.SaveChanges();
+
+            AddOrUpdateCourse(context, "Alexander", "Chemistry");
+            AddOrUpdateCourse(context, "Alexander", "Microeconomics");
+            AddOrUpdateCourse(context, "Alexander", "Macroeconomics");
+            AddOrUpdateCourse(context, "Alonso", "Calculus");
+            AddOrUpdateCourse(context, "Alonso", "Trigonometry");
+            AddOrUpdateCourse(context, "Alonso", "Composition");
+            AddOrUpdateCourse(context, "Anand", "Chemistry");
+            AddOrUpdateCourse(context, "Anand", "Microeconomics");
+            AddOrUpdateCourse(context, "Barzdukas", "Chemistry");
+            AddOrUpdateCourse(context, "Li", "Composition");
+            AddOrUpdateCourse(context, "Justice", "Literature");
         }
+
+        public void AddOrUpdateCourse(MyContext context, string lastName, string courseTitle) {
+            var student = context.Students.SingleOrDefault(s => s.LastName == lastName);
+            var course = student.Courses.SingleOrDefault(c => c.Title == courseTitle);
+            if (course == null)
+                student.Courses.Add(context.Courses.Single(c => c.Title == courseTitle));
+        }
+
     }
 }

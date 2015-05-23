@@ -65,13 +65,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ControlPanel.cs" />
-    <Compile Include="DAL\SchoolContext.cs" />
+    <Compile Include="DAL\MyContext.cs" />
     <Compile Include="DisplayPanel.cs" />
-    <Compile Include="Migrations\ChrisIntialCreate.cs" />
+    <Compile Include="FilterPanel.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Course.cs" />
-    <Compile Include="Models\Enrollment.cs" />
     <Compile Include="Models\Student.cs" />
+    <Compile Include="Models\TaggedObject.cs" />
+    <Compile Include="SuggestionBox.cs" />
+    <Compile Include="TagListPanel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

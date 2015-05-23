@@ -21,9 +21,10 @@ namespace PowerNote {
         MainPanel mainPanel;
         Button button1;
         Button button2;
+
         public MainWindow() {
-            //DATABASE STUFF
-            
+            WindowState = WindowState.Maximized;
+            Background = SystemColors.ControlLightBrush;
             //WINDOW STUFF
             //grid = new MyGrid();
             button1 = new Button();

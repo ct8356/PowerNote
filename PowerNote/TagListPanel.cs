@@ -4,57 +4,30 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel;
-using System.Windows.Data;
 using System.Data.Entity;
-using System.Data.Entity.ModelConfiguration.Conventions;
-using PowerNote.Models;
 using PowerNote.DAL;
+using PowerNote.Models;
+using PowerNote.Migrations;
+using System.Windows.Data;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace PowerNote {
-
-    class Entry : StackPanel {
+    class TagListPanel : StackPanel {
         MyContext context;
-        Student student;
-        List<Course> courseList;
+        AutoCompleteBox autoCompleteBox;
+        TaggedObject taggedObject;
         List<Label> labelList;
-        SuggestionBox autoCompleteBox;
-        CheckBox checkBox { get; set; }
-        public TextBox textBox { get; set; }
-        DisplayPanel displayPanel;
+        DisplayPanel displayPanel; 
 
-        public Entry() {
-            Orientation = Orientation.Horizontal;
-            //CHECK BOX
-            checkBox = new CheckBox();
-            Children.Add(checkBox);
-            //TEXT BOX
-            textBox = new TextBox();    
-            textBox.Width = 100;
-            Children.Add(textBox);
-        }
-
-        public Entry(Student student, MyContext context, DisplayPanel displayPanel) : this() {
-            this.student = student;
+        public TagListPanel(TaggedObject taggedObject, MyContext context) {
+            this.taggedObject = taggedObject;
             this.context = context;
-            this.displayPanel = displayPanel;
-            //TEXT BOX BINDING
-            Binding binding = new Binding("FirstMidName"); //This is the MODEL property it binds to.
-            binding.Source = student; // the binding source (which must fire a PROP CHANGED event).
-            textBox.SetBinding(TextBox.TextProperty, binding); //fortunately, textBox already fires an event when changed.
-            //YOU created the event for the dataSource. SO HOPEFULLY, we have 2 way binding now... we do :)
-            //RIGHT CLICKS
-            MenuItem deleteEntry = new MenuItem();
-            deleteEntry.Click += deleteEntry_Click;
-            textBox.ContextMenu = new ContextMenu();
-            textBox.ContextMenu.Items.Add(deleteEntry); //this causes invocation error.
-            deleteEntry.Header = "Delete entry";
-            //TAG LABELS
-            courseList = new List<Course>();
+            //PANEL
+            Orientation = Orientation.Horizontal;
+            //LABELS
             labelList = new List<Label>();
+            //SUGGESTIONBOX
             addTagLabels();//courseList.Property changed += courseList_PropertyChanged;
             //AUTOCOMPLETEBOX
             autoCompleteBox = new SuggestionBox(context);
@@ -63,13 +36,6 @@ namespace PowerNote {
             //autoCompleteBox.SelectionChanged += autoCompleteBox_SelectionChanged;
             //autoCompleteBox.LostFocus += autoCompleteBox_LostFocus;
             autoCompleteBox.KeyUp += autoCompleteBox_KeyUp;
-            student.PropertyChanged += student_PropertyChanged;
-        }
-
-        public void deleteEntry_Click(object sender, RoutedEventArgs e) {
-            context.Students.Remove(student);
-            context.SaveChanges(); //ALSO lazy. CBTL.
-            displayPanel.updateEntries(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.
         }
 
         public void autoCompleteBox_KeyUp(object sender, KeyEventArgs e) {
@@ -91,13 +57,7 @@ namespace PowerNote {
                     //WHICH is called first by the way? LostFocus, or SelectionCHanged? lostFocus first. SC, SC. LF.
                 }
                 else {
-                    //IF no, then create new entry.
-                    if (autoCompleteBox.Text != null && autoCompleteBox.Text != "") {
-                        Course newCourse = new Course();
-                        newCourse.Title = autoCompleteBox.Text;
-                        context.Courses.Add(newCourse);
-                        addCourseToStudent(newCourse);
-                    }
+                    //IF course does not exist, then do nothing
                 }
             }
         }
@@ -105,28 +65,30 @@ namespace PowerNote {
         public void autoCompleteBox_SelectionChanged(object sender, RoutedEventArgs e) {
             //Add new tag to Navigation property
             AutoCompleteBox autoCompleteBox = (AutoCompleteBox)sender;
-            Course selectedCourse = (Course) autoCompleteBox.SelectedItem;
-            addCourseToStudent(selectedCourse);          
-        }
-
-        public void addCourseToStudent(Course selectedCourse) {
-            if (student.Courses.Contains(selectedCourse)) {
-                //do nothing
-            }
-            else {
-                student.Courses.Add(selectedCourse);
-                context.SaveChanges();
-                updateTagLabels(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.  
-                autoCompleteBox.Text = null;
-            }
+            Course selectedCourse = (Course)autoCompleteBox.SelectedItem;
+            addCourseToStudent(selectedCourse);
+            displayPanel = (DisplayPanel)((FilterPanel)Parent).Parent;
+            displayPanel.updateEntries(); //CBTL lazy but I don't care.
         }
 
         public void addAutoCompleteBox() {
             Children.Add(autoCompleteBox);
         }
 
+        public void addCourseToStudent(Course selectedCourse) {
+            if (taggedObject.Courses.Contains(selectedCourse)) {
+                //do nothing
+            }
+            else {
+                taggedObject.Courses.Add(selectedCourse);
+                context.SaveChanges();
+                updateTagLabels(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.  
+                autoCompleteBox.Text = null;
+            }
+        }
+
         public void addTagLabels() {
-            foreach (Course course in student.Courses) {
+            foreach (Course course in taggedObject.Courses) {
                 Label label = new Label();
                 labelList.Add(label);
                 Binding binding2 = new Binding("Title"); //This is the MODEL property it binds to.
@@ -134,44 +96,35 @@ namespace PowerNote {
                 label.SetBinding(Label.ContentProperty, binding2);
                 //RIGHT CLICKS
                 MenuItem delete_menuItem = new MenuItem();
-                delete_menuItem.Click += delete_menuItem_Click;
+                delete_menuItem.Click += remove_menuItem_Click;
                 label.ContextMenu = new ContextMenu();
                 label.ContextMenu.Items.Add(delete_menuItem); //this causes invocation error.
-                delete_menuItem.Header = "Remove tag";       
+                delete_menuItem.Header = "Remove tag";
                 Children.Add(label);
             }
         }
 
-        public void courseList_PropertyChanged(Object sender, EventArgs e) {
-            updateTagLabels();
-        }
-
-        public void delete_menuItem_Click(Object sender, EventArgs e) {
+        public void remove_menuItem_Click(Object sender, EventArgs e) {
             MenuItem menuItem = new MenuItem();
             menuItem = (MenuItem)sender;
             if (menuItem != null) {
                 ContextMenu contextMenu = (ContextMenu)menuItem.Parent;
                 Label label = (Label)((Popup)contextMenu.Parent).PlacementTarget;
-                String selectedCourseName = (String) label.Content;
+                String selectedCourseName = (String)label.Content;
                 Course selectedCourse = null;
                 //Course selectedCourse = student.Courses.Single(c => c.Title == selectedCourseName);
-                foreach (Course course in student.Courses) {
+                foreach (Course course in taggedObject.Courses) {
                     if (course.ToString() == selectedCourseName) {
                         selectedCourse = course;
                         break;
                     }
                 }
                 if (selectedCourse != null)
-                    student.Courses.Remove(selectedCourse);
+                    taggedObject.Courses.Remove(selectedCourse);
                 updateTagLabels(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.
+                displayPanel.updateEntries(); //CBTL lazy but I don't care.
                 context.SaveChanges(); //ALSO lazy. CBTL.
             }
-        }
-
-        public void student_PropertyChanged(Object sender, EventArgs e) {
-            context.SaveChanges();
-            //RIGHT, so this IS being called, straight after the property is set.
-            //BUT it is not persisting it! Why? ahh! Because it is seeding it every time!
         }
 
         public void updateTagLabels() {
@@ -182,6 +135,5 @@ namespace PowerNote {
             addTagLabels();
             addAutoCompleteBox();
         }
-
     }
 }

@@ -18,8 +18,15 @@ namespace PowerNote.Models {
             }
         }
         public int Credits { get; set; }
+        public virtual ICollection<Student> Students { get; set; }
 
-        public virtual ICollection<Enrollment> Enrollments { get; set; }
+        public Course() {
+            //do nothing
+        }
+
+        public Course(string title) {
+            this.title = title;
+        }
 
         public override string ToString() {
             return Title;
