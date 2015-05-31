@@ -15,25 +15,30 @@ namespace PowerNote.Migrations {
         public void callSeed(MyContext context) {
             Seed(context);
         }
+        //RIGHT, so this configuration, WON'T DO nice migrations.
+        //BUT, can look into that, when really need it.
+        //For now, can just delete, and recreate the database.
 
         protected override void Seed(MyContext context) {
-
+            //OK! Perhaps, it is actually THIS method, that creates the database.
+            //NOT the create context instantiation...
+            //(I guess create(), will still do the trick. but NOT context instantiation...nec.) ??
             var students = new List<Student> {
-                new Student { FirstMidName = "Carson",   LastName = "Alexander", 
+                new Student { Contents = "Carson",   LastName = "Alexander", 
                     EnrollmentDate = DateTime.Parse("2010-09-01") },
-                new Student { FirstMidName = "Meredith", LastName = "Alonso",    
+                new Student { Contents = "Meredith", LastName = "Alonso",    
                     EnrollmentDate = DateTime.Parse("2012-09-01") },
-                new Student { FirstMidName = "Arturo",   LastName = "Anand",     
+                new Student { Contents = "Arturo",   LastName = "Anand",     
                     EnrollmentDate = DateTime.Parse("2013-09-01") },
-                new Student { FirstMidName = "Gytis",    LastName = "Barzdukas", 
+                new Student { Contents = "Gytis",    LastName = "Barzdukas", 
                     EnrollmentDate = DateTime.Parse("2012-09-01") },
-                new Student { FirstMidName = "Yan",      LastName = "Li",        
+                new Student { Contents = "Yan",      LastName = "Li",        
                     EnrollmentDate = DateTime.Parse("2012-09-01") },
-                new Student { FirstMidName = "Peggy",    LastName = "Justice",   
+                new Student { Contents = "Peggy",    LastName = "Justice",   
                     EnrollmentDate = DateTime.Parse("2011-09-01") },
-                new Student { FirstMidName = "Laura",    LastName = "Norman",    
+                new Student { Contents = "Laura",    LastName = "Norman",    
                     EnrollmentDate = DateTime.Parse("2013-09-01") },
-                new Student { FirstMidName = "Nino",     LastName = "Olivetto",  
+                new Student { Contents = "Nino",     LastName = "Olivetto",  
                     EnrollmentDate = DateTime.Parse("2005-08-11") }
             };
             students.ForEach(student => context.Students.AddOrUpdate(s => s.LastName, student));
@@ -52,52 +57,6 @@ namespace PowerNote.Migrations {
             courses.ForEach(course => context.Courses.AddOrUpdate(c => c.Title, course));
             context.SaveChanges();
 
-            //var enrollments = new List<Enrollment>{
-            //    new Enrollment { 
-            //        StudentID = students.Single(s => s.LastName == "Alexander").StudentID, 
-            //        CourseID = courses.Single(c => c.Title == "Chemistry" ).CourseID, 
-            //        Grade = Grade.A },
-            //     new Enrollment { 
-            //        StudentID = students.Single(s => s.LastName == "Alexander").StudentID,
-            //        CourseID = courses.Single(c => c.Title == "Microeconomics" ).CourseID, 
-            //        Grade = Grade.C },                            
-            //     new Enrollment { 
-            //        StudentID = students.Single(s => s.LastName == "Alexander").StudentID,
-            //        CourseID = courses.Single(c => c.Title == "Macroeconomics" ).CourseID, 
-            //        Grade = Grade.B},
-            //     new Enrollment { 
-            //         StudentID = students.Single(s => s.LastName == "Alonso").StudentID,
-            //        CourseID = courses.Single(c => c.Title == "Calculus" ).CourseID, 
-            //        Grade = Grade.B },
-            //     new Enrollment { 
-            //         StudentID = students.Single(s => s.LastName == "Alonso").StudentID,
-            //        CourseID = courses.Single(c => c.Title == "Trigonometry" ).CourseID, 
-            //        Grade = Grade.B },
-            //     new Enrollment {
-            //        StudentID = students.Single(s => s.LastName == "Alonso").StudentID,
-            //        CourseID = courses.Single(c => c.Title == "Composition" ).CourseID, 
-            //        Grade = Grade.B },
-            //     new Enrollment { 
-            //        StudentID = students.Single(s => s.LastName == "Anand").StudentID,
-            //        CourseID = courses.Single(c => c.Title == "Chemistry" ).CourseID},
-            //     new Enrollment { 
-            //        StudentID = students.Single(s => s.LastName == "Anand").StudentID,
-            //        CourseID = courses.Single(c => c.Title == "Microeconomics").CourseID,
-            //        Grade = Grade.B         },
-            //    new Enrollment { 
-            //        StudentID = students.Single(s => s.LastName == "Barzdukas").StudentID,
-            //        CourseID = courses.Single(c => c.Title == "Chemistry").CourseID,
-            //        Grade = Grade.B         },
-            //     new Enrollment { 
-            //        StudentID = students.Single(s => s.LastName == "Li").StudentID,
-            //        CourseID = courses.Single(c => c.Title == "Composition").CourseID,
-            //        Grade = Grade.B         },
-            //     new Enrollment { 
-            //        StudentID = students.Single(s => s.LastName == "Justice").StudentID,
-            //        CourseID = courses.Single(c => c.Title == "Literature").CourseID,
-            //        Grade = Grade.B         }
-            //};
-
             //foreach (Enrollment enrollment in enrollments) {
             //    var enrollmentInDataBase = context.Enrollments.Where(
             //        e =>
@@ -107,7 +66,7 @@ namespace PowerNote.Migrations {
             //        context.Enrollments.Add(enrollment);
             //    }
             //}
-            //context.SaveChanges();
+            
 
             AddOrUpdateCourse(context, "Alexander", "Chemistry");
             AddOrUpdateCourse(context, "Alexander", "Microeconomics");
@@ -120,6 +79,7 @@ namespace PowerNote.Migrations {
             AddOrUpdateCourse(context, "Barzdukas", "Chemistry");
             AddOrUpdateCourse(context, "Li", "Composition");
             AddOrUpdateCourse(context, "Justice", "Literature");
+            context.SaveChanges();
         }
 
         public void AddOrUpdateCourse(MyContext context, string lastName, string courseTitle) {

@@ -21,7 +21,7 @@ namespace PowerNote {
             //PANEL
             Orientation = Orientation.Horizontal;
             title = new Label();
-            title.Content = "Filter by tag:";
+            title.Content = "Filter by tags:";
             Children.Add(title);
             //TAG LIST PANEL
             Filter = new TaggedObject();

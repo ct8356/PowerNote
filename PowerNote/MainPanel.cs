@@ -10,25 +10,48 @@
     using PowerNote.Migrations;
 
     class MainPanel : DockPanel {
+        public ControlPanel ControlPanel { get; set; }
+        public List<DisplayPanel> DisplayPanels { get; set; }
+        public DisplayPanel DisplayPanel { get; set; }
 
         public MainPanel() {
             //DATA
-            MyContext schoolContext = new MyContext(); //works fine. I guess table is made now.
-            //schoolContext.Database.Create(); //YES! Now it works. WHy it no work without this? Me no Know.
+            MyContext databaseContext = new MyContext(); //works fine. I guess table is made now.
+            //databaseContext.Database.Delete();
+            //databaseContext.Database.Create(); //YES! Now it works. WHy it no work without this? Me no Know.
             //ACtually, NO! the database is still not made? WTF? //MAYBE just deleting .mdf files from SQLServer data folder is bad idea.
             //IT PROBS still thinks that they exist. Yes I reckon. BUT then why when I changed Context class name, did it not make NEW one?
             //Ok, so this does indeed, create a database, if not already exist.
             //BUT WHERE is this database created? It is in ProgramFiles, in the SQLServer folder. Let's delete it.
-            Configuration configuration = new Configuration();
-            //configuration.callSeed(schoolContext); //Only need to do this once. Or it will overwrite data.
+            //Configuration configuration = new Configuration();
+            //configuration.callSeed(databaseContext); //Only need to do this once. Or it will overwrite data.
             //issues here. cbtl. fix it.
-            //PANEL
-            ControlPanel controlPanel = new ControlPanel(schoolContext);
-            DisplayPanel displayPanel = new DisplayPanel(schoolContext);
-            Children.Add(controlPanel);
-            Children.Add(displayPanel);
-            SetDock(controlPanel, Dock.Left);
-            //SetDock(displayPanel, Dock.Right);
+            //CONTROL
+            ControlPanel = new ControlPanel(databaseContext, this);
+            Children.Add(ControlPanel);
+            SetDock(ControlPanel, Dock.Left);
+            //ADD DISPLAY PANELS
+            DisplayPanels = new List<DisplayPanel>();
+            //DISP 1
+            DisplayPanel = new DisplayPanel(databaseContext, this);
+            DisplayPanels.Add(DisplayPanel);
+            Children.Add(DisplayPanel);
+            SetDock(DisplayPanel, Dock.Left);
+            //DISP 2
+            //DisplayPanel disp2 = new DisplayPanel(databaseContext, this);
+            //DisplayPanels.Add(disp2);
+            //Children.Add(disp2);
+            //SetDock(disp2, Dock.Left);
+            //SIDE-NOTE
+            //SideNotePanel sideNotePanel = new SideNotePanel(databaseContext, this);
+            //Children.Add(sideNotePanel);
+            //SetDock(sideNotePanel, Dock.Bottom);
+        }
+
+        public void updateEntries() {
+            foreach (DisplayPanel panel in DisplayPanels) {
+                panel.updateEntries(); //Should not have to, since I will only delete ones with NO attachments. For now.
+            }
         }
 
     }

@@ -3,7 +3,7 @@ using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.ComponentModel; //this allows INotifyPropertyChanged
 
-namespace PowerNote.DAL { //DAL stands for Data Access layer.
+namespace PowerNote.DAL { //DAL stands for Data Access Layer.
     //NOTE: what you cannot see here,
     //is that when this class is instantiated, a connection is made.
     //The "namespace + class name" are used to identify the database.

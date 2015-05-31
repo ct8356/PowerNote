@@ -26,3 +26,7 @@ C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\bin\Deb
 C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\bin\Debug\WPFToolkit.dll
 C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\bin\Debug\System.Windows.Controls.Input.Toolkit.pdb
 C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\bin\Debug\WPFToolkit.pdb
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\bin\Debug\PowerNote.exe.manifest
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\bin\Debug\PowerNote.application
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PowerNote.exe.manifest
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PowerNote.application

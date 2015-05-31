@@ -17,13 +17,17 @@ namespace PowerNote {
             Label title;
             Label label2;
             MyContext context;
-            public FilterPanel FilterPanel {get; set;}
+            public FilterPanel FilterPanel { get; set; }
             ICollection<Student> filteredStudents;
-            List<Entry> entryList;
+            public SortPanel SortPanel { get; set; }
+            public List<String> ColumnNames { get; set; }
+            List<Entry> entryList; 
             Entry newEntryEntry;
+            MainPanel mainPanel;
 
-            public DisplayPanel(MyContext context) {
+            public DisplayPanel(MyContext context, MainPanel mainPanel) {
                 this.context = context;
+                this.mainPanel = mainPanel;
                 //PANEL
                 title = new Label();
                 title.Content = "Display panel";
@@ -34,6 +38,17 @@ namespace PowerNote {
                 FilterPanel = new FilterPanel(context);
                 Children.Add(FilterPanel);
                 SetDock(FilterPanel, Dock.Top);
+                //SORT PANEL
+                SortPanel = new SortPanel(context);
+                Children.Add(SortPanel);
+                SetDock(SortPanel, Dock.Top);
+                SortPanel.ComboBox.SelectionChanged += ComboBox_SelectionChanged; //subscribe
+                //COLUMN NAME PANEL
+                //var colNames = typeof(Student).GetProperties().Select(a => a.Name).ToList();
+                ColumnNames = new List<String>() { "Contents", "Priority" };
+                ColumnNamePanel columnNamePanel = new ColumnNamePanel(this);
+                Children.Add(columnNamePanel);
+                SetDock(columnNamePanel, Dock.Top);
                 //ADD ENTRIES
                 entryList = new List<Entry>();
                 addEntries();
@@ -51,26 +66,35 @@ namespace PowerNote {
                 IQueryable<Student> filteredStudents = context.Students;
                 foreach (Course course in filter.Courses) {
                     if (course != null) {
-                        Course tempCourse = course;
-                        filteredStudents = filteredStudents.Where(s => s.Courses.Select(c => c.CourseID).Contains(tempCourse.CourseID)); 
+                        Course tempCourse = course; //nec, because otherwise course is overwritten!
+                        filteredStudents = filteredStudents.Where(s => s.Courses.Select(c => c.CourseID).Contains(tempCourse.CourseID));   
                         //Can only use LINQ Contains(), with PRIMITIVE values! (i.e. strings and ints etc!)
                     }
                 }
+                switch (SortPanel.ComboBox.SelectedItem.ToString()) {
+                    case "ID": break;
+                    case "Priority": filteredStudents = filteredStudents.OrderBy(s => s.Priority); break;
+                }
                 List<Student> studentList = filteredStudents.ToList<Student>();
                 foreach (Student student in studentList) { //AHAH, so query not fired until THIS BIT! i.e. we actually ACCESS the nav property, filteredStudents!
-                    Entry entry = new Entry(student, context, this);
+                    Entry entry = new Entry(student, context, this, mainPanel);
                     //Entry entry = new Entry(context.Students.ToList()[i], context, FilterPanel.Filter);
                     SetDock(entry, Dock.Top);
                     entryList.Add(entry);
                     Children.Add(entry);
                 }
                 //NEW ENTRY ENTRY
-                newEntryEntry = new Entry();  
+                newEntryEntry = new Entry();
                 SetDock(newEntryEntry, Dock.Top);
                 entryList.Add(newEntryEntry);
                 Children.Add(newEntryEntry);
                 newEntryEntry.LostFocus += new RoutedEventHandler(newEntryEntry_LostFocus);
                 newEntryEntry.KeyUp += new KeyEventHandler(newEntryEntry_KeyUp);
+            }
+
+            public void ComboBox_SelectionChanged(object sender, RoutedEventArgs e) {
+                //START a ORDER BY QUERY. I say, just call to UPDATE methods, BUT with NEW INPUT.
+                updateEntries();
             }
 
             public void newEntryEntry_KeyUp(object sender, KeyEventArgs e) {

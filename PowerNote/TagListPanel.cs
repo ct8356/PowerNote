@@ -68,7 +68,8 @@ namespace PowerNote {
             Course selectedCourse = (Course)autoCompleteBox.SelectedItem;
             addCourseToStudent(selectedCourse);
             displayPanel = (DisplayPanel)((FilterPanel)Parent).Parent;
-            displayPanel.updateEntries(); //CBTL lazy but I don't care.
+            MainPanel mainPanel = (MainPanel)displayPanel.Parent;
+            mainPanel.updateEntries(); //CBTL lazy but I don't care.
         }
 
         public void addAutoCompleteBox() {

@@ -17,9 +17,12 @@ namespace PowerNote {
     class ControlPanel : DockPanel {
         MyContext context;
         List<Label> labelList;
+        MainPanel mainPanel;
+        ListBox ListBox { get; set; }
 
-        public ControlPanel(MyContext context) {
+        public ControlPanel(MyContext context, MainPanel mainPanel) {
             this.context = context;
+            this.mainPanel = mainPanel;
             //TITLE
             Label title = new Label();
             title.Content = "Control panel";
@@ -29,36 +32,17 @@ namespace PowerNote {
             //COLLECTION OF TAG LABELS
             labelList = new List<Label>();
             //COULD do it like this, BUT then cannot bind it. BETTER, to use listBox/listView?for now,yes
-            ListBox listBox = new ListBox();
-            context.Courses.Load();
-            listBox.ItemsSource = context.Courses.Local;
-            listBox.ContextMenu = new ContextMenu();
+            ListBox = new ListBox();
+            context.Courses.OrderBy(c => c.Title).Load(); //explicit load. I.e. submit query now.
+            ListBox.ItemsSource = context.Courses.Local;
+            ListBox.Items.SortDescriptions.Add(new SortDescription("Title", ListSortDirection.Ascending)); //"" is for property name.
+            ListBox.ContextMenu = new ContextMenu();
             MenuItem delete_menuItem = new MenuItem();
-            listBox.ContextMenu.Items.Add(delete_menuItem); //PROBLEM! menu belongs to listBox, not ITEM!
+            ListBox.ContextMenu.Items.Add(delete_menuItem); //PROBLEM! menu belongs to listBox, not ITEM!
             delete_menuItem.Click += delete_menuItem_Click;
             delete_menuItem.Header = "Delete tag";
-            Children.Add(listBox);
-            SetDock(listBox, Dock.Top);
-            //NEW ENTRY BUTTON
-            Button newEntryButton = new Button();
-            newEntryButton.Content = "New entry";
-            Children.Add(newEntryButton);
-            SetDock(newEntryButton, Dock.Top);
-            //SAVE CHANGES BUTTON
-            Button saveChangesButton = new Button();
-            saveChangesButton.Content = "Save changes";
-            //Children.Add(saveChangesButton);
-            //SUBSCRIBE TO EVENT
-            //necessary?
-            saveChangesButton.Click += saveChangesButton_Click;
-            //YES! IT WORKS! perhaps, the delegate, already exists? so don't need the new keyword?
-        }
-
-        private void saveChangesButton_Click(object sender, EventArgs e) {
-            //Ah, note, a delegate, calling this method,
-            //is automatically subscribed to the button event!
-            //BUT guess what, it is not calling this...
-            context.SaveChanges();
+            Children.Add(ListBox);
+            SetDock(ListBox, Dock.Top);
         }
 
         public void delete_menuItem_Click(Object sender, EventArgs e) {   
@@ -72,9 +56,17 @@ namespace PowerNote {
                 //Course selectedCourse = student.Courses.Single(c => c.Title == selectedCourseName);   
                 if (selectedCourse != null)
                     context.Courses.Remove(selectedCourse);
-                //updateTagLabels(); Should not have to, since I will only delete ones with NO attachments. For now.
                 context.SaveChanges(); //ALSO lazy. CBTL.
+                mainPanel.updateEntries();
             }
         }
+
+        //public void reorder() {
+        //    context.Courses.OrderBy(c => c.Title).Load(); //explicit load. I.e. submit query now.
+        //    ListBox.ItemsSource = context.Courses.Local;
+        //    Children.Remove(ListBox);
+        //    Children.Add(ListBox);
+        //}
+
     }
 }

@@ -12,15 +12,25 @@ namespace PowerNote.Models {
         //WHICH might be true. Just make DAL respond to events started here...
         public int StudentID { get; set; }
         public string LastName { get; set; }
-        string firstMidName;
-        public string FirstMidName {
-            get { return firstMidName; }
+        string contents;
+        public string Contents {
+            get { return contents; }
             set {
-                firstMidName = value;
+                contents = value;
                 if (PropertyChanged != null) {
-                    PropertyChanged(this, new PropertyChangedEventArgs("FirstMidName"));
+                    PropertyChanged(this, new PropertyChangedEventArgs("Contents"));
                     //This basically means, when set, FIRE THE EVENT, "propertyChanged".
                 } //IF clause is needed, coz set is often called, when PropChanged is not true.
+            }
+        }
+        int priority;
+        public int Priority {
+            get { return priority; }
+            set {
+                priority = value;
+                if (PropertyChanged != null) {
+                    PropertyChanged(this, new PropertyChangedEventArgs("Priority"));
+                }
             }
         }
         public DateTime EnrollmentDate { get; set; }
@@ -31,7 +41,6 @@ namespace PowerNote.Models {
                 courses = value;
                 if (PropertyChanged != null) {
                     PropertyChanged(this, new PropertyChangedEventArgs("Courses"));
-                    //This basically means, when set, FIRE THE EVENT, "propertyChanged".
                 }
             }
         }
@@ -39,10 +48,11 @@ namespace PowerNote.Models {
 
         public Student() {
             Courses = new List<Course>();
+            Priority = 10;
         }
 
-        public Student(string firstMidName) : this() {
-            this.firstMidName = firstMidName;
+        public Student(string contents) : this() {
+            this.contents = contents;
             LastName = "Alexander";
             EnrollmentDate = DateTime.Parse("2010-09-01");
         }

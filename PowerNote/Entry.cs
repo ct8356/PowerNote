@@ -22,30 +22,38 @@ namespace PowerNote {
         List<Course> courseList;
         List<Label> labelList;
         SuggestionBox autoCompleteBox;
-        CheckBox checkBox { get; set; }
         public TextBox textBox { get; set; }
+        public TextBox Priority { get; set; }
         DisplayPanel displayPanel;
+        MainPanel mainPanel;
 
         public Entry() {
             Orientation = Orientation.Horizontal;
-            //CHECK BOX
-            checkBox = new CheckBox();
-            Children.Add(checkBox);
             //TEXT BOX
-            textBox = new TextBox();    
+            textBox = new TextBox();
             textBox.Width = 100;
             Children.Add(textBox);
+            //PRIORITY TEXT BOX
+            Priority = new TextBox();
+            Priority.Width = 100;
+            Children.Add(Priority);
         }
 
-        public Entry(Student student, MyContext context, DisplayPanel displayPanel) : this() {
+        public Entry(Student student, MyContext context, DisplayPanel displayPanel, MainPanel mainPanel) : this() {
             this.student = student;
+            student.PropertyChanged += student_PropertyChanged;
             this.context = context;
             this.displayPanel = displayPanel;
-            //TEXT BOX BINDING
-            Binding binding = new Binding("FirstMidName"); //This is the MODEL property it binds to.
+            this.mainPanel = mainPanel;
+            //TEXTBOX BINDING
+            Binding binding = new Binding(displayPanel.ColumnNames[0]); //This is the MODEL property it binds to.
             binding.Source = student; // the binding source (which must fire a PROP CHANGED event).
             textBox.SetBinding(TextBox.TextProperty, binding); //fortunately, textBox already fires an event when changed.
             //YOU created the event for the dataSource. SO HOPEFULLY, we have 2 way binding now... we do :)
+            //PRIORITY TEXTBOX BINDING
+            Binding binding2 = new Binding(displayPanel.ColumnNames[1]);
+            binding2.Source = student;
+            Priority.SetBinding(TextBox.TextProperty, binding2);
             //RIGHT CLICKS
             MenuItem deleteEntry = new MenuItem();
             deleteEntry.Click += deleteEntry_Click;
@@ -59,17 +67,15 @@ namespace PowerNote {
             //AUTOCOMPLETEBOX
             autoCompleteBox = new SuggestionBox(context);
             addAutoCompleteBox();
-            //SUBSCRIBE TO STUFF
             //autoCompleteBox.SelectionChanged += autoCompleteBox_SelectionChanged;
             //autoCompleteBox.LostFocus += autoCompleteBox_LostFocus;
-            autoCompleteBox.KeyUp += autoCompleteBox_KeyUp;
-            student.PropertyChanged += student_PropertyChanged;
+            autoCompleteBox.KeyUp += autoCompleteBox_KeyUp;        
         }
 
         public void deleteEntry_Click(object sender, RoutedEventArgs e) {
             context.Students.Remove(student);
             context.SaveChanges(); //ALSO lazy. CBTL.
-            displayPanel.updateEntries(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.
+            mainPanel.updateEntries(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.
         }
 
         public void autoCompleteBox_KeyUp(object sender, KeyEventArgs e) {
@@ -96,6 +102,7 @@ namespace PowerNote {
                         Course newCourse = new Course();
                         newCourse.Title = autoCompleteBox.Text;
                         context.Courses.Add(newCourse);
+                        context.SaveChanges();
                         addCourseToStudent(newCourse);
                     }
                 }
@@ -116,7 +123,7 @@ namespace PowerNote {
             else {
                 student.Courses.Add(selectedCourse);
                 context.SaveChanges();
-                updateTagLabels(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.  
+                mainPanel.updateEntries(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.  
                 autoCompleteBox.Text = null;
             }
         }
@@ -126,7 +133,8 @@ namespace PowerNote {
         }
 
         public void addTagLabels() {
-            foreach (Course course in student.Courses) {
+            var alphabeticalCourses = student.Courses.OrderBy(c => c.Title);
+            foreach (Course course in alphabeticalCourses) {
                 Label label = new Label();
                 labelList.Add(label);
                 Binding binding2 = new Binding("Title"); //This is the MODEL property it binds to.
@@ -168,10 +176,13 @@ namespace PowerNote {
             }
         }
 
-        public void student_PropertyChanged(Object sender, EventArgs e) {
+        public void student_PropertyChanged(Object sender, PropertyChangedEventArgs e) {
             context.SaveChanges();
             //RIGHT, so this IS being called, straight after the property is set.
             //BUT it is not persisting it! Why? ahh! Because it is seeding it every time!
+            if (e.PropertyName == "Priority") {
+                mainPanel.updateEntries();
+            }
         }
 
         public void updateTagLabels() {
