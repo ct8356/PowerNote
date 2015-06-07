@@ -44,7 +44,8 @@ namespace PowerNote.Models {
                 }
             }
         }
-
+        public virtual Student Parent { get; set; }
+        public virtual ICollection<Student> Children { get; set; }
 
         public Student() {
             Courses = new List<Course>();

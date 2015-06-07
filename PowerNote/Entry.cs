@@ -55,11 +55,15 @@ namespace PowerNote {
             binding2.Source = student;
             Priority.SetBinding(TextBox.TextProperty, binding2);
             //RIGHT CLICKS
-            MenuItem deleteEntry = new MenuItem();
-            deleteEntry.Click += deleteEntry_Click;
             textBox.ContextMenu = new ContextMenu();
-            textBox.ContextMenu.Items.Add(deleteEntry); //this causes invocation error.
+            MenuItem deleteEntry = new MenuItem();
             deleteEntry.Header = "Delete entry";
+            deleteEntry.Click += deleteEntry_Click;
+            textBox.ContextMenu.Items.Add(deleteEntry); //this causes invocation error.
+            MenuItem insertSubNote = new MenuItem();
+            insertSubNote.Header = "Insert sub-note";
+            insertSubNote.Click += insertSubNote_Click;
+            textBox.ContextMenu.Items.Add(insertSubNote);
             //TAG LABELS
             courseList = new List<Course>();
             labelList = new List<Label>();
@@ -137,16 +141,17 @@ namespace PowerNote {
             foreach (Course course in alphabeticalCourses) {
                 Label label = new Label();
                 labelList.Add(label);
+                Children.Add(label);
+                //Binding
                 Binding binding2 = new Binding("Title"); //This is the MODEL property it binds to.
                 binding2.Source = course; // the binding source (which must fire a PROP CHANGED event).
-                label.SetBinding(Label.ContentProperty, binding2);
+                label.SetBinding(Label.ContentProperty, binding2);       
                 //RIGHT CLICKS
-                MenuItem delete_menuItem = new MenuItem();
-                delete_menuItem.Click += delete_menuItem_Click;
                 label.ContextMenu = new ContextMenu();
-                label.ContextMenu.Items.Add(delete_menuItem); //this causes invocation error.
-                delete_menuItem.Header = "Remove tag";       
-                Children.Add(label);
+                MenuItem delete = new MenuItem();
+                delete.Header = "Remove tag";       
+                label.ContextMenu.Items.Add(delete); //this causes invocation error.
+                delete.Click += delete_Click;        
             }
         }
 
@@ -154,7 +159,7 @@ namespace PowerNote {
             updateTagLabels();
         }
 
-        public void delete_menuItem_Click(Object sender, EventArgs e) {
+        public void delete_Click(Object sender, EventArgs e) {
             MenuItem menuItem = new MenuItem();
             menuItem = (MenuItem)sender;
             if (menuItem != null) {
@@ -173,6 +178,19 @@ namespace PowerNote {
                     student.Courses.Remove(selectedCourse);
                 updateTagLabels(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.
                 context.SaveChanges(); //ALSO lazy. CBTL.
+            }
+        }
+
+        public void insertSubNote_Click(Object sender, EventArgs e) {
+            MenuItem menuItem = new MenuItem();
+            menuItem = (MenuItem)sender;
+            if (menuItem != null) {
+                Student newStudent = new Student(student.Contents + " child");
+                student.Children.Add(newStudent);
+                context.Students.Add(newStudent);
+                context.SaveChanges();
+                mainPanel.updateEntries();
+                context.SaveChanges();
             }
         }
 

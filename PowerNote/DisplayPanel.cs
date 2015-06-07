@@ -15,15 +15,17 @@ namespace PowerNote {
 
     class DisplayPanel : DockPanel {
             Label title;
-            Label label2;
             MyContext context;
             public FilterPanel FilterPanel { get; set; }
-            ICollection<Student> filteredStudents;
+            TaggedObject filter;
+            IQueryable<Student> filteredStudents;
             public SortPanel SortPanel { get; set; }
+            public OptionsPanel OptionsPanel { get; set; }
             public List<String> ColumnNames { get; set; }
-            List<Entry> entryList; 
-            Entry newEntryEntry;
+            List<Entry> entryList;
+            Entry newEntry;
             MainPanel mainPanel;
+            int childLevel;
 
             public DisplayPanel(MyContext context, MainPanel mainPanel) {
                 this.context = context;
@@ -43,6 +45,12 @@ namespace PowerNote {
                 Children.Add(SortPanel);
                 SetDock(SortPanel, Dock.Top);
                 SortPanel.ComboBox.SelectionChanged += ComboBox_SelectionChanged; //subscribe
+                //OPTIONS PANEL
+                OptionsPanel = new OptionsPanel(context);
+                Children.Add(OptionsPanel);
+                SetDock(OptionsPanel, Dock.Top);
+                OptionsPanel.ShowAllEntries.Click += ShowAllEntries_Click; //subscribe
+                OptionsPanel.ShowAllChildren.Click += ShowAllChildren_Click; //subscribe
                 //COLUMN NAME PANEL
                 //var colNames = typeof(Student).GetProperties().Select(a => a.Name).ToList();
                 ColumnNames = new List<String>() { "Contents", "Priority" };
@@ -62,34 +70,42 @@ namespace PowerNote {
             }
 
             public void addEntries() {
-                TaggedObject filter = FilterPanel.Filter;
-                IQueryable<Student> filteredStudents = context.Students;
-                foreach (Course course in filter.Courses) {
-                    if (course != null) {
-                        Course tempCourse = course; //nec, because otherwise course is overwritten!
-                        filteredStudents = filteredStudents.Where(s => s.Courses.Select(c => c.CourseID).Contains(tempCourse.CourseID));   
-                        //Can only use LINQ Contains(), with PRIMITIVE values! (i.e. strings and ints etc!)
-                    }
-                }
+                filter = FilterPanel.Filter;
+                filteredStudents = context.Students;
+                IEnumerable<int> filterCourseIDs = filter.Courses.Select(c => c.CourseID);
+                filteredStudents = filteredStudents
+                    .Where(s => !filterCourseIDs.Except(s.Courses.Select(c => c.CourseID)).Any());
+                //filter.Courses.SelectMany(c => c.Students); //Does not work yet, but look into.
                 switch (SortPanel.ComboBox.SelectedItem.ToString()) {
                     case "ID": break;
                     case "Priority": filteredStudents = filteredStudents.OrderBy(s => s.Priority); break;
                 }
-                List<Student> studentList = filteredStudents.ToList<Student>();
-                foreach (Student student in studentList) { //AHAH, so query not fired until THIS BIT! i.e. we actually ACCESS the nav property, filteredStudents!
-                    Entry entry = new Entry(student, context, this, mainPanel);
-                    //Entry entry = new Entry(context.Students.ToList()[i], context, FilterPanel.Filter);
-                    SetDock(entry, Dock.Top);
-                    entryList.Add(entry);
-                    Children.Add(entry);
+                if (OptionsPanel.ShowAllEntriesBool) {
+                    showAllEntries();
                 }
-                //NEW ENTRY ENTRY
-                newEntryEntry = new Entry();
-                SetDock(newEntryEntry, Dock.Top);
-                entryList.Add(newEntryEntry);
-                Children.Add(newEntryEntry);
-                newEntryEntry.LostFocus += new RoutedEventHandler(newEntryEntry_LostFocus);
-                newEntryEntry.KeyUp += new KeyEventHandler(newEntryEntry_KeyUp);
+                else {
+                    IQueryable<Student> filteredParents = showFirstLevel();
+                    IQueryable<Student> filteredChildren = showDeeperLevels(filteredParents);
+                    filteredChildren = showDeeperLevels(filteredChildren);
+                }
+                    //AHAH! So either way, will have a foreach loop for each child layer.
+                    //BUT if do a query for each layer, 
+                    //(rather than just one, and then placing them all in right place,
+                    //BUT having to check first, whether was a parent, or whatever) 
+                    //(NOTE above would have worked fine, probs, but now, I think what I got is bit quicker)
+                    //THEN can just have 3 foreach loops,
+                    //one after the other,
+                    //rather than nested. WHICH I THINK will be quicker, right???
+                addNewEntry();           
+            }
+
+            public void addNewEntry() {
+                newEntry = new Entry();
+                SetDock(newEntry, Dock.Top);
+                entryList.Add(newEntry);
+                Children.Add(newEntry);
+                newEntry.LostFocus += new RoutedEventHandler(newEntry_LostFocus);
+                newEntry.KeyUp += new KeyEventHandler(newEntry_KeyUp);
             }
 
             public void ComboBox_SelectionChanged(object sender, RoutedEventArgs e) {
@@ -97,18 +113,87 @@ namespace PowerNote {
                 updateEntries();
             }
 
-            public void newEntryEntry_KeyUp(object sender, KeyEventArgs e) {
+            public void newEntry_KeyUp(object sender, KeyEventArgs e) {
                 if (e.Key == Key.Return) {
-                    newEntryEntry_LostFocus(sender, e);
+                    newEntry_LostFocus(sender, e);
                 }
             }
 
-            public void newEntryEntry_LostFocus(object sender, RoutedEventArgs e) {
-                if (newEntryEntry.textBox.Text != null && newEntryEntry.textBox.Text != "") {
-                    Student newStudent = new Student(newEntryEntry.textBox.Text);
+            public void newEntry_LostFocus(object sender, RoutedEventArgs e) {
+                if (newEntry.textBox.Text != null && newEntry.textBox.Text != "") {
+                    Student newStudent = new Student(newEntry.textBox.Text);
                     context.Students.Add(newStudent);
                     context.SaveChanges();
                     updateEntries(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.   
+                }
+            }
+
+            public void ShowAllChildren_Click(object sender, EventArgs e) {
+                updateEntries();
+            }
+
+            public void ShowAllEntries_Click(object sender, EventArgs e) {
+                updateEntries();
+            }
+
+            public void showAllEntries() {
+                foreach (Student student in filteredStudents) {
+                    Entry entry = new Entry(student, context, this, mainPanel);
+                    SetDock(entry, Dock.Top);
+                    entryList.Add(entry);
+                    Children.Add(entry);
+                }
+            }
+
+            public IQueryable<Student> showDeeperLevels(IQueryable<Student> filteredParents) {
+                childLevel++;
+                IQueryable<Student> filteredChildren = null;
+                IEnumerable<int> parentStudentIDs = filteredParents.Select(s => s.StudentID);
+                if (OptionsPanel.ShowAllChildrenBool) {
+                    filteredChildren = 
+                        context.Students.Where(s => parentStudentIDs.Contains(s.Parent.StudentID));
+                } else {
+                    filteredChildren =
+                        filteredStudents.Where(s => parentStudentIDs.Contains(s.Parent.StudentID));
+                } //NOTE! innefficiency here, in that it does this, for parents too...
+                foreach (Student student in filteredChildren) {
+                    if (student.Parent != null) {
+                        List<Student> parentList = filteredParents.ToList<Student>();
+                        int parentIndex = parentList.FindIndex(p => p == student.Parent);
+                        Entry entry = new Entry(student, context, this, mainPanel);
+                        SetDock(entry, Dock.Top);
+                        entryList.Add(entry);
+                        for (int i = 0; i < childLevel; i++) {
+                            entry.Children.Insert(0, new Label() { Content = "    " });
+                        }
+                        Children.Insert(parentIndex, entry);
+                    }
+                } //OK! but will only put all children at end... try it.
+                return filteredChildren;
+            }
+
+            public IQueryable<Student> showFirstLevel() {
+                childLevel = 0;
+                IEnumerable<int> filterCourseIDs = filter.Courses.Select(c => c.CourseID);
+                IQueryable<Student> filteredParents = filteredStudents
+                    .Where(s => filterCourseIDs.Except(s.Parent.Courses.Select(c => c.CourseID)).Any());
+                foreach (Student student in filteredParents) {
+                    Entry entry = new Entry(student, context, this, mainPanel);
+                    SetDock(entry, Dock.Top);
+                    entryList.Add(entry);
+                    Children.Add(entry);
+                }
+                return filteredParents;
+            }
+
+            public void showUntaggedEntries() {
+                IQueryable<Student> untaggedStudents =
+                       filteredStudents.Where(s => !s.Courses.Any()); //Will this work?
+                foreach (Student student in untaggedStudents) {
+                    Entry entry = new Entry(student, context, this, mainPanel);
+                    SetDock(entry, Dock.Top);
+                    entryList.Add(entry);
+                    Children.Add(entry);
                 }
             }
 
