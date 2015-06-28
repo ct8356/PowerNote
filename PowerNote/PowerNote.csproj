@@ -97,17 +97,25 @@
     <Compile Include="ControlPanel.cs" />
     <Compile Include="DAL\MyContext.cs" />
     <Compile Include="DisplayPanel.cs" />
+    <Compile Include="EntriesView.cs" />
     <Compile Include="FilterPanel.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Course.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Models\TaggedObject.cs" />
+    <Compile Include="EntryNode.cs" />
+    <Compile Include="MyEntriesView.xaml.cs">
+      <DependentUpon>MyEntriesView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="OptionsPanel.cs" />
     <Compile Include="SideEntry.cs" />
     <Compile Include="SideNotePanel.cs" />
     <Compile Include="SortPanel.cs" />
     <Compile Include="SuggestionBox.cs" />
     <Compile Include="TagListPanel.cs" />
+    <Compile Include="UserControl1.xaml.cs">
+      <DependentUpon>UserControl1.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -117,12 +125,20 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DAL\Database.cs" />
-    <Compile Include="Entry.cs" />
+    <Compile Include="EntryPanel.cs" />
     <Compile Include="MainPanel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MyEntriesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControl1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MyGrid.cs" />

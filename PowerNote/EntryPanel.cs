@@ -16,54 +16,68 @@ using System.Windows.Input;
 
 namespace PowerNote {
 
-    class Entry : StackPanel {
+    class EntryPanel : StackPanel { //Put this in the header.
+     
         MyContext context;
-        Student student;
         List<Course> courseList;
         List<Label> labelList;
         SuggestionBox autoCompleteBox;
-        public TextBox textBox { get; set; }
+        public static readonly DependencyProperty TextBoxProperty =
+            DependencyProperty.Register("TextBox", typeof(TextBox), typeof(EntryPanel));
+        public TextBox TextBox {
+            get { return GetValue(TextBoxProperty) as TextBox; }
+            set { SetValue(TextBoxProperty, value); }
+        }
         public TextBox Priority { get; set; }
         DisplayPanel displayPanel;
+        TaggedObject filter;
         MainPanel mainPanel;
+        public static readonly DependencyProperty StudentProperty =
+            DependencyProperty.Register("Student", typeof(Student), typeof(EntryPanel));
+        Student Student {
+            get { return GetValue(StudentProperty) as Student; }
+            set { SetValue(StudentProperty, value); }
+        }
 
-        public Entry() {
+        public EntryPanel() {
             Orientation = Orientation.Horizontal;
             //TEXT BOX
-            textBox = new TextBox();
-            textBox.Width = 100;
-            Children.Add(textBox);
+            TextBox = new TextBox();
+            TextBox.Width = 100;
+            Children.Add(TextBox);
             //PRIORITY TEXT BOX
             Priority = new TextBox();
             Priority.Width = 100;
             Children.Add(Priority);
         }
 
-        public Entry(Student student, MyContext context, DisplayPanel displayPanel, MainPanel mainPanel) : this() {
-            this.student = student;
-            student.PropertyChanged += student_PropertyChanged;
-            this.context = context;
-            this.displayPanel = displayPanel;
+        public EntryPanel(Student student, MainPanel mainPanel) : this() {
+            this.Student = student;
+            this.context = mainPanel.Context;
+            this.displayPanel = mainPanel.DisplayPanel;
+            this.filter = displayPanel.FilterPanel.Filter;
             this.mainPanel = mainPanel;
             //TEXTBOX BINDING
             Binding binding = new Binding(displayPanel.ColumnNames[0]); //This is the MODEL property it binds to.
             binding.Source = student; // the binding source (which must fire a PROP CHANGED event).
-            textBox.SetBinding(TextBox.TextProperty, binding); //fortunately, textBox already fires an event when changed.
+            TextBox.SetBinding(TextBox.TextProperty, binding); //fortunately, textBox already fires an event when changed.
             //YOU created the event for the dataSource. SO HOPEFULLY, we have 2 way binding now... we do :)
             //PRIORITY TEXTBOX BINDING
             Binding binding2 = new Binding(displayPanel.ColumnNames[1]);
             binding2.Source = student;
             Priority.SetBinding(TextBox.TextProperty, binding2);
+            //RIGHT! SO we need to stop binding individually (although, that is fine actually).
+            //NOW! we just need to bind the STRUCTURE. i.e. the TEMPLATE!
             //RIGHT CLICKS
-            textBox.ContextMenu = new ContextMenu();
+            TextBox.ContextMenu = new ContextMenu();
             MenuItem deleteEntry = new MenuItem();
             deleteEntry.Header = "Delete entry";
             deleteEntry.Click += deleteEntry_Click;
-            textBox.ContextMenu.Items.Add(deleteEntry); //this causes invocation error.
+            TextBox.ContextMenu.Items.Add(deleteEntry); //this causes invocation error.
             MenuItem insertSubNote = new MenuItem();
             insertSubNote.Header = "Insert sub-note";
             insertSubNote.Click += insertSubNote_Click;
-            textBox.ContextMenu.Items.Add(insertSubNote);
+            TextBox.ContextMenu.Items.Add(insertSubNote);
             //TAG LABELS
             courseList = new List<Course>();
             labelList = new List<Label>();
@@ -77,7 +91,7 @@ namespace PowerNote {
         }
 
         public void deleteEntry_Click(object sender, RoutedEventArgs e) {
-            context.Students.Remove(student);
+            context.Students.Remove(Student);
             context.SaveChanges(); //ALSO lazy. CBTL.
             mainPanel.updateEntries(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.
         }
@@ -121,11 +135,11 @@ namespace PowerNote {
         }
 
         public void addCourseToStudent(Course selectedCourse) {
-            if (student.Courses.Contains(selectedCourse)) {
+            if (Student.Courses.Contains(selectedCourse)) {
                 //do nothing
             }
             else {
-                student.Courses.Add(selectedCourse);
+                Student.Courses.Add(selectedCourse);
                 context.SaveChanges();
                 mainPanel.updateEntries(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.  
                 autoCompleteBox.Text = null;
@@ -137,7 +151,8 @@ namespace PowerNote {
         }
 
         public void addTagLabels() {
-            var alphabeticalCourses = student.Courses.OrderBy(c => c.Title);
+            IEnumerable<int> filterCourseIDs = filter.Courses.Select(c => c.CourseID);
+            var alphabeticalCourses = Student.Courses.Where(c => !filterCourseIDs.Contains(c.CourseID)).OrderBy(c => c.Title);
             foreach (Course course in alphabeticalCourses) {
                 Label label = new Label();
                 labelList.Add(label);
@@ -168,14 +183,14 @@ namespace PowerNote {
                 String selectedCourseName = (String) label.Content;
                 Course selectedCourse = null;
                 //Course selectedCourse = student.Courses.Single(c => c.Title == selectedCourseName);
-                foreach (Course course in student.Courses) {
+                foreach (Course course in Student.Courses) {
                     if (course.ToString() == selectedCourseName) {
                         selectedCourse = course;
                         break;
                     }
                 }
                 if (selectedCourse != null)
-                    student.Courses.Remove(selectedCourse);
+                    Student.Courses.Remove(selectedCourse);
                 updateTagLabels(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.
                 context.SaveChanges(); //ALSO lazy. CBTL.
             }
@@ -185,21 +200,12 @@ namespace PowerNote {
             MenuItem menuItem = new MenuItem();
             menuItem = (MenuItem)sender;
             if (menuItem != null) {
-                Student newStudent = new Student(student.Contents + " child");
-                student.Children.Add(newStudent);
+                Student newStudent = new Student(Student.Contents + " child");
+                Student.Children.Add(newStudent);
                 context.Students.Add(newStudent);
                 context.SaveChanges();
                 mainPanel.updateEntries();
                 context.SaveChanges();
-            }
-        }
-
-        public void student_PropertyChanged(Object sender, PropertyChangedEventArgs e) {
-            context.SaveChanges();
-            //RIGHT, so this IS being called, straight after the property is set.
-            //BUT it is not persisting it! Why? ahh! Because it is seeding it every time!
-            if (e.PropertyName == "Priority") {
-                mainPanel.updateEntries();
             }
         }
 

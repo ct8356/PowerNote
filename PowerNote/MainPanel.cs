@@ -13,37 +13,38 @@
         public ControlPanel ControlPanel { get; set; }
         public List<DisplayPanel> DisplayPanels { get; set; }
         public DisplayPanel DisplayPanel { get; set; }
+        public MyContext Context { get; set; }
 
         public MainPanel() {
             //DATA
-            MyContext databaseContext = new MyContext(); //works fine. I guess table is made now.
-            //databaseContext.Database.Delete();
-            //databaseContext.Database.Create(); //YES! Now it works. WHy it no work without this? Me no Know.
+            Context = new MyContext(); //works fine. I guess table is made now.
+            //context.Database.Delete();
+            //context.Database.Create(); //YES! Now it works. WHy it no work without this? Me no Know.
             //ACtually, NO! the database is still not made? WTF? //MAYBE just deleting .mdf files from SQLServer data folder is bad idea.
             //IT PROBS still thinks that they exist. Yes I reckon. BUT then why when I changed Context class name, did it not make NEW one?
             //Ok, so this does indeed, create a database, if not already exist.
             //BUT WHERE is this database created? It is in ProgramFiles, in the SQLServer folder. Let's delete it.
             //Configuration configuration = new Configuration();
-            //configuration.callSeed(databaseContext); //Only need to do this once. Or it will overwrite data.
+            //configuration.callSeed(context); //Only need to do this once. Or it will overwrite data.
             //issues here. cbtl. fix it.
             //CONTROL
-            ControlPanel = new ControlPanel(databaseContext, this);
+            ControlPanel = new ControlPanel(Context, this);
             Children.Add(ControlPanel);
             SetDock(ControlPanel, Dock.Left);
             //ADD DISPLAY PANELS
             DisplayPanels = new List<DisplayPanel>();
             //DISP 1
-            DisplayPanel = new DisplayPanel(databaseContext, this);
+            DisplayPanel = new DisplayPanel(Context, this);
             DisplayPanels.Add(DisplayPanel);
             Children.Add(DisplayPanel);
             SetDock(DisplayPanel, Dock.Left);
             //DISP 2
-            //DisplayPanel disp2 = new DisplayPanel(databaseContext, this);
+            //DisplayPanel disp2 = new DisplayPanel(context, this);
             //DisplayPanels.Add(disp2);
             //Children.Add(disp2);
             //SetDock(disp2, Dock.Left);
             //SIDE-NOTE
-            //SideNotePanel sideNotePanel = new SideNotePanel(databaseContext, this);
+            //SideNotePanel sideNotePanel = new SideNotePanel(context, this);
             //Children.Add(sideNotePanel);
             //SetDock(sideNotePanel, Dock.Bottom);
         }
