@@ -9,7 +9,7 @@
     using PowerNote.DAL;
     using PowerNote.Migrations;
 
-    class MainPanel : DockPanel {
+    public class MainPanel : DockPanel {
         public ControlPanel ControlPanel { get; set; }
         public List<DisplayPanel> DisplayPanels { get; set; }
         public DisplayPanel DisplayPanel { get; set; }

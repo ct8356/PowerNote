@@ -34,3 +34,11 @@ C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86
 C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\MyEntriesView.g.cs
 C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\UserControl1.baml
 C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\UserControl1.g.cs
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PowerNote_MarkupCompile.lref
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\EntryPanel.baml
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\EntryPanel.g.cs
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\TagListBox.baml
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\TagListBox.g.cs
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\MyAutoCompleteBox.baml
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\MyAutoCompleteBox.g.cs

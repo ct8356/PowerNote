@@ -1,11 +1,26 @@
-﻿<UserControl x:Class="PowerNote.MyEntriesView"
+﻿<TreeView x:Class="PowerNote.MyEntriesView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300"> 
-    <TreeView>
-        <TextBlock>asdf</TextBlock>
-    </TreeView>
-</UserControl>
+             xmlns:local="clr-namespace:PowerNote"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300"
+             DataContext="{Binding RelativeSource={RelativeSource Self}}"
+             ItemsSource = "{Binding StudentVMs}">
+    <!-- I tried Binding to FilteredStudents (the queryable) but did not work. Unsurprising really. 
+    Usually cannot bind to a queryable.-->
+    <!-- were so close all along. Just forgot to make view students PUBLIC PROPERTY!-->
+    <TreeView.ItemContainerStyle>
+        <!-- This Style binds a TreeViewItem to a PersonViewModel. -->
+        <Style TargetType="{x:Type TreeViewItem}">
+            <Setter Property="FontWeight" Value="Normal" />
+            <Setter Property="Background" Value="Red" />
+        </Style>
+    </TreeView.ItemContainerStyle>
+    <TreeView.ItemTemplate>
+        <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+            <local:EntryPanel/>
+        </HierarchicalDataTemplate>
+    </TreeView.ItemTemplate>
+</TreeView>

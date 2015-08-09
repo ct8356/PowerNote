@@ -14,9 +14,8 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace PowerNote {
-    class ControlPanel : DockPanel {
+    public class ControlPanel : DockPanel {
         MyContext context;
-        List<Label> labelList;
         MainPanel mainPanel;
         ListBox ListBox { get; set; }
 
@@ -30,8 +29,6 @@ namespace PowerNote {
             SetDock(title, Dock.Top);
             title.FontWeight = FontWeights.Bold;
             //COLLECTION OF TAG LABELS
-            labelList = new List<Label>();
-            //COULD do it like this, BUT then cannot bind it. BETTER, to use listBox/listView?for now,yes
             ListBox = new ListBox();
             context.Courses.OrderBy(c => c.Title).Load(); //explicit load. I.e. submit query now.
             ListBox.ItemsSource = context.Courses.Local;

@@ -24,7 +24,7 @@ namespace PowerNote {
             this.mainPanel = mainPanel;
             student.PropertyChanged += student_PropertyChanged;
             context = mainPanel.Context;
-            EntryPanel entry = new EntryPanel(student, mainPanel);
+            EntryPanel entry = new EntryPanel();
             Header = entry;
         }
         //MAYBE I don't need this class anymore?

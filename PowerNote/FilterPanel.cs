@@ -11,7 +11,7 @@ using System.Windows.Data;
 using PowerNote.Models;
 
 namespace PowerNote {
-    class FilterPanel : StackPanel {
+    public class FilterPanel : StackPanel {
         Label title;
         MyContext context;
         public TaggedObject Filter { get; set; }

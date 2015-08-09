@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Data;
 using System.Windows.Controls;
 using System.ComponentModel; //this allows INotifyPropertyChanged
+using System.Collections.ObjectModel;
 
 namespace PowerNote.Models {
 
@@ -34,8 +35,8 @@ namespace PowerNote.Models {
             }
         }
         public DateTime EnrollmentDate { get; set; }
-        ICollection<Course> courses;
-        public virtual ICollection<Course> Courses {
+        ObservableCollection<Course> courses;
+        public virtual ObservableCollection<Course> Courses {
             get { return courses; }
             set {
                 courses = value;
@@ -45,10 +46,10 @@ namespace PowerNote.Models {
             }
         }
         public virtual Student Parent { get; set; }
-        public virtual ICollection<Student> Children { get; set; }
+        public virtual ObservableCollection<Student> Children { get; set; }
 
         public Student() {
-            Courses = new List<Course>();
+            Courses = new ObservableCollection<Course>();
             Priority = 10;
         }
 

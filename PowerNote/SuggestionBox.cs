@@ -24,13 +24,7 @@ namespace PowerNote {
             context.Courses.Load();
             ItemsSource = context.Courses.Local; //This gives better bind that one below? Yes, certainly. For how can you bind to result of a query? Makes no sense.
             //ItemsSource = context.Courses.Select(c => c);
-            //WOULD be good, to set this to Courses, rather than just strings. CBTL.
             //Now, I THINK itemsSource, does a binding, as long as you fire a PropChanged event from Courses class. Done.
-            //NOW I need to research, how to NICELY add something to the ENROLLMENT TABLE. See Contoso tutorial.
-            //autoCompleteBox.SelectedItem = schoolContext.Courses.ToList()[0].Title; //This does not matter really.
-            //Binding binding2 = new Binding("Title"); //This is the MODEL property it binds to.
-            //binding2.Source = course; // the binding source (which must fire a PROP CHANGED event).
-            //autoCompleteBox.SetBinding(AutoCompleteBox., binding2);
             //UpdateSelection();
             IsTextCompletionEnabled = true; //YES! Works a treat. Just backspace if dont want text completion.
             //BUT it would be good if it would highlight the box below too. for easy up and down arrowing. //Not important though.

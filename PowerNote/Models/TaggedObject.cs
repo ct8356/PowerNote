@@ -5,7 +5,7 @@ using System.Text;
 using System.ComponentModel; //this allows INotifyPropertyChanged
 
 namespace PowerNote.Models {
-    class TaggedObject : INotifyPropertyChanged {
+    public class TaggedObject : INotifyPropertyChanged {
         public event PropertyChangedEventHandler PropertyChanged;
 
         ICollection<Course> courses;

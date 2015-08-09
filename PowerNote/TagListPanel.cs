@@ -27,7 +27,6 @@ namespace PowerNote {
             Orientation = Orientation.Horizontal;
             //LABELS
             labelList = new List<Label>();
-            //SUGGESTIONBOX
             addTagLabels();//courseList.Property changed += courseList_PropertyChanged;
             //AUTOCOMPLETEBOX
             autoCompleteBox = new SuggestionBox(context);

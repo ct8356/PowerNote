@@ -13,14 +13,15 @@ using System.Windows.Input;
 
 namespace PowerNote {
 
-    class DisplayPanel : DockPanel {
+    public class DisplayPanel : DockPanel {
+            public UserControl1 uc;
             Label title;
             MyContext context;
             public FilterPanel FilterPanel { get; set; }
             public SortPanel SortPanel { get; set; }
             public OptionsPanel OptionsPanel { get; set; }
             public List<String> ColumnNames { get; set; }
-            MyEntriesView EntriesView { get; set; }
+            public MyEntriesView EntriesView { get; set; }
             public MainPanel MainPanel { get; set; }
 
             public DisplayPanel(MyContext context, MainPanel mainPanel) {
@@ -53,17 +54,14 @@ namespace PowerNote {
                 Children.Add(columnNamePanel);
                 SetDock(columnNamePanel, Dock.Top);
                 //ENTRY PANEL
-                //UserControl1 fad = new UserControl1();
-                //Children.Add(fad);
-                EntriesView = new MyEntriesView();
+                EntriesView = new MyEntriesView(context, this);
                 Children.Add(EntriesView);
                 SetDock(EntriesView, Dock.Top);
+                //USER CONTROL
+                //uc = new UserControl1();
+                //Children.Add(uc);
+                //SetDock(uc, Dock.Top);
                 //OTHER
-                //label2 = new Label();
-                //Binding binding = new Binding("FirstMidName"); //This is the MODEL property it binds to.
-                //binding.Source = context.Students.ToList()[0]; // the binding source (which must fire a PROP CHANGED event).
-                //label2.SetBinding(Label.ContentProperty, binding);
-                //Children.Add(label2);
                 LastChildFill = false;
             }
 
@@ -74,6 +72,7 @@ namespace PowerNote {
 
             public void updateEntries() {
                 EntriesView.updateEntries();
+                //uc.addTo();
             }
     }
 }

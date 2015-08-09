@@ -11,7 +11,7 @@ using System.Windows.Data;
 using PowerNote.Models;
 
 namespace PowerNote {
-    class OptionsPanel : StackPanel {
+    public class OptionsPanel : StackPanel {
         Label title;
         MyContext context;
         public bool ShowAllEntriesBool { get; set; }

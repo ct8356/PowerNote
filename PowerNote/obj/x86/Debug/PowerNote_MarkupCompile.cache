@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\App.xaml
-3-875512121
+6-313472290
 
-28-1209896501
-16-476835414
-MainWindow.xaml;MyEntriesView.xaml;UserControl1.xaml;
+311761042788
+171052703605
+EntryPanel.xaml;MainWindow.xaml;MyAutoCompleteBox.xaml;MyEntriesView.xaml;TagListBox.xaml;UserControl1.xaml;
 
 False
 

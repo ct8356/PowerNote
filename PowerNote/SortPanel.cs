@@ -11,7 +11,7 @@ using System.Windows.Data;
 using PowerNote.Models;
 
 namespace PowerNote {
-    class SortPanel : StackPanel {
+    public class SortPanel : StackPanel {
         Label title;
         MyContext context;
         public ComboBox ComboBox { get; set; }
