@@ -15,7 +15,7 @@ using System.Windows.Input;
 namespace PowerNote {
     class TagListPanel : StackPanel {
         MyContext context;
-        AutoCompleteBox autoCompleteBox;
+        MyAutoCompleteBox autoCompleteBox;
         TaggedObject taggedObject;
         List<Label> labelList;
         DisplayPanel displayPanel; 
@@ -29,7 +29,9 @@ namespace PowerNote {
             labelList = new List<Label>();
             addTagLabels();//courseList.Property changed += courseList_PropertyChanged;
             //AUTOCOMPLETEBOX
-            autoCompleteBox = new SuggestionBox(context);
+            autoCompleteBox = new MyAutoCompleteBox();
+            context.Tags.Load();
+            autoCompleteBox.ItemsSource = context.Tags.Local;
             addAutoCompleteBox();
             //SUBSCRIBE TO STUFF
             //autoCompleteBox.SelectionChanged += autoCompleteBox_SelectionChanged;
@@ -43,9 +45,9 @@ namespace PowerNote {
             if (e.Key == Key.Return) {
                 AutoCompleteBox autoCompleteBox = (AutoCompleteBox)sender;
                 List<String> courseStrings = new List<String>();
-                List<Course> courses = new List<Course>();
-                courses = context.Courses.Select(c => c).ToList<Course>();
-                foreach (Course course in courses) {
+                List<Tag> courses = new List<Tag>();
+                courses = context.Tags.Select(c => c).ToList<Tag>();
+                foreach (Tag course in courses) {
                     courseStrings.Add(course.ToString());
                 }
                 if (courseStrings.Contains(autoCompleteBox.Text)) {
@@ -64,7 +66,7 @@ namespace PowerNote {
         public void autoCompleteBox_SelectionChanged(object sender, RoutedEventArgs e) {
             //Add new tag to Navigation property
             AutoCompleteBox autoCompleteBox = (AutoCompleteBox)sender;
-            Course selectedCourse = (Course)autoCompleteBox.SelectedItem;
+            Tag selectedCourse = (Tag)autoCompleteBox.SelectedItem;
             addCourseToStudent(selectedCourse);
             displayPanel = (DisplayPanel)((FilterPanel)Parent).Parent;
             MainPanel mainPanel = (MainPanel)displayPanel.Parent;
@@ -75,12 +77,12 @@ namespace PowerNote {
             Children.Add(autoCompleteBox);
         }
 
-        public void addCourseToStudent(Course selectedCourse) {
-            if (taggedObject.Courses.Contains(selectedCourse)) {
+        public void addCourseToStudent(Tag selectedCourse) {
+            if (taggedObject.Tags.Contains(selectedCourse)) {
                 //do nothing
             }
             else {
-                taggedObject.Courses.Add(selectedCourse);
+                taggedObject.Tags.Add(selectedCourse);
                 context.SaveChanges();
                 updateTagLabels(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.  
                 autoCompleteBox.Text = null;
@@ -88,7 +90,7 @@ namespace PowerNote {
         }
 
         public void addTagLabels() {
-            foreach (Course course in taggedObject.Courses) {
+            foreach (Tag course in taggedObject.Tags) {
                 Label label = new Label();
                 labelList.Add(label);
                 Binding binding2 = new Binding("Title"); //This is the MODEL property it binds to.
@@ -111,16 +113,16 @@ namespace PowerNote {
                 ContextMenu contextMenu = (ContextMenu)menuItem.Parent;
                 Label label = (Label)((Popup)contextMenu.Parent).PlacementTarget;
                 String selectedCourseName = (String)label.Content;
-                Course selectedCourse = null;
+                Tag selectedCourse = null;
                 //Course selectedCourse = student.Courses.Single(c => c.Title == selectedCourseName);
-                foreach (Course course in taggedObject.Courses) {
+                foreach (Tag course in taggedObject.Tags) {
                     if (course.ToString() == selectedCourseName) {
                         selectedCourse = course;
                         break;
                     }
                 }
                 if (selectedCourse != null)
-                    taggedObject.Courses.Remove(selectedCourse);
+                    taggedObject.Tags.Remove(selectedCourse);
                 updateTagLabels(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.
                 displayPanel.updateEntries(); //CBTL lazy but I don't care.
                 context.SaveChanges(); //ALSO lazy. CBTL.

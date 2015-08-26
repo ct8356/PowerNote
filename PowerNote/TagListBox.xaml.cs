@@ -34,10 +34,10 @@ namespace PowerNote {
                 //IF this listBox is bound to student.courses, will deleting an item, delete the course from student?
                 //MAYBE, BUT still, it probably would NOT do a SAVECHANGES...
                 //MAybe could add a LISTENER for this though...
-                Course selectedCourse = Items[SelectedIndex] as Course; //the line i was missing.
+                Tag selectedCourse = Items[SelectedIndex] as Tag; //the line i was missing.
                 //Course selectedCourse = student.Courses.Single(c => c.Title == selectedCourseName);   
                 if (selectedCourse != null) {
-                    ObservableCollection<Course> myList = (ItemsSource as ObservableCollection<Course>);
+                    ObservableCollection<Tag> myList = (ItemsSource as ObservableCollection<Tag>);
                     myList.Remove(selectedCourse);
                 }
                 //MAYBE fire an event here, so that ENTRYPANEL, or TREEVIEW knows to save changes?

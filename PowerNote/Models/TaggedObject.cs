@@ -8,13 +8,13 @@ namespace PowerNote.Models {
     public class TaggedObject : INotifyPropertyChanged {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        ICollection<Course> courses;
-        public virtual ICollection<Course> Courses {
-            get { return courses; }
+        ICollection<Tag> tags;
+        public virtual ICollection<Tag> Tags {
+            get { return tags; }
             set {
-                courses = value;
+                tags = value;
                 if (PropertyChanged != null) {
-                    PropertyChanged(this, new PropertyChangedEventArgs("Courses"));
+                    PropertyChanged(this, new PropertyChangedEventArgs("Tags"));
                     //This basically means, when set, FIRE THE EVENT, "propertyChanged".
                 }
             }

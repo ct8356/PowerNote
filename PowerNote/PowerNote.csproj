@@ -94,40 +94,41 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ColumnNamePanel.cs" />
     <Compile Include="ControlPanel.cs" />
     <Compile Include="DAL\MyContext.cs" />
     <Compile Include="DisplayPanel.cs" />
-    <Compile Include="EntriesView.cs" />
-    <Compile Include="EntryPanel.xaml.cs">
-      <DependentUpon>EntryPanel.xaml</DependentUpon>
+    <Compile Include="EntryPanel.cs" />
+    <Compile Include="ToDoPanel.xaml.cs">
+      <DependentUpon>ToDoPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="FilterPanel.cs" />
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\Course.cs" />
-    <Compile Include="Models\Student.cs" />
+    <Compile Include="Models\Entry.cs" />
+    <Compile Include="Models\Part.cs" />
+    <Compile Include="Models\Tag.cs" />
+    <Compile Include="Models\ToDo.cs" />
     <Compile Include="Models\TaggedObject.cs" />
-    <Compile Include="EntryNode.cs" />
     <Compile Include="MyAutoCompleteBox.xaml.cs">
       <DependentUpon>MyAutoCompleteBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MyEntriesView.xaml.cs">
-      <DependentUpon>MyEntriesView.xaml</DependentUpon>
+    <Compile Include="EntriesTreeView.xaml.cs">
+      <DependentUpon>EntriesTreeView.xaml</DependentUpon>
     </Compile>
     <Compile Include="OptionsPanel.cs" />
+    <Compile Include="PartPanel.xaml.cs">
+      <DependentUpon>PartPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SideEntry.cs" />
     <Compile Include="SideNotePanel.cs" />
     <Compile Include="SortPanel.cs" />
-    <Compile Include="SuggestionBox.cs" />
     <Compile Include="TagListBox.xaml.cs">
       <DependentUpon>TagListBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="TagListPanel.cs" />
-    <Compile Include="UserControl1.xaml.cs">
-      <DependentUpon>UserControl1.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="ViewModels\EntryVM.cs" />
+    <Compile Include="ViewModels\PartVM.cs" />
     <Compile Include="ViewModels\StudentVM.cs" />
-    <Page Include="EntryPanel.xaml">
+    <Page Include="ToDoPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -149,15 +150,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MyEntriesView.xaml">
+    <Page Include="EntriesTreeView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PartPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="TagListBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UserControl1.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

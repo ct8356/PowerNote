@@ -17,10 +17,10 @@ using System.Windows.Input;
 namespace PowerNote {
     class SideEntry : StackPanel {
         MyContext context;
-        Student Student { get; set; }
-        List<Course> courseList;
+        ToDo Student { get; set; }
+        List<Tag> courseList;
         List<Label> labelList;
-        SuggestionBox autoCompleteBox;
+        MyAutoCompleteBox autoCompleteBox;
         CheckBox checkBox { get; set; }
         public TextBox textBox { get; set; }
         DisplayPanel displayPanel;
@@ -44,17 +44,18 @@ namespace PowerNote {
             //THEN Bind it... ONCE IT HAS BEEN FILLED.
             //THEN CLEAR when button pressed.
             //TAG LABELS
-            courseList = new List<Course>();
+            courseList = new List<Tag>();
             labelList = new List<Label>();
             //addTagLabels();//courseList.Property changed += courseList_PropertyChanged;
             //AUTOCOMPLETEBOX
-            autoCompleteBox = new SuggestionBox(context);
+            autoCompleteBox = new MyAutoCompleteBox();
+            //need to call the load, local thing here.
             addAutoCompleteBox();
             //SUBSCRIBE TO STUFF
             autoCompleteBox.KeyUp += autoCompleteBox_KeyUp;
         }
 
-        public void bindTextBox(Student student) {
+        public void bindTextBox(ToDo student) {
             this.Student = student;
             Binding binding = new Binding("Contents"); //This is the MODEL property it binds to.
             binding.Source = Student; // the binding source (which must fire a PROP CHANGED event).
@@ -68,9 +69,9 @@ namespace PowerNote {
             if (e.Key == Key.Return) {
                 AutoCompleteBox autoCompleteBox = (AutoCompleteBox)sender;
                 List<String> courseStrings = new List<String>();
-                List<Course> courses = new List<Course>();
-                courses = context.Courses.Select(c => c).ToList<Course>();
-                foreach (Course course in courses) {
+                List<Tag> courses = new List<Tag>();
+                courses = context.Tags.Select(c => c).ToList<Tag>();
+                foreach (Tag course in courses) {
                     courseStrings.Add(course.ToString());
                 }
                 if (courseStrings.Contains(autoCompleteBox.Text)) {
@@ -83,9 +84,9 @@ namespace PowerNote {
                 else {
                     //IF no, then create new entry.
                     if (autoCompleteBox.Text != null && autoCompleteBox.Text != "") {
-                        Course newCourse = new Course();
+                        Tag newCourse = new Tag();
                         newCourse.Title = autoCompleteBox.Text;
-                        context.Courses.Add(newCourse);
+                        context.Tags.Add(newCourse);
                         addCourseToStudent(newCourse);
                     }
                 }
@@ -95,16 +96,16 @@ namespace PowerNote {
         public void autoCompleteBox_SelectionChanged(object sender, RoutedEventArgs e) {
             //Add new tag to Navigation property
             AutoCompleteBox autoCompleteBox = (AutoCompleteBox)sender;
-            Course selectedCourse = (Course) autoCompleteBox.SelectedItem;
+            Tag selectedCourse = (Tag) autoCompleteBox.SelectedItem;
             addCourseToStudent(selectedCourse);          
         }
 
-        public void addCourseToStudent(Course selectedCourse) {
-            if (Student.Courses.Contains(selectedCourse)) {
+        public void addCourseToStudent(Tag selectedCourse) {
+            if (Student.Tags.Contains(selectedCourse)) {
                 //do nothing
             }
             else {
-                Student.Courses.Add(selectedCourse);
+                Student.Tags.Add(selectedCourse);
                 context.SaveChanges();
                 updateTagLabels(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.  
                 autoCompleteBox.Text = null;
@@ -116,7 +117,7 @@ namespace PowerNote {
         }
 
         public void addTagLabels() {
-            foreach (Course course in Student.Courses) {
+            foreach (Tag course in Student.Tags) {
                 Label label = new Label();
                 labelList.Add(label);
                 Binding binding2 = new Binding("Title"); //This is the MODEL property it binds to.
@@ -143,16 +144,16 @@ namespace PowerNote {
                 ContextMenu contextMenu = (ContextMenu)menuItem.Parent;
                 Label label = (Label)((Popup)contextMenu.Parent).PlacementTarget;
                 String selectedCourseName = (String) label.Content;
-                Course selectedCourse = null;
+                Tag selectedCourse = null;
                 //Course selectedCourse = student.Courses.Single(c => c.Title == selectedCourseName);
-                foreach (Course course in Student.Courses) {
+                foreach (Tag course in Student.Tags) {
                     if (course.ToString() == selectedCourseName) {
                         selectedCourse = course;
                         break;
                     }
                 }
                 if (selectedCourse != null)
-                    Student.Courses.Remove(selectedCourse);
+                    Student.Tags.Remove(selectedCourse);
                 updateTagLabels(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.
                 context.SaveChanges(); //ALSO lazy. CBTL.
             }

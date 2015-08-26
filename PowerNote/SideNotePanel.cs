@@ -51,8 +51,8 @@ namespace PowerNote {
 
         public void sideEntry_LostFocus(object sender, RoutedEventArgs e) {
             if (sideEntry.textBox.Text != null && sideEntry.textBox.Text != "") {
-                Student newStudent = new Student(sideEntry.textBox.Text);
-                context.Students.Add(newStudent);
+                ToDo newStudent = new ToDo(sideEntry.textBox.Text);
+                context.ToDos.Add(newStudent);
                 context.SaveChanges();
                 mainPanel.DisplayPanel.updateEntries();
                 //CBTL

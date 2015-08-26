@@ -18,14 +18,14 @@
         public MainPanel() {
             //DATA
             Context = new MyContext(); //works fine. I guess table is made now.
-            //context.Database.Delete();
-            //context.Database.Create(); //YES! Now it works. WHy it no work without this? Me no Know.
+            Context.Database.Delete(); Context.Database.Create(); 
+            //YES! Now it works. WHy it no work without this? Me no Know.
             //ACtually, NO! the database is still not made? WTF? //MAYBE just deleting .mdf files from SQLServer data folder is bad idea.
             //IT PROBS still thinks that they exist. Yes I reckon. BUT then why when I changed Context class name, did it not make NEW one?
             //Ok, so this does indeed, create a database, if not already exist.
             //BUT WHERE is this database created? It is in ProgramFiles, in the SQLServer folder. Let's delete it.
-            //Configuration configuration = new Configuration();
-            //configuration.callSeed(context); //Only need to do this once. Or it will overwrite data.
+            Configuration configuration = new Configuration(); configuration.callSeed(Context); 
+            //Only need to do this once. Or it will overwrite data.
             //issues here. cbtl. fix it.
             //CONTROL
             ControlPanel = new ControlPanel(Context, this);

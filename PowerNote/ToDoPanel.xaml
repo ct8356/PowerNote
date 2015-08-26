@@ -1,0 +1,14 @@
+﻿<StackPanel x:Class="PowerNote.ToDoPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:PowerNote"
+             mc:Ignorable="d"
+             d:DesignWidth="300"
+             Orientation="Horizontal">
+    <TextBox Name="TextBox" Text="{Binding Contents}" BorderBrush="WhiteSmoke"/>
+    <TextBox Name="Priority" Text="{Binding Priority}" BorderBrush="WhiteSmoke"/>
+    <local:TagListBox ItemsSource="{Binding Tags}"/>
+    <local:MyAutoCompleteBox x:Name="MyAutoCompleteBox" ItemsSource="{Binding AllCourses}"/>
+</StackPanel>

@@ -54,14 +54,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PowerNote.exe" size="55808">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PowerNote.exe" size="57856">
       <assemblyIdentity name="PowerNote" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>7g7E2TzG+czsxDtbEeR7aKwAvjI=</dsig:DigestValue>
+        <dsig:DigestValue>AXXNasM/AE01EjB7yu132PM86dU=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

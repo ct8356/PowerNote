@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 
 namespace PowerNote.Models {
-    public class Course : INotifyPropertyChanged {
+    public class Tag : INotifyPropertyChanged {
         public event PropertyChangedEventHandler PropertyChanged;
         //[DatabaseGenerated(DatabaseGeneratedOption.None)] //?? CBTL? important?
-        public int CourseID { get; set; }
+        public int TagID { get; set; }
         string title;
         public string Title {
             get { return title; }
@@ -17,14 +17,13 @@ namespace PowerNote.Models {
                 }
             }
         }
-        public int Credits { get; set; }
-        public virtual ICollection<Student> Students { get; set; }
+        public virtual ICollection<Entry> Entries { get; set; }
 
-        public Course() {
+        public Tag() {
             //do nothing
         }
 
-        public Course(string title) {
+        public Tag(string title) {
             this.title = title;
         }
 

@@ -16,25 +16,24 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace PowerNote {
-    public partial class EntryPanel : StackPanel {
+    public partial class ToDoPanel : StackPanel {
 
-        public EntryPanel() {
+        public ToDoPanel() {
             InitializeComponent();
             //RIGHT CLICKS
-            //TBH CHRIS! I BET THE TREEVIEW DEALS WITH THIS STUFF!!! LIKE LISTBOX DOES!!!
-            //WELL ACTUALLY! APPARENTLY, in MVVM, it is the VIEWMODEL that deals with this stuff.
-            //If gonna use XAML, then fair play, do it their way.
+            //Could do this in treeView. Does not really matter.
+            //PROBS doing it in treeView means less instances...
             TextBox.ContextMenu = new ContextMenu();
             MenuItem insertNote = new MenuItem();
-            insertNote.Header = "Insert note";
+            insertNote.Header = "Insert entry";
             insertNote.Click += insertNote_Click;
             TextBox.ContextMenu.Items.Add(insertNote);
             MenuItem insertSubNote = new MenuItem();
-            insertSubNote.Header = "Insert sub-note";
+            insertSubNote.Header = "Insert sub-entry";
             insertSubNote.Click += insertSubNote_Click;
             TextBox.ContextMenu.Items.Add(insertSubNote);
             MenuItem deleteEntry = new MenuItem();
-            deleteEntry.Header = "Delete note";
+            deleteEntry.Header = "Delete entry";
             deleteEntry.Click += deleteEntry_Click;
             TextBox.ContextMenu.Items.Add(deleteEntry); //this causes invocation error.
             //Easier to do this in XAML???
@@ -45,10 +44,10 @@ namespace PowerNote {
         }
 
         public void deleteEntry_Click(object sender, RoutedEventArgs e) {
-            (DataContext as StudentVM).Context.Students.Remove((DataContext as StudentVM).Student);
-            (DataContext as StudentVM).Context.SaveChanges(); //ALSO lazy. CBTL.
+            (DataContext as StudentVM).Context.ToDos.Remove((DataContext as StudentVM).Student);
+            (DataContext as EntryVM).Context.SaveChanges(); //ALSO lazy. CBTL.
             //SO NOTE: OF COURSE, easier you just do these things, IN THE VIEWMODEL!
-            (DataContext as StudentVM).MainPanel.updateEntries(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.
+            (DataContext as EntryVM).MainPanel.updateEntries(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.
         }
 
         public void autoCompleteBox_KeyUp(object sender, KeyEventArgs e) {
@@ -57,9 +56,9 @@ namespace PowerNote {
             if (e.Key == Key.Return) {
                 AutoCompleteBox autoCompleteBox = (AutoCompleteBox)sender;
                 List<String> courseStrings = new List<String>();
-                List<Course> courses = new List<Course>();
-                courses = (DataContext as StudentVM).Context.Courses.Select(c => c).ToList<Course>();
-                foreach (Course course in courses) {
+                List<Tag> courses = new List<Tag>();
+                courses = (DataContext as StudentVM).Context.Tags.Select(c => c).ToList<Tag>();
+                foreach (Tag course in courses) {
                     courseStrings.Add(course.ToString());
                 }
                 if (courseStrings.Contains(autoCompleteBox.Text)) {
@@ -72,11 +71,11 @@ namespace PowerNote {
                 else {
                     //IF no, then create new entry.
                     if (autoCompleteBox.Text != null && autoCompleteBox.Text != "") {
-                        Course newCourse = new Course();
+                        Tag newCourse = new Tag();
                         newCourse.Title = autoCompleteBox.Text;
-                        (DataContext as StudentVM).Context.Courses.Add(newCourse);
+                        (DataContext as StudentVM).Context.Tags.Add(newCourse);
                         (DataContext as StudentVM).Context.SaveChanges();
-                        addCourseToStudent(newCourse);
+                        addTagToEntry(newCourse);
                     }
                 }
             }
@@ -85,53 +84,53 @@ namespace PowerNote {
         public void autoCompleteBox_SelectionChanged(object sender, RoutedEventArgs e) {
             //Add new tag to Navigation property
             AutoCompleteBox autoCompleteBox = (AutoCompleteBox)sender;
-            Course selectedCourse = (Course)autoCompleteBox.SelectedItem;
-            addCourseToStudent(selectedCourse);
+            Tag selectedCourse = (Tag)autoCompleteBox.SelectedItem;
+            addTagToEntry(selectedCourse);
         }
 
-        public void addCourseToStudent(Course selectedCourse) {
-            if ((DataContext as StudentVM).Courses.Contains(selectedCourse)) {
+        public void addTagToEntry(Tag selectedCourse) {
+            if ((DataContext as EntryVM).Tags.Contains(selectedCourse)) {
                 //do nothing
             }
             else {
-                (DataContext as StudentVM).Courses.Add(selectedCourse);
-                (DataContext as StudentVM).Context.SaveChanges();
-                (DataContext as StudentVM).MainPanel.updateEntries(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.  
+                (DataContext as EntryVM).Tags.Add(selectedCourse);
+                (DataContext as EntryVM).Context.SaveChanges();
+                (DataContext as EntryVM).MainPanel.updateEntries(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.  
                 MyAutoCompleteBox.Text = null;
             }
         }
 
-        public void addTagLabels() {
-            IEnumerable<int> filterCourseIDs = (DataContext as StudentVM).MainPanel.DisplayPanel
-                .FilterPanel.Filter.Courses.Select(c => c.CourseID);
-            var alphabeticalCourses = (DataContext as StudentVM)
-                .Courses.Where(c => !filterCourseIDs.Contains(c.CourseID)).OrderBy(c => c.Title);
-        } //WHOLE THING needs to be rewritten, to suit LISTBOX.
+        public void filterAndSortTagsShown() {
+            IEnumerable<int> filterCourseIDs = (DataContext as EntryVM).MainPanel.DisplayPanel
+                .FilterPanel.Filter.Tags.Select(c => c.TagID);
+            var alphabeticalCourses = (DataContext as EntryVM)
+                .Tags.Where(c => !filterCourseIDs.Contains(c.TagID)).OrderBy(c => c.Title);
+        }
 
         public void courseList_PropertyChanged(Object sender, EventArgs e) {
             updateTagLabels();
         }
 
-        public void delete_Click(Object sender, EventArgs e) {
-            MenuItem menuItem = new MenuItem();
-            menuItem = (MenuItem)sender;
-            if (menuItem != null) {
-                ContextMenu contextMenu = (ContextMenu)menuItem.Parent;
-                Label label = (Label)((Popup)contextMenu.Parent).PlacementTarget;
-                String selectedCourseName = (String)label.Content;
-                Course selectedCourse = null;
-                foreach (Course course in (DataContext as StudentVM).Courses) {
-                    if (course.ToString() == selectedCourseName) {
-                        selectedCourse = course;
-                        break;
-                    }
-                }
-                if (selectedCourse != null)
-                    (DataContext as StudentVM).Courses.Remove(selectedCourse);
-                updateTagLabels(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.
-                (DataContext as StudentVM).Context.SaveChanges(); //ALSO lazy. CBTL.
-            }
-        }
+        //public void delete_Click(Object sender, EventArgs e) {
+        //    MenuItem menuItem = new MenuItem();
+        //    menuItem = (MenuItem)sender;
+        //    if (menuItem != null) {
+        //        ContextMenu contextMenu = (ContextMenu)menuItem.Parent;
+        //        Label label = (Label)((Popup)contextMenu.Parent).PlacementTarget;
+        //        String selectedCourseName = (String)label.Content;
+        //        Tag selectedCourse = null;
+        //        foreach (Tag course in (DataContext as StudentVM).Tags) {
+        //            if (course.ToString() == selectedCourseName) {
+        //                selectedCourse = course;
+        //                break;
+        //            }
+        //        }
+        //        if (selectedCourse != null)
+        //            (DataContext as StudentVM).Tags.Remove(selectedCourse);
+        //        updateTagLabels(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.
+        //        (DataContext as StudentVM).Context.SaveChanges(); //ALSO lazy. CBTL.
+        //    }
+        //}
 
         public void insertNote_Click(Object sender, EventArgs e) {
             MenuItem menuItem = new MenuItem();
@@ -154,12 +153,12 @@ namespace PowerNote {
             MenuItem menuItem = new MenuItem();
             menuItem = (MenuItem)sender;
             if (menuItem != null) {
-                (DataContext as StudentVM).insertSubNote(DataContext as StudentVM);
+                (DataContext as StudentVM).insertChild(DataContext as StudentVM);
             }
         }
 
         public void updateTagLabels() {
-            addTagLabels();
+            filterAndSortTagsShown();
         }
 
     }

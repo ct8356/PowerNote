@@ -7,17 +7,16 @@ using System.Collections.ObjectModel;
 
 namespace PowerNote.Models {
 
-    public class Student : INotifyPropertyChanged {
+    public class ToDo : INotifyPropertyChanged {
         public event PropertyChangedEventHandler PropertyChanged;
         //SOME people say, models should know nothing about your DALayer.
         //WHICH might be true. Just make DAL respond to events started here...
-        public int StudentID { get; set; }
-        public string LastName { get; set; }
-        string contents;
+        public int ToDoID { get; set; }
+        string content;
         public string Contents {
-            get { return contents; }
+            get { return content; }
             set {
-                contents = value;
+                content = value;
                 if (PropertyChanged != null) {
                     PropertyChanged(this, new PropertyChangedEventArgs("Contents"));
                     //This basically means, when set, FIRE THE EVENT, "propertyChanged".
@@ -35,27 +34,26 @@ namespace PowerNote.Models {
             }
         }
         public DateTime EnrollmentDate { get; set; }
-        ObservableCollection<Course> courses;
-        public virtual ObservableCollection<Course> Courses {
-            get { return courses; }
+        ObservableCollection<Tag> tags;
+        public virtual ObservableCollection<Tag> Tags {
+            get { return tags; }
             set {
-                courses = value;
+                tags = value;
                 if (PropertyChanged != null) {
-                    PropertyChanged(this, new PropertyChangedEventArgs("Courses"));
+                    PropertyChanged(this, new PropertyChangedEventArgs("Tags"));
                 }
             }
         }
-        public virtual Student Parent { get; set; }
-        public virtual ObservableCollection<Student> Children { get; set; }
+        public virtual ToDo Parent { get; set; }
+        public virtual ObservableCollection<ToDo> Children { get; set; }
 
-        public Student() {
-            Courses = new ObservableCollection<Course>();
+        public ToDo() {
+            Tags = new ObservableCollection<Tag>();
             Priority = 10;
         }
 
-        public Student(string contents) : this() {
-            this.contents = contents;
-            LastName = "Alexander";
+        public ToDo(string contents) : this() {
+            this.content = contents;
             EnrollmentDate = DateTime.Parse("2010-09-01");
         }
     }

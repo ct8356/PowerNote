@@ -25,7 +25,7 @@ namespace PowerNote {
             Children.Add(title);
             //TAG LIST PANEL
             Filter = new TaggedObject();
-            Filter.Courses = new List<Course>();
+            Filter.Tags = new List<Tag>();
             //filter.Courses.Add(new Course("Chemistry"));
             TagListPanel tagListPanel = new TagListPanel(Filter, context);
             Children.Add(tagListPanel);

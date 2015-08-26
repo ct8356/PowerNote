@@ -14,14 +14,13 @@ using System.Windows.Input;
 namespace PowerNote {
 
     public class DisplayPanel : DockPanel {
-            public UserControl1 uc;
             Label title;
             MyContext context;
             public FilterPanel FilterPanel { get; set; }
             public SortPanel SortPanel { get; set; }
             public OptionsPanel OptionsPanel { get; set; }
             public List<String> ColumnNames { get; set; }
-            public MyEntriesView EntriesView { get; set; }
+            public EntriesTreeView EntriesView { get; set; }
             public MainPanel MainPanel { get; set; }
 
             public DisplayPanel(MyContext context, MainPanel mainPanel) {
@@ -46,21 +45,13 @@ namespace PowerNote {
                 OptionsPanel = new OptionsPanel(context);
                 Children.Add(OptionsPanel);
                 SetDock(OptionsPanel, Dock.Top);
-
                 //COLUMN NAME PANEL
                 //var colNames = typeof(Student).GetProperties().Select(a => a.Name).ToList();
                 ColumnNames = new List<String>() { "Contents", "Priority" };
-                ColumnNamePanel columnNamePanel = new ColumnNamePanel(this);
-                Children.Add(columnNamePanel);
-                SetDock(columnNamePanel, Dock.Top);
                 //ENTRY PANEL
-                EntriesView = new MyEntriesView(context, this);
+                EntriesView = new EntriesTreeView(context, this);
                 Children.Add(EntriesView);
                 SetDock(EntriesView, Dock.Top);
-                //USER CONTROL
-                //uc = new UserControl1();
-                //Children.Add(uc);
-                //SetDock(uc, Dock.Top);
                 //OTHER
                 LastChildFill = false;
             }

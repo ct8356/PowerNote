@@ -24,7 +24,6 @@ namespace PowerNote {
 
         public MainWindow() {
             WindowState = WindowState.Maximized;
-            Background = SystemColors.ControlLightBrush;
             //WINDOW STUFF
             //grid = new MyGrid();
             button1 = new Button();

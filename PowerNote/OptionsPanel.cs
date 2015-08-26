@@ -12,7 +12,6 @@ using PowerNote.Models;
 
 namespace PowerNote {
     public class OptionsPanel : StackPanel {
-        Label title;
         MyContext context;
         public bool ShowAllEntriesBool { get; set; }
         public CheckBox ShowAllEntries { get; set; }
@@ -23,10 +22,6 @@ namespace PowerNote {
             this.context = context;
             //PANEL
             Orientation = Orientation.Horizontal;
-            //TITLE
-            title = new Label();
-            title.Content = "Options panel:";
-            Children.Add(title);
             //SHOW ALL ENTRIES
             ShowAllEntries = new CheckBox();
             ShowAllEntries.Content = "Show all entries";

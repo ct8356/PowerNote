@@ -30,8 +30,8 @@ namespace PowerNote {
             title.FontWeight = FontWeights.Bold;
             //COLLECTION OF TAG LABELS
             ListBox = new ListBox();
-            context.Courses.OrderBy(c => c.Title).Load(); //explicit load. I.e. submit query now.
-            ListBox.ItemsSource = context.Courses.Local;
+            context.Tags.OrderBy(c => c.Title).Load(); //explicit load. I.e. submit query now.
+            ListBox.ItemsSource = context.Tags.Local;
             ListBox.Items.SortDescriptions.Add(new SortDescription("Title", ListSortDirection.Ascending)); //"" is for property name.
             ListBox.ContextMenu = new ContextMenu();
             MenuItem delete_menuItem = new MenuItem();
@@ -49,10 +49,10 @@ namespace PowerNote {
                 ListBox listBox = (ListBox)contextMenu.PlacementTarget;
                 //ListBox listBox = (ListBox)menuItem.DataContext;
                 if (listBox.SelectedIndex == -1) return;
-                Course selectedCourse = (Course)listBox.Items[listBox.SelectedIndex]; //the line i was missing.
+                Tag selectedCourse = (Tag)listBox.Items[listBox.SelectedIndex]; //the line i was missing.
                 //Course selectedCourse = student.Courses.Single(c => c.Title == selectedCourseName);   
                 if (selectedCourse != null)
-                    context.Courses.Remove(selectedCourse);
+                    context.Tags.Remove(selectedCourse);
                 context.SaveChanges(); //ALSO lazy. CBTL.
                 mainPanel.updateEntries();
             }
