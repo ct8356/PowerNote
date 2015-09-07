@@ -23,29 +23,36 @@ namespace PowerNote.Migrations {
             //OK! Perhaps, it is actually THIS method, that creates the database.
             //NOT the create context instantiation...
             //(I guess create(), will still do the trick. but NOT context instantiation...nec.) ??
-            var todos = new List<ToDo> {
-                new ToDo { Contents = "Return ipod",            EnrollmentDate = DateTime.Parse("2010-09-01") },
-                new ToDo { Contents = "Check ipod on Jon's PC", EnrollmentDate = DateTime.Parse("2012-09-01") },
-                new ToDo { Contents = "Fix bottom bracket",     EnrollmentDate = DateTime.Parse("2013-09-01") },
-                new ToDo { Contents = "Straighten back wheel",  EnrollmentDate = DateTime.Parse("2012-09-01") },
-                new ToDo { Contents = "Ask for roller chair",   EnrollmentDate = DateTime.Parse("2012-09-01") },
-                new ToDo { Contents = "Ask for TV remote",      EnrollmentDate = DateTime.Parse("2011-09-01") },
-                new ToDo { Contents = "Ask for shelves",        EnrollmentDate = DateTime.Parse("2013-09-01") },
-                new ToDo { Contents = "Fix your pannier",       EnrollmentDate = DateTime.Parse("2005-08-11") }
+            var todos = new List<Task> {
+                new Task { Contents = "Return ipod"},
+                new Task { Contents = "Check ipod on Jon's PC"},
+                new Task { Contents = "Fix bottom bracket"},
+                new Task { Contents = "Straighten back wheel"},
+                new Task { Contents = "Ask for roller chair"},
+                new Task { Contents = "Ask for TV remote"},
+                new Task { Contents = "Ask for shelves"},
+                new Task { Contents = "Fix your pannier"}
             };
             todos.ForEach(student => context.ToDos.AddOrUpdate(s => s.Contents, student));
             //wow, it does not like this line...
             context.SaveChanges();
 
-            var parts = new List<Part> {
-                    new Part { NickName = "FU54", Manufacturer = "Keyence"},
-                    new Part { NickName = "FU35", Manufacturer = "Keyence"},
-                    new Part { NickName = "IE5827", Manufacturer = "IFM"},
-                    new Part { NickName = "MFS200", Manufacturer = "IFM"},
-                    new Part { NickName = "ME5010", Manufacturer = "IFM"},
-                    new Part { NickName = "M8 Proxy", Manufacturer = "Balluff"},
+            var parts = new List<PartClass> {
+                    new PartClass { NickName = "FU54", Manufacturer = "Keyence"},
+                    new PartClass { NickName = "FU35", Manufacturer = "Keyence"},
+                    new PartClass { NickName = "IE5827", Manufacturer = "IFM"},
+                    new PartClass { NickName = "MFS200", Manufacturer = "IFM"},
+                    new PartClass { NickName = "ME5010", Manufacturer = "IFM"},
+                    new PartClass { NickName = "M8 Proxy", Manufacturer = "Balluff"},
             };
             parts.ForEach(part => context.Parts.AddOrUpdate(p => p.NickName, part));
+            context.SaveChanges();
+
+            var partInstances = new List<PartInstance> {
+                    new PartInstance("Part present"),
+                    new PartInstance("Part correctly oriented"),
+            };
+            partInstances.ForEach(pI => context.PartInstances.AddOrUpdate(PI => PI.FunctionText, pI));
             context.SaveChanges();
 
             var tags = new List<Tag> {
@@ -61,16 +68,6 @@ namespace PowerNote.Migrations {
             tags.ForEach(course => context.Tags.AddOrUpdate(c => c.Title, course));
             context.SaveChanges();
 
-            //foreach (Enrollment enrollment in enrollments) {
-            //    var enrollmentInDataBase = context.Enrollments.Where(
-            //        e =>
-            //             e.Student.StudentID == enrollment.StudentID &&
-            //             e.Course.CourseID == enrollment.CourseID).SingleOrDefault();
-            //    if (enrollmentInDataBase == null) {
-            //        context.Enrollments.Add(enrollment);
-            //    }
-            //}
-
             AddOrUpdateTag(context, 1, "Ebay");
             AddOrUpdateTag(context, 2, "Question");
             AddOrUpdateTag(context, 3, "Bike");
@@ -83,12 +80,22 @@ namespace PowerNote.Migrations {
             AddOrUpdateTag(context, 6, "Room");
             //AddOrUpdateTag(context, 7, "Room");
             //AddOrUpdateTag(context, 8, "Part");
-            AddOrUpdateTag(context, 1, "Part");
-            AddOrUpdateTag(context, 2, "Part");
-            AddOrUpdateTag(context, 3, "Part");
-            AddOrUpdateTag(context, 4, "Part");
-            AddOrUpdateTag(context, 5, "Part");
-            AddOrUpdateTag(context, 6, "Part");
+            AddOrUpdateTag(context, 9, "Part");
+            AddOrUpdateTag(context, 10, "Part");
+            AddOrUpdateTag(context, 11, "Part");
+            AddOrUpdateTag(context, 12, "Part");
+            AddOrUpdateTag(context, 13, "Part");
+            AddOrUpdateTag(context, 14, "Part");
+            context.SaveChanges();
+
+            //FORCE SOME CHILDREN IN
+            var entry = context.Entrys.SingleOrDefault(e => e.EntryID == 9);
+            Entry newEntry;
+            entry.Children.Add( newEntry = new PartClass { NickName = "child" } );
+            newEntry.Children.Add(new PartClass { NickName = "child child" });
+            context.SaveChanges();
+            //CHILD is defo there, it just is not being shown. //AHAH
+            //ACTUALLY, it was NOT there, not in the DATABASE at least!
             context.SaveChanges();
         }
 

@@ -12,9 +12,10 @@ namespace PowerNote.DAL { //DAL stands for Data Access Layer.
     //Apparently, if call database.Create, creates a database that matches this schema.
     //SO, don't even need InitialCreate file??? No, you don't.
     public class MyContext : DbContext {
-        public DbSet<ToDo> ToDos { get; set; }
+        public DbSet<Task> ToDos { get; set; }
         public DbSet<Tag> Tags { get; set; }
-        public DbSet<Part> Parts { get; set; }
+        public DbSet<PartClass> Parts { get; set; }
+        public DbSet<PartInstance> PartInstances { get; set; }
         public DbSet<Entry> Entrys { get; set; }
 
         public delegate PropertyChangedEventHandler Handler(PropertyChangedEventArgs args);

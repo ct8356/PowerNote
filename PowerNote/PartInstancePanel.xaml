@@ -1,4 +1,4 @@
-﻿<local:EntryPanel x:Class="PowerNote.PartPanel"
+﻿<local:EntryPanel x:Class="PowerNote.PartInstancePanel"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -8,17 +8,18 @@
              mc:Ignorable="d"
              d:DesignWidth="300"
              Orientation="Horizontal">
-    <!--<local:EntryPanel.TextBox Text="{Binding Entry.NickName}" BorderBrush="WhiteSmoke"/>-->
-    <!--Above won't work without defining dependency properties. SO best approach, just define ItemMenus here-->
-    <!--Well no, actually, just define textBox in cs. Fair play, since XAML won't let you define a base view in XAML-->
-    <TextBox Text="{Binding Entry.NickName}" BorderBrush="WhiteSmoke">
+    <TextBox Text="{Binding Entry.FunctionText}" BorderBrush="{StaticResource BackgroundBrush}">
         <TextBox.ContextMenu>
             <ContextMenu>
-                <MenuItem Header="Insert part" Click="insertPart_Click"></MenuItem>
+                <MenuItem Header="Insert part instance" Click="insertPart_Click"></MenuItem>
                 <MenuItem Header="Delete entry" Click="deleteEntry_Click"></MenuItem>
+                <MenuItem Header="Change parent" Click="changeParent_Click"></MenuItem>
             </ContextMenu>
         </TextBox.ContextMenu>
     </TextBox>
+    <Label Name="PartClassNickName" DataContext="{Binding Entry.PartClass}" Content="{Binding NickName}"></Label>
+    <Label Name="Manufacturer" DataContext="{Binding Entry.PartClass}" Content="{Binding Manufacturer}"></Label>
+    <local:MyAutoCompleteBox x:Name="PropertyAutoCompleteBox" ItemsSource="{Binding NickNames}"/>
     <local:TagListBox ItemsSource="{Binding Entry.Tags}"/>
     <local:MyAutoCompleteBox x:Name="MyAutoCompleteBox" ItemsSource="{Binding AllTags}"/>
 </local:EntryPanel>

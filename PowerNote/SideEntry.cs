@@ -17,7 +17,7 @@ using System.Windows.Input;
 namespace PowerNote {
     class SideEntry : StackPanel {
         MyContext context;
-        ToDo Student { get; set; }
+        Task Student { get; set; }
         List<Tag> courseList;
         List<Label> labelList;
         MyAutoCompleteBox autoCompleteBox;
@@ -55,7 +55,7 @@ namespace PowerNote {
             autoCompleteBox.KeyUp += autoCompleteBox_KeyUp;
         }
 
-        public void bindTextBox(ToDo student) {
+        public void bindTextBox(Task student) {
             this.Student = student;
             Binding binding = new Binding("Contents"); //This is the MODEL property it binds to.
             binding.Source = Student; // the binding source (which must fire a PROP CHANGED event).

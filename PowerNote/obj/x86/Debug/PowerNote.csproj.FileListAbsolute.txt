@@ -39,7 +39,9 @@ C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86
 C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\App.baml
 C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\EntriesTreeView.g.cs
 C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\EntriesTreeView.baml
-C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PartPanel.g.cs
-C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PartPanel.baml
 C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\ToDoPanel.g.cs
 C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\ToDoPanel.baml
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PartInstancePanel.g.cs
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PartClassPanel.g.cs
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PartInstancePanel.baml
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PartClassPanel.baml

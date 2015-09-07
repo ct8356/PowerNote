@@ -6,5 +6,5 @@
              xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
-             BorderBrush="{StaticResource BackgroundBrush}">
+             BorderBrush="{StaticResource BackgroundBrush}">         
 </controls:AutoCompleteBox>

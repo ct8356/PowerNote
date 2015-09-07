@@ -8,24 +8,27 @@
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
              DataContext="{Binding RelativeSource={RelativeSource Self}}"
-             ItemsSource = "{Binding EntryVMs}"
+             ItemsSource = "{Binding FirstGenEntryVMs}"
              Background="{StaticResource BackgroundBrush}"
              BorderBrush="{StaticResource BackgroundBrush}">
     <!-- I tried Binding to FilteredStudents (the queryable) but did not work. Unsurprising really. 
     Usually cannot bind to a queryable.-->
-    <!-- were so close all along. Just forgot to make view students PUBLIC PROPERTY!-->
+    <!-- u were so close all along. Just forgot to make entryVMs PUBLIC PROPERTY!-->
     <!--<TreeView.ItemTemplate>
         <HierarchicalDataTemplate ItemsSource="{Binding Children}">
             <local:EntryPanel/>
         </HierarchicalDataTemplate>
     </TreeView.ItemTemplate>-->
     <TreeView.Resources>
-        <HierarchicalDataTemplate DataType="{x:Type VMs:StudentVM}"  ItemsSource="{Binding Children}">
-            <local:EntryPanel/>
+        <HierarchicalDataTemplate DataType="{x:Type VMs:TaskVM}"  ItemsSource="{Binding Children}">
+            <local:ToDoPanel/>
         </HierarchicalDataTemplate>
-        <HierarchicalDataTemplate DataType="{x:Type VMs:PartVM}"  ItemsSource="{Binding Children}">
-            <local:PartPanel/>
+        <HierarchicalDataTemplate DataType="{x:Type VMs:PartClassVM}"  ItemsSource="{Binding Children}">
+            <local:PartClassPanel/>
             <!--IT is recognising that it needs partPanel, I think-->
+        </HierarchicalDataTemplate>
+        <HierarchicalDataTemplate DataType="{x:Type VMs:PartInstanceVM}"  ItemsSource="{Binding Children}">
+            <local:PartInstancePanel/>
         </HierarchicalDataTemplate>
     </TreeView.Resources>
 </TreeView>

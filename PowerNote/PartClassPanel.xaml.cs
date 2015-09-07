@@ -15,14 +15,21 @@ using PowerNote.Models;
 using PowerNote.ViewModels;
 
 namespace PowerNote {
-    public partial class PartPanel : EntryPanel {
-        public PartPanel() {
+    public partial class PartClassPanel : EntryPanel {
+        public PartClassPanel() {
             InitializeComponent();
             MyAutoCompleteBox.KeyUp += autoCompleteBox_KeyUp;
         }
 
         public void insertPart_Click(object sender, RoutedEventArgs e) {
-            (DataContext as PartVM).insertPart();
+            (DataContext as PartClassVM).insertPart();
+        }
+
+        public void insertSubPart_Click(Object sender, EventArgs e) {
+            MenuItem menuItem = sender as MenuItem;
+            if (menuItem != null) {
+                (DataContext as PartClassVM).insertSubPart(DataContext as PartClassVM);
+            }
         }
     }
 }

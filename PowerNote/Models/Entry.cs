@@ -17,6 +17,9 @@ namespace PowerNote.Models {
         }
         public virtual Entry Parent { get; set; }
         public virtual ObservableCollection<Entry> Children { get; set; }
+        //NOTE: somehow, EntFramework inherently knows that Parent and Children are related.
+        //BUT actually, it CAN'T here! how can it distinguish, since Parent and Children are BOTH of type Entry?
+        //IT COULD well interpret it as Children means Siblings, and think its a manyToMany relation!
 
         protected void NotifyPropertyChanged(String propertyName) {
             if (PropertyChanged != null) {
@@ -24,7 +27,11 @@ namespace PowerNote.Models {
             }
         }
 
+        public Entry() {
+            CreationDate = DateTime.Parse("2010-09-01");
+            Tags = new ObservableCollection<Tag>();
+            Children = new ObservableCollection<Entry>();
+        }
 
-      
     }
 }

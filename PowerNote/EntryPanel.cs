@@ -18,36 +18,36 @@ using System.Windows.Input;
 namespace PowerNote {
     public partial class EntryPanel : StackPanel {
         public TextBox TextBox { get; set; }
+
         public EntryPanel() {
+            //conditionalSubscribe(); //OF COURSE! WON'T WORK, coz datacontext don't exist yet.
+            //REALLY, need to do conditional subscribe in XAML? But, complex, CBTL.
             //RIGHT CLICKS
-            //Could do this in treeView. Does not really matter.
-            //PROBS doing it in treeView means less instances...
-            //BEST do this in XAML, or gonna get complicated...
-            TextBox = new TextBox();
-            TextBox.ContextMenu = new ContextMenu();
-            //MenuItem insertNote = new MenuItem();
-            //insertNote.Header = "Insert entry";
-            //insertNote.Click += insertNote_Click;
-            //TextBox.ContextMenu.Items.Add(insertNote);
-            //MenuItem insertSubNote = new MenuItem();
-            //insertSubNote.Header = "Insert sub-entry";
-            //insertSubNote.Click += insertSubNote_Click;
-            //TextBox.ContextMenu.Items.Add(insertSubNote);
-            //MenuItem deleteEntry = new MenuItem();
-            //deleteEntry.Header = "Delete entry";
-            //deleteEntry.Click += deleteEntry_Click;
-            //TextBox.ContextMenu.Items.Add(deleteEntry); //this causes invocation error.
-            //Easier to do this in XAML???
-            //NO! because, would have to do it in both sub classes.
-            //SINCE this base class, cannot be written in XAML. Annoyingly.
-            //AHH, but perhaps, DO want it to behave differently!!! YES!!!
-            //POSS! but would also involve more learning, so skip for now.
             //DependencyProps is the real proper way anyway.
             //AUTOCOMPLETEBOX
             //autoCompleteBox.SelectionChanged += autoCompleteBox_SelectionChanged;
             //autoCompleteBox.LostFocus += autoCompleteBox_LostFocus;
             //TRY KEEPING below method here, BUT, call it from sub class...
             //MyAutoCompleteBox.KeyUp += autoCompleteBox_KeyUp;
+        }
+
+        public void conditionalSubscribe() {
+            if ((DataContext as EntryVM).MainPanel.DisplayPanel
+                .EntriesView.WaitingForParentSelection)
+                this.MouseUp += sendToFosterParent;
+        }
+
+        public void sendToFosterParent(object sender, RoutedEventArgs e) {
+            (DataContext as EntryVM).MainPanel.DisplayPanel
+                .EntriesView.WaitingForParentSelection = false;
+            this.MouseUp -= sendToFosterParent; //unsubscribe
+            EntryPanel selectedParentPanel = sender as EntryPanel;
+            (selectedParentPanel.DataContext as EntryVM).adoptChild();
+        }
+
+        public void changeParent_Click(object sender, RoutedEventArgs e) {
+            //Entry entry = sender as Entry;
+            (DataContext as EntryVM).changeParent();
         }
 
         public void deleteEntry_Click(object sender, RoutedEventArgs e) {
@@ -58,14 +58,9 @@ namespace PowerNote {
             //Oddly, this is called twice when you click in the dropdown box. I guess, lets accept that, and work around it.
             //Put an if statement in there, to stop something being saved twice.
             if (e.Key == Key.Return) {
-                AutoCompleteBox autoCompleteBox = (AutoCompleteBox)sender;
-                List<String> courseStrings = new List<String>();
-                List<Tag> courses = new List<Tag>();
-                courses = (DataContext as EntryVM).Context.Tags.Select(c => c).ToList<Tag>();
-                foreach (Tag course in courses) {
-                    courseStrings.Add(course.ToString());
-                }
-                if (courseStrings.Contains(autoCompleteBox.Text)) {
+                AutoCompleteBox autoCompleteBox = sender as AutoCompleteBox;
+                List<Tag> tags = (DataContext as EntryVM).Context.Tags.ToList<Tag>();
+                if (tags.Select(t => t.Title).Contains(autoCompleteBox.Text)) {
                     //i.e. IF course exists already, then say "selection Changed!".
                     //This method no longer needed, but keep it, just in case.
                     autoCompleteBox_SelectionChanged(sender, e);
@@ -75,11 +70,7 @@ namespace PowerNote {
                 else {
                     //IF no, then create new entry.
                     if (autoCompleteBox.Text != null && autoCompleteBox.Text != "") {
-                        Tag newCourse = new Tag();
-                        newCourse.Title = autoCompleteBox.Text;
-                        (DataContext as EntryVM).Context.Tags.Add(newCourse);
-                        (DataContext as EntryVM).Context.SaveChanges();
-                        addTagToEntry(sender, newCourse);
+                        (DataContext as EntryVM).addNewTagToEntry(sender, autoCompleteBox.Text);
                     }
                 }
             }
@@ -89,76 +80,18 @@ namespace PowerNote {
             //Add new tag to Navigation property
             AutoCompleteBox autoCompleteBox = (AutoCompleteBox)sender;
             Tag selectedCourse = (Tag)autoCompleteBox.SelectedItem;
-            addTagToEntry(sender, selectedCourse);
-        }
-
-        public void addTagToEntry(object sender, Tag selectedCourse) {
-            if ((DataContext as EntryVM).Entry.Tags.Contains(selectedCourse)) {
-                //do nothing
-            }
-            else {
-                (DataContext as EntryVM).Tags.Add(selectedCourse);
-                (DataContext as EntryVM).Context.SaveChanges();
-                (DataContext as EntryVM).MainPanel.updateEntries(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.  
-                (sender as AutoCompleteBox).Text = null;
-            }
+            (DataContext as EntryVM).addTagToEntry(sender, selectedCourse);
         }
 
         public void filterAndSortTagsShown() {
             IEnumerable<int> filterCourseIDs = (DataContext as EntryVM).MainPanel.DisplayPanel
                 .FilterPanel.Filter.Tags.Select(c => c.TagID);
             var alphabeticalCourses = (DataContext as EntryVM)
-                .Tags.Where(c => !filterCourseIDs.Contains(c.TagID)).OrderBy(c => c.Title);
+                .Entry.Tags.Where(c => !filterCourseIDs.Contains(c.TagID)).OrderBy(c => c.Title);
         }
 
         public void courseList_PropertyChanged(Object sender, EventArgs e) {
             updateTagLabels();
-        }
-
-        //public void delete_Click(Object sender, EventArgs e) {
-        //    MenuItem menuItem = new MenuItem();
-        //    menuItem = (MenuItem)sender;
-        //    if (menuItem != null) {
-        //        ContextMenu contextMenu = (ContextMenu)menuItem.Parent;
-        //        Label label = (Label)((Popup)contextMenu.Parent).PlacementTarget;
-        //        String selectedCourseName = (String)label.Content;
-        //        Tag selectedCourse = null;
-        //        foreach (Tag course in (DataContext as StudentVM).Tags) {
-        //            if (course.ToString() == selectedCourseName) {
-        //                selectedCourse = course;
-        //                break;
-        //            }
-        //        }
-        //        if (selectedCourse != null)
-        //            (DataContext as StudentVM).Tags.Remove(selectedCourse);
-        //        updateTagLabels(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.
-        //        (DataContext as StudentVM).Context.SaveChanges(); //ALSO lazy. CBTL.
-        //    }
-        //}
-
-        public void insertNote_Click(Object sender, EventArgs e) {
-            MenuItem menuItem = new MenuItem();
-            menuItem = (MenuItem)sender;
-            if (menuItem != null) {
-                (DataContext as StudentVM).insertNote();
-                //NOTE: not ok to just create student, HAVE TO ADD IT to CONTEXT!
-                //NOTE: at best, STUDENTVM can know about the CONTEXT.
-                //NOT this entryPanel.
-                //BUT TO BE HONEST: it makes more sense to get TREEVIEWMODEL to do it.
-                //NOTE THOUGH; want it to be aware of the filter...
-                //I'LL BE HONEST: I think either would work.
-                //BUT I THINK it makes more sense to do in TREEVIEWMODEL! 
-                //since MODIFYING the structure of the TREE!
-                //BUT SINCE already started here, I will continue here.
-            }
-        }
-
-        public void insertSubNote_Click(Object sender, EventArgs e) {
-            MenuItem menuItem = new MenuItem();
-            menuItem = (MenuItem)sender;
-            if (menuItem != null) {
-                (DataContext as StudentVM).insertChild(DataContext as StudentVM);
-            }
         }
 
         public void updateTagLabels() {

@@ -28,7 +28,9 @@ C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86
 C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Release\App.baml
 C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Release\EntriesTreeView.g.cs
 C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Release\EntriesTreeView.baml
-C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Release\PartPanel.g.cs
-C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Release\PartPanel.baml
 C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Release\ToDoPanel.g.cs
 C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Release\ToDoPanel.baml
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Release\PartClassPanel.g.cs
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Release\PartClassPanel.baml
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Release\PartInstancePanel.g.cs
+C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Release\PartInstancePanel.baml

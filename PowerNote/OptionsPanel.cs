@@ -13,25 +13,25 @@ using PowerNote.Models;
 namespace PowerNote {
     public class OptionsPanel : StackPanel {
         MyContext context;
-        public bool ShowAllEntriesBool { get; set; }
-        public CheckBox ShowAllEntries { get; set; }
-        public bool ShowAllChildrenBool { get; set; }
-        public CheckBox ShowAllChildren { get; set; }
+        public bool ShowAllEntries { get; set; }
+        public CheckBox ShowAllEntriesCBox { get; set; }
+        public bool ShowAllChildren { get; set; }
+        public CheckBox ShowAllChildrenCBox { get; set; }
 
         public OptionsPanel(MyContext context) {
             this.context = context;
             //PANEL
             Orientation = Orientation.Horizontal;
             //SHOW ALL ENTRIES
-            ShowAllEntries = new CheckBox();
-            ShowAllEntries.Content = "Show all entries";
-            Children.Add(ShowAllEntries);
-            bind("ShowAllEntriesBool", this, ShowAllEntries);
+            ShowAllEntriesCBox = new CheckBox();
+            ShowAllEntriesCBox.Content = "Show all entries";
+            Children.Add(ShowAllEntriesCBox);
+            bind("ShowAllEntries", this, ShowAllEntriesCBox);
             //SHOW ALL CHILDREN
-            ShowAllChildren = new CheckBox();
-            ShowAllChildren.Content = "Show all children";
-            Children.Add(ShowAllChildren);
-            bind("ShowAllChildrenBool", this, ShowAllChildren);
+            ShowAllChildrenCBox = new CheckBox();
+            ShowAllChildrenCBox.Content = "Show all children";
+            Children.Add(ShowAllChildrenCBox);
+            bind("ShowAllChildren", this, ShowAllChildrenCBox);
         }
 
         public void bind(String property, object source, CheckBox checkBox) {
