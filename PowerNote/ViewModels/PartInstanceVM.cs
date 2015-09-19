@@ -56,8 +56,6 @@ namespace PowerNote.ViewModels {
             (Entry as PartInstance).PartClass = partClass;
             Context.SaveChanges();
             MainPanel.DisplayPanel.EntriesView.updateEntries();
-            //MAYBE you need a nav property in PartClass, to show link to PartInstance?
-            //Nope, made no difference.
             //CBTL, why was this not working before?
             //nav property? lack of update entries?
         }

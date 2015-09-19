@@ -32,6 +32,16 @@ namespace PowerNote {
                 title.FontWeight = FontWeights.Bold;
                 Children.Add(title);
                 SetDock(title, Dock.Top);
+                //Filter by type
+                Label filterByType = new Label();
+                filterByType.Content = "Filter by type: (if so desire)";
+                Children.Add(filterByType);
+                SetDock(filterByType, Dock.Top);
+                //Order types
+                Label treeLayout = new Label();
+                treeLayout.Content = "Children to show:";
+                Children.Add(treeLayout);
+                SetDock(treeLayout, Dock.Top);
                 //FILTER PANEL
                 FilterPanel = new FilterPanel(context);
                 Children.Add(FilterPanel);

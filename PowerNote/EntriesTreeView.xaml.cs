@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -17,6 +16,9 @@ using PowerNote.Models;
 using PowerNote.ViewModels;
 using PowerNote.Migrations;
 using System.Collections.ObjectModel;
+using System.Reflection;
+using System.Data.Entity.Infrastructure;
+using System.Linq.Expressions;
 
 namespace PowerNote {
     partial class EntriesTreeView : TreeView {
@@ -67,7 +69,11 @@ namespace PowerNote {
                 case "ID": break;
                 case "Priority": break;
             }
-            IQueryable<Entry> filteredParents = showFirstLevel();
+            //GET STRING
+            string columnName = "Parent";
+            Entry entry = context.Entrys.First();
+            entry.GetType().GetProperty("Name");
+            IQueryable<Entry> filteredParents = showFirstLevel(columnName);
             for (int gen = 2; gen <= 5; gen++) {
                 filteredParents = showMoreLevels(filteredParents);
             }
@@ -87,7 +93,7 @@ namespace PowerNote {
             }
         }
 
-        public void newEntry_LostFocus(object sender, RoutedEventArgs e) {
+        public void newEntry_LostFocus(object sender, System.Windows.RoutedEventArgs e) {
             if (newEntry.TextBox.Text != null && newEntry.TextBox.Text != "") {
                 Task newStudent = new Task(newEntry.TextBox.Text);
                 context.ToDos.Add(newStudent);
@@ -104,16 +110,62 @@ namespace PowerNote {
             updateEntries();
         }
 
-        public IQueryable<Entry> showFirstLevel() {
+        private Expression<Func<Entry, string>> GetGroupKey(string propertyName) {
+            ParameterExpression parameter = Expression.Parameter(typeof(Entry));
+            MemberExpression member = Expression.Property(parameter, propertyName);
+            return Expression.Lambda<Func<Entry, string>>(member, parameter);
+        }
+
+        private Expression<Func<Entry, bool>> GetBooleanExpression(string propertyName) {
+            ParameterExpression parameter = Expression.Parameter(typeof(Entry));
+            MemberExpression member = Expression.Property(parameter, propertyName);
+            ConstantExpression constant = Expression.Constant(null);
+            Expression exp = Expression.Equal(member, constant);
+            return Expression.Lambda<Func<Entry, bool>>(exp, parameter);
+        }
+
+        public IQueryable<Entry> showFirstLevel(string columnName) {
             IEnumerable<int> filterTagIDs = filter.Tags.Select(c => c.TagID);
             IQueryable<Entry> filteredParents = null;
             if (displayPanel.OptionsPanel.ShowAllEntries) {
-                filteredParents = filteredEntries.Where(s => s.Parent == null);
+                Entry entry = context.Entrys.First();
+                //filteredParents = filteredEntries.Where(s => s.Parent == null);
+                filteredParents = filteredEntries.Where(GetBooleanExpression(columnName));
+                //YES! It worked!
+                //filteredParents = filteredEntries.OrderBy(GetBool(columnName));
+                //filteredParents = filteredEntries.OrderBy(s => s.Parent);
+                //PropertyInfo propInfo = entry.GetType().GetProperty("Name");
+                //OR
+                //DbPropertyEntry dbPropEntry = context.Entry(entry).Property("Name");
+                //OK so see how they are different.
+                //WHICH would expressions take?
+                //ACTUALLY, WHO CARES! Pretty sure expressions is STILL reflection.
+                //SIMPLEST example I have seen, is entry.GetProperty("Name").GetValue(entry, null). 
+                //TRY IT!
                 //WHERE it has NO parent.
+                //NOTE! CBTL! THIS is the line that has to change,
+                //If want to show OTHER relations, NOT just Parent->Child, but OTHER relations!
+                //PERHAPS must pass the PROPERTY to examine to this method?
+                //OR perhaps that is why it is best to keep the list of children generic?
+                //BUT will be times when need to change it, so...
+                //JUST has to be, load of if statements!
+                //if THIS option selected, then do this. Either here,
+                //OR in method that CALLS this method.
+                //UNLESS can pass the string (or PROPERTY?) here, and this method can use it.
+                //i.e. pretty sure means reflection. OR using STRINGS for all references
+                //WHICH kind of makes sense really. SO not tied to names used in OOP!
+                //HOW to pass a PROPERTY that method should look at?
+                //and NOT the contents of the property, but the PROPERTY itself?
+                //MAYBE do this with DELEGATES!
+                //I.e. I pass you a value. and you CALL METHODS dependent on it?
+                //OR NO, you PASS the method you want it to call... no, does not help i think.
+                //I THINK reflection is the way. SO call showFirstLevel(Property property).
+                //then .Where(s => s.property == null). boom!
+                //REFLECTION may even be a GOOD thing! Maybe point of it is to replicate OOP?
             }
             else {
                 filteredParents = filteredEntries
-                .Where(s => filterTagIDs.Except(s.Parent.Tags.Select(c => c.TagID)).Any());
+                .Where(e => filterTagIDs.Except(e.Parent.Tags.Select(t => t.TagID)).Any());
                 //WHERE it has NO parent that matches the filter.
             }
             foreach (Entry entry in filteredParents) {
@@ -162,6 +214,7 @@ namespace PowerNote {
                         if (child is Task)
                             entryVM = new TaskVM(child as Task, displayPanel.MainPanel);
                         //FINALLY
+                        //CBTL! THIS is where you CHOOSE different CHILDREN to put in.
                         parentVM.Children.Add(entryVM);
                         AllEntryVMs.Add(entryVM);
                     }

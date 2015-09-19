@@ -4,6 +4,7 @@ using System.Windows.Data;
 using System.Windows.Controls;
 using System.ComponentModel; //this allows INotifyPropertyChanged
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PowerNote.Models {
 
@@ -23,12 +24,6 @@ namespace PowerNote.Models {
         public string NickName {
             get { return nickName; }
             set { nickName = value; NotifyPropertyChanged("NickName"); }
-        }
-
-        string deviceType = "Undefined";
-        public string DeviceType {
-            get { return deviceType; }
-            set { deviceType = value; NotifyPropertyChanged("DeviceType"); }
         }
 
         string manufacturer = "Undefined";
@@ -51,14 +46,21 @@ namespace PowerNote.Models {
         public virtual ObservableCollection<PartInstance> PartInstances { get; set; }
         public virtual PartClass ParentPartClass { get; set; }
         public virtual ObservableCollection<PartClass> ChildPartClasses { get; set; }
+        [InverseProperty("SensedParts")]
+        public virtual ObservableCollection<PartInstance> Sensors { get; set; }
 
         public PartClass() : base() {
             PartInstances = new ObservableCollection<PartInstance>();
-        } //IF got it, have to assume people will use it.
+        } //IF got it, have to assume people will use it. WELL, if it is public.
 
         public PartClass(string nickName) : this() {
-            this.nickName = nickName;
-            
+            NickName = nickName;        
+        }
+
+        public PartClass(string nickName, PartClass parent)
+            : this() {
+            NickName = nickName;
+            ParentPartClass = parent;
         }
 
         public override string ToString() {
