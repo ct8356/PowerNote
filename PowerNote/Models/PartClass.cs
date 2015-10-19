@@ -46,10 +46,10 @@ namespace PowerNote.Models {
         public virtual ObservableCollection<PartInstance> PartInstances { get; set; }
         public virtual PartClass ParentPartClass { get; set; }
         public virtual ObservableCollection<PartClass> ChildPartClasses { get; set; }
-        [InverseProperty("SensedParts")]
-        public virtual ObservableCollection<PartInstance> Sensors { get; set; }
-
+        //[InverseProperty("SensedParts")]
+        //public virtual ObservableCollection<PartInstance> Sensors { get; set; }
         public PartClass() : base() {
+            Type = "PowerNote.Models.PartClass";
             PartInstances = new ObservableCollection<PartInstance>();
         } //IF got it, have to assume people will use it. WELL, if it is public.
 

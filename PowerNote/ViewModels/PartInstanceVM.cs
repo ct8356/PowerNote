@@ -22,6 +22,11 @@ namespace PowerNote.ViewModels {
     public class PartInstanceVM : EntryVM {
         public ObservableCollection<string> NickNames { get; set; }
         public PartClass PartClass { get; set; }
+        public static ObservableCollection<string> Structures { get; set; }
+        public static string SelectedStructure { get; set; }
+        //NOTE: might be a good idea to make own DbSet class,
+        //AND then put these statics, in there.
+
         public PartInstanceVM(Entry entry, MainPanel mainPanel) {
             //NOTE: this constructor just WRAPS an entry in a VM.
             initialize(entry, mainPanel);
@@ -62,7 +67,7 @@ namespace PowerNote.ViewModels {
 
         public void insertPart() {
             PartClassVM partVM = new PartClassVM("blank", MainPanel);
-            foreach (Tag tag in MainPanel.DisplayPanel.FilterPanel.Filter.Tags) {
+            foreach (Tag tag in MainPanel.DisplayPanel.FilterPanel.Filter.SelectedObjects) {
                 partVM.Entry.Tags.Add(tag);
             }
             Context.SaveChanges();
@@ -73,7 +78,7 @@ namespace PowerNote.ViewModels {
             PartClassVM partVM = new PartClassVM
                 ((parentVM.Entry as PartClass).NickName + " child", MainPanel); //create part.
             parentVM.Entry.Children.Add(partVM.Entry); //add it to children
-            foreach (Tag tag in MainPanel.DisplayPanel.FilterPanel.Filter.Tags) {
+            foreach (Tag tag in MainPanel.DisplayPanel.FilterPanel.Filter.SelectedObjects) {
                 partVM.Entry.Tags.Add(tag); //give it tags as per filter
             }
             Context.SaveChanges();

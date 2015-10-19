@@ -18,7 +18,8 @@
         public MainPanel() {
             //DATA
             Context = new MyContext(); //works fine. I guess table is made now.
-            Context.Database.Delete(); Context.Database.Create(); Configuration configuration = new Configuration(); configuration.callSeed(Context);
+            Context.Database.Delete(); 
+            Context.Database.Create(); Configuration configuration = new Configuration(); configuration.callSeed(Context);
             //Ok, so this does indeed, create a database, if not already exist.
             //BUT WHERE is this database created? It is in ProgramFiles, in the SQLServer folder. Let's delete it.
             //ACtually, NO! the database is still not made? WTF? //MAYBE just deleting .mdf files from SQLServer data folder is bad idea.

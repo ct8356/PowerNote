@@ -13,18 +13,19 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.ComponentModel;
 using PowerNote.Models;
+using PowerNote.ViewModels;
 using System.Collections.ObjectModel;
 
 namespace PowerNote {
-    public partial class TagListBox : ListBox {
-        public TagListBox() {
+    public partial class MyListBox : ListBox {
+        public MyListBox() {
             InitializeComponent();
             Items.SortDescriptions.Add(new SortDescription("Title", ListSortDirection.Ascending)); //"" is for property name.
             ContextMenu = new ContextMenu();
             MenuItem delete_menuItem = new MenuItem();
             ContextMenu.Items.Add(delete_menuItem); //PROBLEM! menu belongs to listBox, not ITEM!
             delete_menuItem.Click += delete_menuItem_Click;
-            delete_menuItem.Header = "Remove tag";
+            delete_menuItem.Header = "Remove item";
         }
 
         public void delete_menuItem_Click(Object sender, EventArgs e) {
@@ -34,11 +35,14 @@ namespace PowerNote {
                 //IF this listBox is bound to student.courses, will deleting an item, delete the course from student?
                 //MAYBE, BUT still, it probably would NOT do a SAVECHANGES...
                 //MAybe could add a LISTENER for this though...
-                Tag selectedCourse = Items[SelectedIndex] as Tag; //the line i was missing.
-                //Course selectedCourse = student.Courses.Single(c => c.Title == selectedCourseName);   
-                if (selectedCourse != null) {
-                    ObservableCollection<Tag> myList = (ItemsSource as ObservableCollection<Tag>);
-                    myList.Remove(selectedCourse);
+                object selectedItem = Items[SelectedIndex] as object;
+                if (selectedItem != null) {
+                    //ObservableCollection<object> myList = (ItemsSource as ObservableCollection<object>);
+                    //myList.Remove(selectedItem);
+                    //maybe object is just TOO generic to work? Not sure why though.
+                    //JUST going to have to delete from the ACTUAL SOURCE.
+                    //WHICH IS, SelectedObjects! (needs to be this generic one, if want THIS to be generic).
+                    (DataContext as ListBoxPanelVM).SelectedObjects.Remove(selectedItem);
                 }
                 //MAYBE fire an event here, so that ENTRYPANEL, or TREEVIEW knows to save changes?
                 //MAYBE an event is already fired by this, you just need to LISTEN for it?

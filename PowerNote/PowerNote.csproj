@@ -95,6 +95,13 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ControlPanel.cs" />
+    <Compile Include="ListBoxPanel.cs" />
+    <Compile Include="TypePanel.xaml.cs">
+      <DependentUpon>TypePanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="StructurePanel.xaml.cs">
+      <DependentUpon>StructurePanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PartInstancePanel.xaml.cs">
       <DependentUpon>PartInstancePanel.xaml</DependentUpon>
     </Compile>
@@ -125,14 +132,26 @@
     <Compile Include="SideEntry.cs" />
     <Compile Include="SideNotePanel.cs" />
     <Compile Include="SortPanel.cs" />
-    <Compile Include="TagListBox.xaml.cs">
-      <DependentUpon>TagListBox.xaml</DependentUpon>
+    <Compile Include="MyListBox.xaml.cs">
+      <DependentUpon>MyListBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="TagListPanel.cs" />
+    <Compile Include="ViewModels\FilterPanelVM.cs" />
+    <Compile Include="ViewModels\ListBoxPanelVM.cs" />
+    <Compile Include="ViewModels\TypePanelVM.cs" />
+    <Compile Include="ViewModels\StructurePanelVM.cs" />
     <Compile Include="ViewModels\PartInstanceVM.cs" />
     <Compile Include="ViewModels\EntryVM.cs" />
     <Compile Include="ViewModels\PartClassVM.cs" />
     <Compile Include="ViewModels\TaskVM.cs" />
+    <Page Include="TypePanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="StructurePanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="PartInstancePanel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -167,7 +186,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="TagListBox.xaml">
+    <Page Include="MyListBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -191,6 +210,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="PowerNote_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

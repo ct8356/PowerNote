@@ -6,11 +6,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Data.Entity;
 using PowerNote.DAL;
 using PowerNote.Models;
 using PowerNote.ViewModels;
@@ -22,10 +17,11 @@ using System.Linq.Expressions;
 
 namespace PowerNote {
     partial class EntriesTreeView : TreeView {
+        Type type;
         DisplayPanel displayPanel;
-        TaggedObject filter;
-        IQueryable<Entry> filteredEntries;
-        IQueryable<Task> filteredStudents;
+        FilterPanelVM filter;
+        //IQueryable<Entry> filteredEntries;
+        //IQueryable<Task> filteredStudents;
         public ObservableCollection<EntryVM> FirstGenEntryVMs { get; set; } 
         //needed for treeview to bind to
         public ObservableCollection<EntryVM> AllEntryVMs { get; set; }
@@ -45,7 +41,7 @@ namespace PowerNote {
             this.displayPanel = displayPanel;
             FirstGenEntryVMs = new ObservableCollection<EntryVM>();
             AllEntryVMs = new ObservableCollection<EntryVM>();
-            filterEntries();
+            filterSortAndShowEntries();
             //filterToDos();
             //SUBSCRIBE
             displayPanel.OptionsPanel.ShowAllEntriesCBox.Click += ShowAllEntries_Click; //subscribe
@@ -57,34 +53,61 @@ namespace PowerNote {
             //newEntry.KeyUp += new KeyEventHandler(newEntry_KeyUp);
         }
 
-        public void filterEntries() {
-            filter = displayPanel.FilterPanel.Filter;
-            IEnumerable<int> filterCourseIDs = filter.Tags.Select(c => c.TagID);
-            filteredEntries = context.Entrys;
+        public void filterSortAndShowEntries() {
+            Type selectedType = (displayPanel.TypePanel.DataContext as TypePanelVM).SelectedObjects.First() as Type;
+            if (selectedType == typeof(Entry)) ;
+            //processEntries<Entry>(context.Entrys);
+            if (selectedType == typeof(PartClass)) ;//is does not work here. it says selected type is Type.
+                //processEntries<PartClass>(context.Parts);
+            if (selectedType == typeof(PartInstance))
+                processEntries<PartInstance>(context.PartInstances);
+            if (selectedType == typeof(Task)) ;
+                //processEntries<Task>(context.ToDos);
+            //SO filteredEntries is filled. BUT can it be converted back to parts?
+            //I IMAGINE, not EASILY!
+            //NO! It certainly is not a simple cast. SO lets try MORE generic methods...
+        }
+
+        public IQueryable<T> filterEntries<T>(IQueryable<T> entries, Expression<Func<T, bool>> exp) {
+            IQueryable<T> filteredEntries = entries.Where(exp);
+            return filteredEntries;
+        }
+
+        //public IQueryable<T> filterByType<T>(IQueryable<Entry> entries) {
+        //    IQueryable<T> filteredEntries = entries.Where(e => e.Type == typeof(T).FullName);
+        //    return filteredEntries;
+        //} //OMG! DUH! THERE IS NO NEED TO FILTER BY TYPE! YOU JUST QUERY THE RIGHT TABLE IN FIRST PLACE!
+
+        public IEnumerable<Entry> filterByType(IQueryable<Entry> filteredEntries) {
+            //string typeName = ((displayPanel.TypePanel.DataContext as TypePanelVM).SelectedObjects.First() as Type).FullName;
+            //Type type = Type.GetType(typeName);
+            Type type = (displayPanel.TypePanel.DataContext as TypePanelVM).SelectedObjects.First() as Type;
+            IEnumerable<Entry> filteredEntriesEnum = filteredEntries.AsEnumerable<Entry>()
+                .Where(e => e.GetType() == type);
+            return filteredEntriesEnum;
+        }//LATER if decide it takes too long to do several queries,
+        //can turn this method into a "construct SQL" query, maybe...
+
+        public IQueryable<T> filterByTag<T>(IQueryable<T> entries) where T : Entry {
+            filter = displayPanel.FilterPanel.DataContext as FilterPanelVM;
+            IEnumerable<int> filterCourseIDs = filter.Objects.Select(o => (o as Tag).TagID);
             if (!displayPanel.OptionsPanel.ShowAllEntries)
-                filteredEntries = filteredEntries
-                .Where(s => !filterCourseIDs.Except(s.Tags.Select(c => c.TagID)).Any());
+                return entries.Where(s => !filterCourseIDs.Except(s.Tags.Select(c => c.TagID)).Any());
+            else return null;
+        }
+
+        public void orderBy() {
             //ORDERBY
             switch (displayPanel.SortPanel.ComboBox.SelectedItem.ToString()) {
                 case "ID": break;
                 case "Priority": break;
             }
-            //GET STRING
-            string columnName = "Parent";
-            Entry entry = context.Entrys.First();
-            entry.GetType().GetProperty("Name");
-            IQueryable<Entry> filteredParents = showFirstLevel(columnName);
-            for (int gen = 2; gen <= 5; gen++) {
-                filteredParents = showMoreLevels(filteredParents);
-            }
         }
 
-        public void sortTasks() {
-            //ORDERBY
-            switch (displayPanel.SortPanel.ComboBox.SelectedItem.ToString()) {
-                case "ID": break;
-                case "Priority": filteredStudents = filteredStudents.OrderBy(s => s.Priority); break;
-            }
+        public void processEntries<T>(IQueryable<T> entries) where T : PartInstance {
+            filterByTag<T>(entries);
+            //orderBy(); //does nothing yet
+            showLevels<T>(entries);
         }
 
         public void newEntry_KeyUp(object sender, KeyEventArgs e) {
@@ -110,111 +133,128 @@ namespace PowerNote {
             updateEntries();
         }
 
-        private Expression<Func<Entry, string>> GetGroupKey(string propertyName) {
-            ParameterExpression parameter = Expression.Parameter(typeof(Entry));
+        private Expression<Func<T, bool>> EnumContainsPropertyEntryID<T>(IEnumerable<int> enumerable, string propertyName) {
+            ParameterExpression parameter = Expression.Parameter(typeof(T));
             MemberExpression member = Expression.Property(parameter, propertyName);
-            return Expression.Lambda<Func<Entry, string>>(member, parameter);
+            MemberExpression member2 = Expression.Property(member, "EntryID");
+            //MethodInfo method = typeof(Enumerable).GetMethod("Contains", new Type[] { typeof(int) });
+            MethodInfo method = typeof(Enumerable).GetMethods().
+                    Where(x => x.Name == "Contains").
+                    Single(x => x.GetParameters().Length == 2).
+                    MakeGenericMethod(typeof(int));
+            ConstantExpression constant = Expression.Constant(enumerable, typeof(IEnumerable<int>));
+            Expression exp = Expression.Call(method, constant, member2);
+            return Expression.Lambda<Func<T, bool>>(exp, parameter);
         }
 
-        private Expression<Func<Entry, bool>> GetBooleanExpression(string propertyName) {
-            ParameterExpression parameter = Expression.Parameter(typeof(Entry));
+        private Expression<Func<EntryVM, bool>> EntryEqualsChildsProperty<T>(T child, string propertyName) {
+            //Get entry
+            ParameterExpression entryVM = Expression.Parameter(typeof(EntryVM));
+            MemberExpression entry = Expression.Property(entryVM, "Entry");
+            //Get constant
+            //ParameterExpression childParam = Expression.Parameter(typeof(T));
+            //MemberExpression property = Expression.Property(childParam, propertyName);
+            PropertyInfo property = child.GetType().GetProperty(propertyName);
+            //ConstantExpression constant = Expression.Constant(property, typeof(Entry));
+            ConstantExpression constant = Expression.Constant(property.GetValue(child, null), typeof(Entry));
+            //YES! THIS WORKS!
+            //and the rest
+            Expression exp = Expression.Equal(entry, constant);
+            return Expression.Lambda<Func<EntryVM, bool>>(exp, entryVM);
+        } //NOT QUITE working. CBTL. CURRENT.
+
+        private Expression<Func<T, bool>> PropertyEqualsNull<T>(string propertyName) {
+            ParameterExpression parameter = Expression.Parameter(typeof(T));
+            //NOTE: using reflection below, SO may as well use it above!
             MemberExpression member = Expression.Property(parameter, propertyName);
             ConstantExpression constant = Expression.Constant(null);
             Expression exp = Expression.Equal(member, constant);
-            return Expression.Lambda<Func<Entry, bool>>(exp, parameter);
+            return Expression.Lambda<Func<T, bool>>(exp, parameter);
         }
 
-        public IQueryable<Entry> showFirstLevel(string columnName) {
-            IEnumerable<int> filterTagIDs = filter.Tags.Select(c => c.TagID);
-            IQueryable<Entry> filteredParents = null;
+        private Expression<Func<T, bool>> PropertyNotNull<T>(string propertyName) {
+            //type = (displayPanel.TypePanel.DataContext as TypePanelVM).SelectedObjects.First() as Type;
+            ParameterExpression parameter = Expression.Parameter(typeof(T));
+            MemberExpression member = Expression.Property(parameter, propertyName); //propName sensor is not defined for entry!
+            ConstantExpression constant = Expression.Constant(null);
+            Expression exp = Expression.NotEqual(member, constant);
+            //parameter = Expression.Convert(parameter, typeof(Entry));
+            //sure the above won't help anyway.
+            return Expression.Lambda<Func<T, bool>>(exp, parameter);
+        } //only way to make this generic, is to use ENTRY!
+          //SO just have to somehow AVOID sending it anything other than entrys.
+          //THAT WON'T be any good! MUST have to have ONE OF THESE, for each type.
+          //SO, need a PartInstanceTypeVM, (or do it in static PartInstanceVM, would be fine if works, and easier),
+          //AND put a method like this in each... BUT that is Copy and Paste! Bad!
+          //BUT surely no other way... if PropertyName "sensor" is not defined for entry.
+
+        public void sortTasks() {
+            switch (displayPanel.SortPanel.ComboBox.SelectedItem.ToString()) {
+                case "ID":
+                    break;
+                case "Priority":
+                    //filteredStudents = filteredStudents.OrderBy(s => s.Priority);
+                    break;
+            }
+        }
+
+        public void showLevels<T>(IQueryable<T> entries) where T : PartInstance {
+            //string columnName = (displayPanel.StructurePanel.DataContext as StructurePanelVM).SelectedObjects.First() as string;
+            string columnName = "Sensor"; //HARDWIRE
+            IQueryable<T> filteredParents = showFirstLevel(entries, columnName);
+            Expression<Func<T, bool>> expression = PropertyNotNull<T>(columnName);
+            for (int gen = 2; gen <= 5; gen++) {
+                //filteredParents = showMoreLevels(filteredParents, child => child.Parent != null);
+                filteredParents = showMoreLevels(entries, filteredParents, columnName, expression.Compile());
+            }
+        }
+
+        public IQueryable<T> showFirstLevel<T>(IQueryable<T> entries, string columnName) where T : Entry {
+            IEnumerable<int> filterTagIDs = filter.Objects.Select(o => (o as Tag).TagID);
+            IQueryable<T> filteredParents = null;
+            Type selectedType = (displayPanel.TypePanel.DataContext as TypePanelVM).SelectedObjects.First() as Type;
             if (displayPanel.OptionsPanel.ShowAllEntries) {
-                Entry entry = context.Entrys.First();
-                //filteredParents = filteredEntries.Where(s => s.Parent == null);
-                filteredParents = filteredEntries.Where(GetBooleanExpression(columnName));
-                //YES! It worked!
-                //filteredParents = filteredEntries.OrderBy(GetBool(columnName));
-                //filteredParents = filteredEntries.OrderBy(s => s.Parent);
-                //PropertyInfo propInfo = entry.GetType().GetProperty("Name");
-                //OR
-                //DbPropertyEntry dbPropEntry = context.Entry(entry).Property("Name");
-                //OK so see how they are different.
-                //WHICH would expressions take?
-                //ACTUALLY, WHO CARES! Pretty sure expressions is STILL reflection.
-                //SIMPLEST example I have seen, is entry.GetProperty("Name").GetValue(entry, null). 
-                //TRY IT!
-                //WHERE it has NO parent.
-                //NOTE! CBTL! THIS is the line that has to change,
-                //If want to show OTHER relations, NOT just Parent->Child, but OTHER relations!
-                //PERHAPS must pass the PROPERTY to examine to this method?
-                //OR perhaps that is why it is best to keep the list of children generic?
-                //BUT will be times when need to change it, so...
-                //JUST has to be, load of if statements!
-                //if THIS option selected, then do this. Either here,
-                //OR in method that CALLS this method.
-                //UNLESS can pass the string (or PROPERTY?) here, and this method can use it.
-                //i.e. pretty sure means reflection. OR using STRINGS for all references
-                //WHICH kind of makes sense really. SO not tied to names used in OOP!
-                //HOW to pass a PROPERTY that method should look at?
-                //and NOT the contents of the property, but the PROPERTY itself?
-                //MAYBE do this with DELEGATES!
-                //I.e. I pass you a value. and you CALL METHODS dependent on it?
-                //OR NO, you PASS the method you want it to call... no, does not help i think.
-                //I THINK reflection is the way. SO call showFirstLevel(Property property).
-                //then .Where(s => s.property == null). boom!
-                //REFLECTION may even be a GOOD thing! Maybe point of it is to replicate OOP?
+                filteredParents = filterEntries<T>(entries, PropertyEqualsNull<T>(columnName));
+                //PERHAPS, really DO want to do 3 filters, one for each type...
+                //HELL, may as well just DO it for now... Can change later.
+                //NOTE: the SENSOR is NOT getting into filteredParents. It SHOULD!!
             }
             else {
-                filteredParents = filteredEntries
-                .Where(e => filterTagIDs.Except(e.Parent.Tags.Select(t => t.TagID)).Any());
+                filteredParents = entries.Where(e => filterTagIDs.Except(e.Parent.Tags.Select(t => t.TagID)).Any());
                 //WHERE it has NO parent that matches the filter.
             }
-            foreach (Entry entry in filteredParents) {
+            foreach (T entry in filteredParents) {
                 //CBTL: NEED to do a TYPE check here!!!
-                EntryVM entryVM = null;
-                if (entry is PartClass)
-                    entryVM = new PartClassVM(entry as PartClass, displayPanel.MainPanel);
-                if (entry is PartInstance)
-                    entryVM = new PartInstanceVM(entry as PartInstance, displayPanel.MainPanel);
-                if (entry is Task)
-                    entryVM = new TaskVM(entry as Task, displayPanel.MainPanel);
-                //FINALLY
+                EntryVM entryVM = wrapInCorrectVM(entry);
                 FirstGenEntryVMs.Add(entryVM);
                 AllEntryVMs.Add(entryVM);
-            } //seems to work FINE up to here...
+                //PART PRESENT should have 1 sensed part. Does it?
+                //YES it does!
+                //THIS IS GREAT, actually! SENSORS come first.
+            } 
             return filteredParents;
         }
 
-        public IQueryable<Entry> showMoreLevels(IQueryable<Entry> filteredParents) {
+        public IQueryable<T> showMoreLevels<T>(IQueryable<T> entries, IQueryable<T> filteredParents, 
+            string columnName, Func<T, bool> hasParent) where T : PartInstance {
             childLevel++;
-            IQueryable<Entry> filteredChildren = null;
-            IEnumerable<int> parentEntryIDs = filteredParents.Select(s => s.EntryID);
-            if (displayPanel.OptionsPanel.ShowAllChildren) {
-                filteredChildren =
-                    context.Entrys.Where(s => parentEntryIDs.Contains(s.Parent.EntryID));
-            }
-            else {
-                filteredChildren =
-                    filteredEntries.Where(s => parentEntryIDs.Contains(s.Parent.EntryID));
-            } //NOTE! innefficiency above, in that it does this for parents too...
-            foreach (Entry child in filteredChildren) {
-                if (child.Parent != null) { //if kid has a parent
-                    try {     
-                        EntryVM parentVM = AllEntryVMs.Where(eVM => eVM.Entry == child.Parent).Single();
-                        //FIND the parentVM.
-                        //AHAH! WERE searching in the wrong list...
-                        EntryVM entryVM = null;
-                        if (child is PartClass)
-                            entryVM = new PartClassVM(child as PartClass, displayPanel.MainPanel);
-                        //AHAH! CBTL! Has to be passed a PARTVM, not ENTRYVM, or cannot tell what it is!
-                        //BUT DUH! IF the VM is CREATED as an ENTRYVM, then it is NOT a PARTVM!!!
-                        //SO FAIR PLAY! CBTL. I SAY, just create proper one here for now. Fine.
-                        //Too much dawdling already.
-                        if (child is PartInstance)
-                            entryVM = new PartInstanceVM(child as PartInstance, displayPanel.MainPanel);
-                        if (child is Task)
-                            entryVM = new TaskVM(child as Task, displayPanel.MainPanel);
-                        //FINALLY
-                        //CBTL! THIS is where you CHOOSE different CHILDREN to put in.
+            IQueryable<T> filteredChildren = null;
+            IEnumerable<int> parentEntryIDs = filteredParents.Select(e => e.EntryID);
+            //filteredChildren = entries.Where(e => parentEntryIDs.Contains(e.Sensor.EntryID));
+            filteredChildren = entries.Where(EnumContainsPropertyEntryID<T>(parentEntryIDs, columnName));
+            //CBTL! HOPEFULLY (CURRENT) just got to figure out how to do above with Expression!!!
+            //NOTE! innefficiency above, in that it does this for parents too...
+            //perhaps in previous cycle, could REMOVE parents. once placed. BUT then they 
+            //only show once. MIGHT not want that. 
+            foreach (T child in filteredChildren) {
+                if (hasParent(child)) { //if child has a parent
+                    //BUT surely BOUND to have a parent!??? if filtered children???
+                    try {
+                        //EntryVM parentVM = AllEntryVMs.Where(eVM => eVM.Entry == child.Sensor).Single();
+                        EntryVM parentVM = AllEntryVMs.Where(EntryEqualsChildsProperty<T>(child, columnName).Compile()).First();
+                        //OH YEAH! I remember! queryables can take expressions, Enumerables must take delegates!
+                        //HERE WAS the bit you missed!
+                        EntryVM entryVM = wrapInCorrectVM(child);
                         parentVM.Children.Add(entryVM);
                         AllEntryVMs.Add(entryVM);
                     }
@@ -226,18 +266,28 @@ namespace PowerNote {
             return filteredChildren;
         }
 
-        public void showUntaggedEntries() {
-            IQueryable<Task> untaggedStudents =
-                   filteredStudents.Where(s => !s.Tags.Any()); //Will this work?
-            foreach (Task student in untaggedStudents) {
-                //EntryNode entryNode = new EntryNode(student, displayPanel.MainPanel);
-            }
+        public EntryVM wrapInCorrectVM(Entry entry) {
+            EntryVM entryVM = null;
+            if (entry is PartClass)
+                entryVM = new PartClassVM(entry as PartClass, displayPanel.MainPanel);
+            if (entry is PartInstance)
+                entryVM = new PartInstanceVM(entry as PartInstance, displayPanel.MainPanel);
+            if (entry is Task)
+                entryVM = new TaskVM(entry as Task, displayPanel.MainPanel);
+            return entryVM;
         }
+
+        //public void showUntaggedEntries() {
+        //    IQueryable<Task> untaggedStudents = filteredStudents.Where(s => !s.Tags.Any()); //Will this work?
+        //    foreach (Task student in untaggedStudents) {
+        //        //EntryNode entryNode = new EntryNode(student, displayPanel.MainPanel);
+        //    }
+        //}
 
         public void updateEntries() {
             FirstGenEntryVMs.Clear();
             AllEntryVMs.Clear();
-            filterEntries();
+            filterSortAndShowEntries();
         }
 
         public void waitForParentSelection(Entry entry) {

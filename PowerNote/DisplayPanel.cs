@@ -16,6 +16,8 @@ namespace PowerNote {
     public class DisplayPanel : DockPanel {
             Label title;
             MyContext context;
+            public TypePanel TypePanel { get; set; }
+            public StructurePanel StructurePanel { get; set; }
             public FilterPanel FilterPanel { get; set; }
             public SortPanel SortPanel { get; set; }
             public OptionsPanel OptionsPanel { get; set; }
@@ -32,16 +34,19 @@ namespace PowerNote {
                 title.FontWeight = FontWeights.Bold;
                 Children.Add(title);
                 SetDock(title, Dock.Top);
-                //Filter by type
-                Label filterByType = new Label();
-                filterByType.Content = "Filter by type: (if so desire)";
-                Children.Add(filterByType);
-                SetDock(filterByType, Dock.Top);
-                //Order types
+                //Filter by TYPE
+                TypePanel = new TypePanel(context, this);
+                Children.Add(TypePanel);
+                SetDock(TypePanel, Dock.Top);
+                //TREE LAYOUT
                 Label treeLayout = new Label();
                 treeLayout.Content = "Children to show:";
                 Children.Add(treeLayout);
                 SetDock(treeLayout, Dock.Top);
+                //STRUCTURE PANEL
+                StructurePanel = new StructurePanel(context, this);
+                Children.Add(StructurePanel);
+                SetDock(StructurePanel, Dock.Top);
                 //FILTER PANEL
                 FilterPanel = new FilterPanel(context);
                 Children.Add(FilterPanel);

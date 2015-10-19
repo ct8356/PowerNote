@@ -20,6 +20,6 @@
     <Label Name="PartClassNickName" DataContext="{Binding Entry.PartClass}" Content="{Binding NickName}"></Label>
     <Label Name="Manufacturer" DataContext="{Binding Entry.PartClass}" Content="{Binding Manufacturer}"></Label>
     <local:MyAutoCompleteBox x:Name="PropertyAutoCompleteBox" ItemsSource="{Binding NickNames}"/>
-    <local:TagListBox ItemsSource="{Binding Entry.Tags}"/>
+    <local:MyListBox ItemsSource="{Binding Entry.Tags}"/>
     <local:MyAutoCompleteBox x:Name="MyAutoCompleteBox" ItemsSource="{Binding AllTags}"/>
 </local:EntryPanel>

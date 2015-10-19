@@ -32,7 +32,7 @@ namespace PowerNote {
             autoCompleteBox = new MyAutoCompleteBox();
             context.Tags.Load();
             autoCompleteBox.ItemsSource = context.Tags.Local;
-            addAutoCompleteBox();
+            Children.Add(autoCompleteBox);
             //SUBSCRIBE TO STUFF
             //autoCompleteBox.SelectionChanged += autoCompleteBox_SelectionChanged;
             //autoCompleteBox.LostFocus += autoCompleteBox_LostFocus;
@@ -71,10 +71,6 @@ namespace PowerNote {
             displayPanel = (DisplayPanel)((FilterPanel)Parent).Parent;
             MainPanel mainPanel = (MainPanel)displayPanel.Parent;
             mainPanel.updateEntries(); //CBTL lazy but I don't care.
-        }
-
-        public void addAutoCompleteBox() {
-            Children.Add(autoCompleteBox);
         }
 
         public void addCourseToStudent(Tag selectedCourse) {
@@ -135,7 +131,7 @@ namespace PowerNote {
             }
             Children.Remove(autoCompleteBox);
             addTagLabels();
-            addAutoCompleteBox();
+            Children.Add(autoCompleteBox);
         }
     }
 }

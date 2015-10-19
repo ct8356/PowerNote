@@ -26,7 +26,7 @@ namespace PowerNote.ViewModels {
 
         public void insertTask() {
             TaskVM entryVM = new TaskVM("blank", MainPanel);
-            foreach (Tag tag in MainPanel.DisplayPanel.FilterPanel.Filter.Tags) {
+            foreach (Tag tag in MainPanel.DisplayPanel.FilterPanel.Filter.SelectedObjects) {
                 entryVM.Entry.Tags.Add(tag);
             }
             Context.SaveChanges();
@@ -37,7 +37,7 @@ namespace PowerNote.ViewModels {
             TaskVM entryVM = new TaskVM
                 ((parentVM.Entry as Task).Contents + " child", MainPanel);
             parentVM.Entry.Children.Add(entryVM.Entry);
-            foreach (Tag tag in MainPanel.DisplayPanel.FilterPanel.Filter.Tags) {
+            foreach (Tag tag in MainPanel.DisplayPanel.FilterPanel.Filter.SelectedObjects) {
                 entryVM.Entry.Tags.Add(tag);
             }
             Context.SaveChanges();

@@ -37,7 +37,7 @@ namespace PowerNote.ViewModels {
 
         public void insertPart() {
             PartClassVM partVM = new PartClassVM("blank", MainPanel);
-            foreach (Tag tag in MainPanel.DisplayPanel.FilterPanel.Filter.Tags) {
+            foreach (Tag tag in MainPanel.DisplayPanel.FilterPanel.Filter.SelectedObjects) {
                 partVM.Entry.Tags.Add(tag);
             }
             Context.SaveChanges();
@@ -51,7 +51,7 @@ namespace PowerNote.ViewModels {
             PartClassVM partVM = new PartClassVM
                 ((parentVM.Entry as PartClass).NickName + " child", MainPanel); //create part.
             parentVM.Entry.Children.Add(partVM.Entry); //add it to children
-            foreach (Tag tag in MainPanel.DisplayPanel.FilterPanel.Filter.Tags) {
+            foreach (Tag tag in MainPanel.DisplayPanel.FilterPanel.Filter.SelectedObjects) {
                 partVM.Entry.Tags.Add(tag); //give it tags as per filter
             }
             Context.SaveChanges();

@@ -52,22 +52,24 @@ namespace PowerNote.Migrations {
             tasks.ForEach(student => context.ToDos.AddOrUpdate(s => s.Contents, student));
             context.SaveChanges();
 
-            var parts = new List<PartClass>();
-            parts.Add(new PartClass { NickName = "FU54", Manufacturer = "Keyence"});
-            parts.Add(new PartClass { NickName = "FU35", Manufacturer = "Keyence"});
-            parts.Add(new PartClass { NickName = "IE5827", Manufacturer = "IFM"});
-            parts.Add(new PartClass { NickName = "MFS200", Manufacturer = "IFM"});
-            parts.Add(new PartClass { NickName = "ME5010", Manufacturer = "IFM"});
-            parts.Add(new PartClass { NickName = "M8 Proxy", Manufacturer = "Balluff"});
-            //CustomerParts
-            PartClass tempPart;
-            parts.Add(tempPart = new PartClass("Customer part"));
-            parts.Add(new PartClass("LH mid HIC 1", tempPart));
-            parts.ForEach(part => context.Parts.AddOrUpdate(p => p.NickName, part));
+            var partClasses = new List<PartClass>();
+            partClasses.Add(new PartClass { NickName = "FU54", Manufacturer = "Keyence"});
+            partClasses.Add(new PartClass { NickName = "FU35", Manufacturer = "Keyence"});
+            partClasses.Add(new PartClass { NickName = "IE5827", Manufacturer = "IFM"});
+            partClasses.Add(new PartClass { NickName = "MFS200", Manufacturer = "IFM"});
+            partClasses.Add(new PartClass { NickName = "ME5010", Manufacturer = "IFM"});
+            partClasses.Add(new PartClass { NickName = "M8 Proxy", Manufacturer = "Balluff"});
+            partClasses.Add(new PartClass { NickName = "LH mid HIC", Manufacturer = "Grupo" });
+            partClasses.ForEach(partClass => context.Parts.AddOrUpdate(p => p.NickName, partClass));
             context.SaveChanges();
-
-            createPartInstance("Part present", "FU54", new List<string> { "J5693" }, context);
+            PartInstance parent = createPartInstance("Parent", "FU54", new List<string> { "J5693" }, context);
+            PartInstance part = createPartInstance("Part present", "FU54", new List<string> { "J5693" }, context);
             createPartInstance("Part correctly oriented", "FU35", new List<string> { "J5693" }, context);
+            //CustomerParts
+            PartInstance custPart = createPartInstance("LH mid HIC 1", "LH mid HIC", new List<string> { "Nissan infinity headliner NR" }, context);
+            part.SensedParts.Add(custPart);
+            custPart.Sensor = part;
+            parent.Children.Add(part);
             context.SaveChanges();
 
             AddOrUpdateTag(context, 1, "Ebay");
@@ -101,15 +103,16 @@ namespace PowerNote.Migrations {
             context.SaveChanges();
         }
 
-        public void createPartInstance(string functionText, string partClassNickName, List<string> tags, MyContext context) {
+        public PartInstance createPartInstance(string functionText, string partClassNickName, List<string> tags, MyContext context) {
             PartInstance part = new PartInstance(functionText);
             context.PartInstances.AddOrUpdate(p => p.FunctionText, part);
-            context.SaveChanges();
+            context.SaveChanges(); //must save it before adding partClass and tags?
             part.PartClass = context.Parts.Where(pc => pc.NickName == partClassNickName).First();
-            int eid = part.EntryID;
             foreach (string tag in tags) {
                 AddOrUpdateTag(context, part.EntryID, tag);
             }
+            context.SaveChanges();
+            return part;
         }
 
         public void AddOrUpdateTag(MyContext context, int entryID, string tagTitle) {

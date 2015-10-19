@@ -17,6 +17,6 @@
         </TextBox.ContextMenu>
     </TextBox>
     <TextBox Name="Priority" Text="{Binding Entry.Priority}" BorderBrush="{StaticResource BackgroundBrush}"/>
-    <local:TagListBox ItemsSource="{Binding Entry.Tags}"/>
+    <local:MyListBox ItemsSource="{Binding Entry.Tags}"/>
     <local:MyAutoCompleteBox x:Name="MyAutoCompleteBox" ItemsSource="{Binding AllTags}"/>
 </local:EntryPanel>

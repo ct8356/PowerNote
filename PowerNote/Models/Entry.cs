@@ -9,6 +9,7 @@ namespace PowerNote.Models {
     public class Entry: INotifyPropertyChanged {
         public event PropertyChangedEventHandler PropertyChanged;
         public int EntryID { get; set; }
+        public string Type { get; set; }
         public DateTime CreationDate { get; set; }
         ObservableCollection<Tag> tags;
         public virtual ObservableCollection<Tag> Tags {

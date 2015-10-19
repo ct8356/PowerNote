@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel;
 namespace PowerNote.Models {
     public class PartInstance : Entry {
+       
         string functionText;
         public string FunctionText {
             get { return functionText; }
@@ -19,15 +20,22 @@ namespace PowerNote.Models {
         public virtual PartInstance ParentPartInstance { get; set; }
         public virtual ObservableCollection<PartInstance> ChildPartInstances { get; set; }      
         public virtual ObservableCollection<Task> ChildTasks { get; set; }
-        [InverseProperty("Sensors")]
-        public virtual ObservableCollection<PartClass> SensedParts { get; set; }
+        [InverseProperty("Sensor")]
+        public virtual ObservableCollection<PartInstance> SensedParts { get; set; }
+        [InverseProperty("SensedParts")]
+        public virtual PartInstance Sensor { get; set; }
+        //NOTE: A PartInstance, CAN be an EXAMPLE partInstance. i.e. imaginary.
+        //Does not actually have to exist. //THIS way, is bit more work, but more flexible, I think.
+
         public PartInstance()
             : base() {
+            Type = "PowerNote.Models.PartInstance";
+            SensedParts = new ObservableCollection<PartInstance>();
         }//FOR some bizzare reason, AddOrUpdate method requires this...
         //even though, it is never used.
 
         public PartInstance(string functionText)
-            : base() {
+            : this() {
             FunctionText = functionText;
         }
 

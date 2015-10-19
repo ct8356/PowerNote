@@ -21,6 +21,6 @@
             </ContextMenu>
         </TextBox.ContextMenu>
     </TextBox>
-    <local:TagListBox ItemsSource="{Binding Entry.Tags}"/>
+    <local:MyListBox ItemsSource="{Binding Entry.Tags}"/>
     <local:MyAutoCompleteBox x:Name="MyAutoCompleteBox" ItemsSource="{Binding AllTags}"/>
 </local:EntryPanel>

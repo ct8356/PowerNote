@@ -23,6 +23,7 @@ namespace PowerNote.Models {
         }
 
         public Task(): base() {
+            Type = "PowerNote.Models.Task";
             Priority = 10;
         }
 

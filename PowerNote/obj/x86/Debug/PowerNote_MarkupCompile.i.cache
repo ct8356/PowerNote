@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\
+C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\
 PowerNote
 none
 false
 DEBUG;TRACE
-C:\Users\Chris\documents\visual studio 2010\Projects\PowerNote\PowerNote\App.xaml
-7-1232315432
+C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\App.xaml
+92021005227
 
-36-1354066588
-171052703605
-PartInstancePanel.xaml;ToDoPanel.xaml;MainWindow.xaml;MyAutoCompleteBox.xaml;EntriesTreeView.xaml;PartClassPanel.xaml;TagListBox.xaml;
+43-563392132
+171806628292
+TypePanel.xaml;StructurePanel.xaml;PartInstancePanel.xaml;ToDoPanel.xaml;MainWindow.xaml;MyAutoCompleteBox.xaml;EntriesTreeView.xaml;PartClassPanel.xaml;MyListBox.xaml;
 
 False
 
