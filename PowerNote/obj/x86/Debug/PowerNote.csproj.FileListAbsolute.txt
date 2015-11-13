@@ -79,8 +79,6 @@ C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNot
 C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\bin\Debug\PowerNote.exe
 C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\bin\Debug\PowerNote.pdb
 C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\bin\Debug\EntityFramework.dll
-C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\bin\Debug\System.Windows.Controls.Input.Toolkit.pdb
-C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\bin\Debug\WPFToolkit.pdb
 C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PowerNote.exe.manifest
 C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PowerNote.application
 C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\bin\Debug\PowerNote.exe.config
@@ -88,3 +86,17 @@ C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNot
 C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\MyListBox.g.cs
 C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\StructurePanel.g.cs
 C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\StructurePanel.baml
+C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\MainPanel.g.cs
+C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\MainPanel.baml
+C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\FilterPanel.g.cs
+C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\DisplayPanel.g.cs
+C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\DisplayPanel.baml
+C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\FilterPanel.baml
+C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\OptionsPanel.g.cs
+C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\OptionsPanel.baml
+C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\EntryClassOptionsPanel.g.cs
+C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\EntryClassOptionsPanel.baml
+C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\EntryPropertiesWindow.g.cs
+C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\EntryPropertiesWindow.baml
+C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\EntryPropertiesPanel.g.cs
+C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\EntryPropertiesPanel.baml

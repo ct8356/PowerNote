@@ -12,8 +12,10 @@
         <TextBox.ContextMenu>
             <ContextMenu>
                 <MenuItem Header="Insert part instance" Click="insertPart_Click"></MenuItem>
+                <MenuItem Header="Insert sub part instance" Click="insertSubPart_Click"></MenuItem>
                 <MenuItem Header="Delete entry" Click="deleteEntry_Click"></MenuItem>
                 <MenuItem Header="Change parent" Click="changeParent_Click"></MenuItem>
+                <MenuItem Header="Properties" Click="showProperties_Click"></MenuItem>
             </ContextMenu>
         </TextBox.ContextMenu>
     </TextBox>

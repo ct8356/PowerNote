@@ -43,12 +43,13 @@ namespace PowerNote {
                     //JUST going to have to delete from the ACTUAL SOURCE.
                     //WHICH IS, SelectedObjects! (needs to be this generic one, if want THIS to be generic).
                     (DataContext as ListBoxPanelVM).SelectedObjects.Remove(selectedItem);
+                    (DataContext as ListBoxPanelVM).ParentVM.updateEntries(); //lazy?
                 }
                 //MAYBE fire an event here, so that ENTRYPANEL, or TREEVIEW knows to save changes?
                 //MAYBE an event is already fired by this, you just need to LISTEN for it?
                 //context.SaveChanges(); //ALSO lazy. CBTL.
                 //mainPanel.updateEntries();
-            }
+            } //CBTL! CURRENT! have to call a method here, to refresh entries, when delete clicked.
         }
     }
 }

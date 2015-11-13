@@ -19,43 +19,30 @@ namespace PowerNote.ViewModels {
         //I.E. this viewModel, acts bit like a view!!
 
         //NOTE: I think COULD get away, with just ONE type of VM. But keep as is for now.
-        public PartClassVM(PartClass part, MainPanel mainPanel) {
+        public PartClassVM(PartClass part, EntriesTreeVM parentVM) {
             //NOTE: this constructor just WRAPS a student in a VM.
-            initialize(part, mainPanel);
+            initialize(part, parentVM);
         }
 
-        public PartClassVM(String name, MainPanel mainPanel) {
+        public PartClassVM(String name, EntriesTreeVM parentVM) {
             //NOTE: this one creates the Student, and THEN wraps it!!!
             PartClass part = new PartClass(name);
-            initialize(part, mainPanel);
-            Context.Parts.Add(part); //YES!!
-            Context.SaveChanges(); //remember this.
+            initialize(part, parentVM);
+            DbContext.Parts.Add(part); //YES!!
+            DbContext.SaveChanges(); //remember this.
         }
 
         public void deletePart() {
         }
 
-        public void insertPart() {
-            PartClassVM partVM = new PartClassVM("blank", MainPanel);
-            foreach (Tag tag in MainPanel.DisplayPanel.FilterPanel.Filter.SelectedObjects) {
-                partVM.Entry.Tags.Add(tag);
-            }
-            Context.SaveChanges();
-            //NEED to make it UPDATE TREEVIEW when you add a part...
-            //FIGURED OUT how to do this with binding I think... see TEST
-            //BUT FOR NOW, just call update.
-            MainPanel.DisplayPanel.EntriesView.updateEntries();
+        public void insertPart(EntryVM selectedEntryVM) {
+            PartClassVM entryVM = new PartClassVM("blank", TreeVM);
+            insertEntry(entryVM, selectedEntryVM);
         }
 
         public void insertSubPart(PartClassVM parentVM) {
-            PartClassVM partVM = new PartClassVM
-                ((parentVM.Entry as PartClass).NickName + " child", MainPanel); //create part.
-            parentVM.Entry.Children.Add(partVM.Entry); //add it to children
-            foreach (Tag tag in MainPanel.DisplayPanel.FilterPanel.Filter.SelectedObjects) {
-                partVM.Entry.Tags.Add(tag); //give it tags as per filter
-            }
-            Context.SaveChanges();
-            MainPanel.DisplayPanel.EntriesView.updateEntries(); //nec
+            PartClassVM entryVM = new PartClassVM((parentVM.Entry as PartClass).NickName + " child", TreeVM); //create part.
+            insertSubEntry(entryVM, parentVM);
         }
 
         //NOTE: Say, ASSEMBLY, can have parts.

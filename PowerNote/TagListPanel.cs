@@ -13,6 +13,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace PowerNote {
+    //NO LONGER USED! but keep for reference.
     class TagListPanel : StackPanel {
         MyContext context;
         MyAutoCompleteBox autoCompleteBox;

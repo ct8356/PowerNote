@@ -12,36 +12,27 @@ namespace PowerNote.ViewModels {
 
     public class TaskVM : EntryVM {
 
-        public TaskVM(Task student, MainPanel mainPanel) {
+        public TaskVM(Task student, EntriesTreeVM treeVM) {
             //NOTE: this constructor just WRAPS a student in a VM.
-            initialize(student, mainPanel);
+            initialize(student, treeVM);
         }
 
-        public TaskVM(String name, MainPanel mainPanel) {
-            //NOTE: this one creates the Student, and THEN wraps it!!!
-            Task newStudent = new Task(name);
-            initialize(newStudent, mainPanel);
-            Context.ToDos.Add(newStudent);
+        public TaskVM(String name, EntriesTreeVM treeVM) {
+            //NOTE: this one creates the Entry, and THEN wraps it!!!
+            Task newTask = new Task(name);
+            initialize(newTask, treeVM);
+            DbContext.ToDos.Add(newTask);
         }
 
-        public void insertTask() {
-            TaskVM entryVM = new TaskVM("blank", MainPanel);
-            foreach (Tag tag in MainPanel.DisplayPanel.FilterPanel.Filter.SelectedObjects) {
-                entryVM.Entry.Tags.Add(tag);
-            }
-            Context.SaveChanges();
-            MainPanel.DisplayPanel.EntriesView.updateEntries();
+        public void insertTask(TaskVM selectedVM) {
+            TaskVM entryVM = new TaskVM("blank", TreeVM);
+            insertEntry(entryVM, selectedVM);
         }
 
-        public void insertSubTask(TaskVM parentVM) {
-            TaskVM entryVM = new TaskVM
-                ((parentVM.Entry as Task).Contents + " child", MainPanel);
-            parentVM.Entry.Children.Add(entryVM.Entry);
-            foreach (Tag tag in MainPanel.DisplayPanel.FilterPanel.Filter.SelectedObjects) {
-                entryVM.Entry.Tags.Add(tag);
-            }
-            Context.SaveChanges();
-            MainPanel.DisplayPanel.EntriesView.updateEntries(); //nec
+        public void insertSubTask(TaskVM selectedVM) {
+            TaskVM entryVM = new TaskVM((selectedVM.Entry as Task).Contents + " child", TreeVM); 
+            //this creates an entry too!
+            insertSubEntry(entryVM, selectedVM);
         }
     }
 }

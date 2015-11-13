@@ -54,7 +54,7 @@ namespace PowerNote {
                 Task newStudent = new Task(sideEntry.textBox.Text);
                 context.ToDos.Add(newStudent);
                 context.SaveChanges();
-                mainPanel.DisplayPanel.updateEntries();
+                //mainPanel.DisplayPanel.updateEntries();
                 //CBTL
                 //TODO
                 sideEntry.bindTextBox(newStudent);

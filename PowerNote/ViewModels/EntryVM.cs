@@ -14,36 +14,46 @@ using System.Windows;
 
 namespace PowerNote.ViewModels {
     public class EntryVM : INotifyPropertyChanged {
+        public EntriesTreeVM TreeVM { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
         public Entry Entry { get; set; }
-        public MainPanel MainPanel { get; set; }
-        public DisplayPanel DisplayPanel { get; set; }
-        public MyContext Context { get; set; }
+        public MyContext DbContext { get; set; }
         public ObservableCollection<string> AllProperties { get; set; }
         public ObservableCollection<Tag> AllTags { get; set; }
         public EntryVM Parent { get; set; }
+        //NOTE! I think proper way to do this, is to just MODIFY the entry,
+        //BUT because the the EntryVM is bound to it, it will update itself accordingly!
+        //i.e. this entryVM just has a public Entry Parent.
+        //NOW, whene that Entry is deleted, the EntryVM deletes itself. SO this EntryVM,
+        //does not even need to know its own ParentVM???? maybe... not sure yet.
         public ObservableCollection<EntryVM> Children { get; set; }
+        //DON'T want others adding to children. If I make it private, will that stop binding?
+        //No, it won't, provided you KEEP this property public!!!
+        //BUT problem is, then you can still add to Children...issue...
+        public FilterPanelVM Filter { get; set; }
+        public bool IsExpanded { get; set; }
+
+        //SHOULD there be an option to emanciate??? (free from parent?)
 
         public EntryVM() {
             //do nothing.
             //NOTE: is this called? maybe. Even if it is, does not matter.
         }
 
-        public void initialize(Entry entry, MainPanel mainPanel) {
-            Children = new ObservableCollection<EntryVM>();
-            MainPanel = mainPanel;
-            Context = MainPanel.Context;
-            AllProperties = new ObservableCollection<string>();
-            Context.Tags.Load();
-            AllTags = Context.Tags.Local;
+        public void initialize(Entry entry, EntriesTreeVM treeVM) {
             bindToEntry(entry);
+            TreeVM = treeVM;
+            Children = new ObservableCollection<EntryVM>();
+            Filter = treeVM.Filter;
+            DbContext = treeVM.DbContext;
+            AllProperties = new ObservableCollection<string>();
+            DbContext.Tags.Load();
+            AllTags = DbContext.Tags.Local; 
         }
 
         public void addNewTagToEntry(object sender, string text) {
-            Tag newTag = new Tag();
-            newTag.Title = text;
-            Context.Tags.Add(newTag);
-            Context.SaveChanges();
+            Tag newTag = new Tag(); newTag.Title = text;
+            DbContext.Tags.Add(newTag); DbContext.SaveChanges();
             addTagToEntry(sender, newTag);
         }
 
@@ -53,14 +63,27 @@ namespace PowerNote.ViewModels {
             }
             else {
                 Entry.Tags.Add(selectedCourse);
-                Context.SaveChanges();
-                MainPanel.updateEntries(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.  
+                DbContext.SaveChanges();
+                //ParentVM.ParentVM.updateEntries(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.  
+                //above is bad, because deletes all entryVMs.
                 (sender as AutoCompleteBox).Text = null;
             }
         }
 
-        public void adoptChild() {
-            Entry.Children.Add(MainPanel.DisplayPanel.EntriesView.Orphan);
+        public void adoptChild(EntryVM entryVM) {
+            Children.Add(entryVM); //Does this do the trick? Yes it seems to...
+            entryVM.Parent = this;
+            Entry.Children.Add(entryVM.Entry);
+        }
+
+        public void adoptSibling(EntryVM entryVM) {
+            Parent.Children.Add(entryVM);
+            entryVM.Parent = Parent;
+            Parent.Entry.Children.Add(entryVM.Entry);
+        }
+
+        public void adoptChildFromTreeVM() {
+            Entry.Children.Add(TreeVM.Orphan);
         }
 
         public void bindToEntry(Entry entry) {
@@ -71,15 +94,45 @@ namespace PowerNote.ViewModels {
             Entry parent = Entry.Parent; //just to check if it is anything! if EF works.
             //(EVEN if it does work, its a fluke. MUST be a way of FURTHER specifying/Explicitfying link between parent and child).
             Entry.Parent = null;
-            MainPanel.DisplayPanel.EntriesView.waitForParentSelection(Entry);
+            TreeVM.waitForParentSelection(Entry);
         }
 
         public void deleteEntry() {
-            Context.Entrys.Remove(Entry);
-            Context.SaveChanges(); //ALSO lazy. CBTL.
+            DbContext.Entrys.Remove(Entry);
+            if (Parent != null) {//IF it has a parent: delete self from children
+                Parent.Children.Remove(this);
+            }
+            else { //else delete self from FirstLevelVMs
+                TreeVM.FirstGenEntryVMs.Remove(this);
+            }
+            DbContext.SaveChanges(); //ALSO lazy. CBTL.
             //SO NOTE: OF COURSE, easier you just do these things, IN THE VIEWMODEL!
-            MainPanel.updateEntries(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.
+            //TreeVM.ParentVM.updateEntries(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.
         }
 
+        public void insertEntry(EntryVM entryVM, EntryVM selectedVM) {
+            if (Parent != null) {//IF it has a parent: make new one a sibling.
+                adoptSibling(entryVM);
+            } else { //else put it in FirstLevelVMs
+                TreeVM.FirstGenEntryVMs.Add(entryVM);
+            }
+            foreach (Tag tag in Filter.SelectedObjects) {
+                entryVM.Entry.Tags.Add(tag);
+            }
+            DbContext.SaveChanges();
+            //ParentVM.updateEntries(); //not needed? shouldn't be. Not needed for inserting tags...
+        }
+
+        public void insertSubEntry(EntryVM entryVM, EntryVM selectedVM) {
+            adoptChild(entryVM);
+            foreach (Tag tag in Filter.SelectedObjects) {
+                entryVM.Entry.Tags.Add(tag);
+            }
+            DbContext.SaveChanges();
+            //ParentVM.updateEntries(); //nec //is it though? well yes. Is there another way?
+            //is entry.Children observable? Yes. BUT real issue is: is it adding a VM? No!
+            //so make it do so!
+            //DONE! CBTL, works, but could be more issues here...
+        }
     }
 }

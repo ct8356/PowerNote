@@ -20,6 +20,7 @@ namespace PowerNote {
         ListBox ListBox { get; set; }
 
         public ControlPanel(MyContext context, MainPanel mainPanel) {
+            //LETS leave this out for a bit.
             this.context = context;
             this.mainPanel = mainPanel;
             //TITLE

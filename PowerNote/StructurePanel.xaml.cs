@@ -18,10 +18,8 @@ using PowerNote.ViewModels;
 
 namespace PowerNote {
     public partial class StructurePanel : ListBoxPanel {
-        public DisplayPanel DisplayPanel { get; set; }
 
-        public StructurePanel(MyContext context, DisplayPanel displayPanel) {
-            DisplayPanel = displayPanel;
+        public StructurePanel() {
             InitializeComponent();
             MyAutoCompleteBox.KeyUp += autoCompleteBox_KeyUp;
         }

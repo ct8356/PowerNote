@@ -13,11 +13,9 @@ using PowerNote.Models;
 namespace PowerNote {
     public class SortPanel : StackPanel {
         Label title;
-        MyContext context;
         public ComboBox ComboBox { get; set; }
 
-        public SortPanel(MyContext context) {
-            this.context = context;
+        public SortPanel() {
             //PANEL
             Orientation = Orientation.Horizontal;
             title = new Label();

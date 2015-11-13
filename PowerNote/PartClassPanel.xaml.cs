@@ -22,7 +22,7 @@ namespace PowerNote {
         }
 
         public void insertPart_Click(object sender, RoutedEventArgs e) {
-            (DataContext as PartClassVM).insertPart();
+            (DataContext as PartClassVM).insertPart(DataContext as PartClassVM);
         }
 
         public void insertSubPart_Click(Object sender, EventArgs e) {

@@ -9,10 +9,13 @@
              xmlns:VMs="clr-namespace:PowerNote.ViewModels"
              d:DesignHeight="300" d:DesignWidth="300"
              Orientation="Horizontal">
-    <StackPanel.DataContext>
-        <VMs:TypePanelVM/>
-    </StackPanel.DataContext>
     <Label Content="Filter by type:"></Label>
-    <local:MyListBox ItemsSource="{Binding SelectedObjects}" />
-    <local:MyAutoCompleteBox x:Name="MyAutoCompleteBox" ItemsSource="{Binding Objects}"/>
+    <local:MyListBox x:Name="MyListBox" ItemsSource="{Binding SelectedObjects}" />
+    <local:MyAutoCompleteBox x:Name="MyChoiceBox" ItemsSource="{Binding Objects}">
+        <local:MyAutoCompleteBox.ItemTemplate>
+            <DataTemplate>
+                <TextBlock Text="{Binding Name}"></TextBlock>
+            </DataTemplate>
+        </local:MyAutoCompleteBox.ItemTemplate>
+    </local:MyAutoCompleteBox>
 </local:ListBoxPanel>

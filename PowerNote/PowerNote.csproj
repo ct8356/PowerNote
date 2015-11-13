@@ -95,7 +95,29 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ControlPanel.cs" />
+    <Compile Include="DisplayPanel.xaml.cs">
+      <DependentUpon>DisplayPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EntryClassOptionsPanel.xaml.cs">
+      <DependentUpon>EntryClassOptionsPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EntryPropertiesPanel.xaml.cs">
+      <DependentUpon>EntryPropertiesPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EntryPropertiesWindow.xaml.cs">
+      <DependentUpon>EntryPropertiesWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ListBoxPanel.cs" />
+    <Compile Include="MainPanel.xaml.cs">
+      <DependentUpon>MainPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FilterPanel.xaml.cs">
+      <DependentUpon>FilterPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OldEntry.cs" />
+    <Compile Include="OptionsPanel.xaml.cs">
+      <DependentUpon>OptionsPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TypePanel.xaml.cs">
       <DependentUpon>TypePanel.xaml</DependentUpon>
     </Compile>
@@ -106,13 +128,11 @@
       <DependentUpon>PartInstancePanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="DAL\MyContext.cs" />
-    <Compile Include="DisplayPanel.cs" />
     <Compile Include="EntryPanel.cs" />
     <Compile Include="Models\PartInstance.cs" />
     <Compile Include="ToDoPanel.xaml.cs">
       <DependentUpon>ToDoPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FilterPanel.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Entry.cs" />
     <Compile Include="Models\PartClass.cs" />
@@ -125,7 +145,6 @@
     <Compile Include="EntriesTreeView.xaml.cs">
       <DependentUpon>EntriesTreeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="OptionsPanel.cs" />
     <Compile Include="PartClassPanel.xaml.cs">
       <DependentUpon>PartClassPanel.xaml</DependentUpon>
     </Compile>
@@ -136,14 +155,46 @@
       <DependentUpon>MyListBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="TagListPanel.cs" />
+    <Compile Include="ViewModels\EntriesTreeVM.cs" />
+    <Compile Include="ViewModels\OldEntryVM.cs" />
     <Compile Include="ViewModels\FilterPanelVM.cs" />
     <Compile Include="ViewModels\ListBoxPanelVM.cs" />
+    <Compile Include="ViewModels\EntryClassOptionsVM.cs" />
+    <Compile Include="ViewModels\OptionsPanelVM.cs" />
     <Compile Include="ViewModels\TypePanelVM.cs" />
     <Compile Include="ViewModels\StructurePanelVM.cs" />
     <Compile Include="ViewModels\PartInstanceVM.cs" />
     <Compile Include="ViewModels\EntryVM.cs" />
     <Compile Include="ViewModels\PartClassVM.cs" />
     <Compile Include="ViewModels\TaskVM.cs" />
+    <Page Include="DisplayPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EntryClassOptionsPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EntryPropertiesPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EntryPropertiesWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="FilterPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="OptionsPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="TypePanel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -169,7 +220,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DAL\Database.cs" />
-    <Compile Include="MainPanel.cs" />
+    <Compile Include="ViewModels\MainVM.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

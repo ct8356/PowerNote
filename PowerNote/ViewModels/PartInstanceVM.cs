@@ -20,69 +20,55 @@ using System.Collections.ObjectModel;
 
 namespace PowerNote.ViewModels {
     public class PartInstanceVM : EntryVM {
-        public ObservableCollection<string> NickNames { get; set; }
-        public PartClass PartClass { get; set; }
+        public static IEnumerable<string> PropertyNames { get; set; }
         public static ObservableCollection<string> Structures { get; set; }
         public static string SelectedStructure { get; set; }
         //NOTE: might be a good idea to make own DbSet class,
         //AND then put these statics, in there.
 
-        public PartInstanceVM(Entry entry, MainPanel mainPanel) {
+        public PartInstanceVM(Entry entry, EntriesTreeVM parentVM) {
             //NOTE: this constructor just WRAPS an entry in a VM.
-            initialize(entry, mainPanel);
-            IQueryable<PartClass> partClasses = Context.Parts;
+            initialize(entry, parentVM);
+            IQueryable<PartClass> partClasses = DbContext.Parts;
             PartClass partClass = partClasses.First();
             //(entry as PartInstance).PartClass = partClass;
             //WHAT THE!!??? NOW IT WORKS???
             //Weird.
         }
 
-        public PartInstanceVM(String name, MainPanel mainPanel) {
-            //NOTE: this one creates the Student, and THEN wraps it!!!
+        public PartInstanceVM(String name, EntriesTreeVM parentVM) {
+            //NOTE: this one creates the Entry, and THEN wraps it!!!
             PartInstance entry = new PartInstance(name);
-            initialize(entry, mainPanel);
-            Context.PartInstances.Add(entry);
-            Context.SaveChanges(); //remember this.
+            initialize(entry, parentVM);
+            DbContext.PartInstances.Add(entry);
+            DbContext.SaveChanges(); //remember this.
         }
 
-        public void initialize(Entry entry, MainPanel mainPanel) {
-            base.initialize(entry, mainPanel);
-            IQueryable<PartClass> partClasses = Context.Parts;
-            IQueryable<string> partNickNames = partClasses.Select(pc => pc.NickName).Distinct();
-            NickNames = new ObservableCollection<string>();
-            foreach (string name in partNickNames) {
-                NickNames.Add(name);
-            }
-        }
+        public new void initialize(Entry entry, EntriesTreeVM parentVM) {
+            base.initialize(entry, parentVM);
+            IQueryable<PartInstance> partInstances = DbContext.PartInstances;
+            PropertyNames = typeof(PartInstance).GetProperties().Select(x => x.Name);
+        }//NOTE: new, means, this is NOT called, if call EntryVM.initialize, and happens to be a partInstance.
 
         public void addPartClassToEntry(string text) {
-            IQueryable<PartClass> partClasses = Context.Parts;
+            IQueryable<PartClass> partClasses = DbContext.Parts;
             PartClass partClass = partClasses.Where(pc => pc.NickName == text).First();
             (Entry as PartInstance).PartClass = partClass;
-            Context.SaveChanges();
-            MainPanel.DisplayPanel.EntriesView.updateEntries();
+            DbContext.SaveChanges();
+            TreeVM.updateEntries();
             //CBTL, why was this not working before?
             //nav property? lack of update entries?
         }
 
-        public void insertPart() {
-            PartClassVM partVM = new PartClassVM("blank", MainPanel);
-            foreach (Tag tag in MainPanel.DisplayPanel.FilterPanel.Filter.SelectedObjects) {
-                partVM.Entry.Tags.Add(tag);
-            }
-            Context.SaveChanges();
-            MainPanel.DisplayPanel.EntriesView.updateEntries();
+        public void insertPart(PartInstanceVM selectedVM) {
+            PartInstanceVM entryVM = new PartInstanceVM("blank", TreeVM);
+            insertEntry(entryVM, selectedVM);
         }
 
-        public void insertSubPart(PartClassVM parentVM) {
-            PartClassVM partVM = new PartClassVM
-                ((parentVM.Entry as PartClass).NickName + " child", MainPanel); //create part.
-            parentVM.Entry.Children.Add(partVM.Entry); //add it to children
-            foreach (Tag tag in MainPanel.DisplayPanel.FilterPanel.Filter.SelectedObjects) {
-                partVM.Entry.Tags.Add(tag); //give it tags as per filter
-            }
-            Context.SaveChanges();
-            MainPanel.DisplayPanel.EntriesView.updateEntries(); //nec
+        public void insertSubPart(PartInstanceVM parentVM) {
+            PartInstanceVM entryVM = new PartInstanceVM((parentVM.Entry as PartInstance).FunctionText + " child", 
+                TreeVM); //create part.
+            insertSubEntry(entryVM, parentVM);
         }
 
     }

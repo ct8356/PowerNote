@@ -13,12 +13,12 @@ using PowerNote.ViewModels;
 
 namespace PowerNote {
     public partial class TypePanel : ListBoxPanel {
-        public DisplayPanel DisplayPanel { get; set; }
 
-        public TypePanel(MyContext context, DisplayPanel displayPanel) {
-            DisplayPanel = displayPanel;
+        public TypePanel() {
             InitializeComponent();
-            MyAutoCompleteBox.KeyUp += autoCompleteBox_KeyUp;
+            MyChoiceBox.KeyUp += autoCompleteBox_KeyUp;
+            MyListBox.DisplayMemberPath = "Name";
+            MyChoiceBox.ValueMemberPath = "Name";
         }
 
     }

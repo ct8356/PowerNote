@@ -11,21 +11,8 @@ using System.Collections.ObjectModel;
 
 namespace PowerNote {
     public class ListBoxPanel : StackPanel {
-        Label title;
-        public ObservableCollection<object> Objects { get; set; }
 
         public ListBoxPanel() {
-            //PANEL
-            //Orientation = Orientation.Horizontal;
-            //title = new Label();
-            //title.Content = "List-box panel:";
-            //Children.Add(title);
-            ////OTHER
-            //MyListBox myListBox = new MyListBox();
-            //myListBox.ItemsSource = Objects;
-            //Children.Add(myListBox);
-            //MyAutoCompleteBox myAutoCompleteBox = new MyAutoCompleteBox();      
-            //Children.Add(myAutoCompleteBox);
         }
 
         public void autoCompleteBox_KeyUp(object sender, KeyEventArgs e) {

@@ -23,15 +23,15 @@ namespace PowerNote {
         }
 
         public void insertPart_Click(object sender, RoutedEventArgs e) {
-            (DataContext as PartInstanceVM).insertPart();
+            (DataContext as PartInstanceVM).insertPart(DataContext as PartInstanceVM);
         }
 
-        //public void insertSubPart_Click(Object sender, EventArgs e) {
-        //    MenuItem menuItem = sender as MenuItem;
-        //    if (menuItem != null) {
-        //        (DataContext as PartInstanceVM).insertSubPart(DataContext as PartInstanceVM);
-        //    }
-        //}
+        public void insertSubPart_Click(Object sender, EventArgs e) {
+            MenuItem menuItem = sender as MenuItem;
+            if (menuItem != null) {
+                (DataContext as PartInstanceVM).insertSubPart(DataContext as PartInstanceVM);
+            }
+        }
 
         public void partClassACBox_KeyUp(object sender, KeyEventArgs e) {
             if (e.Key == Key.Return) {
@@ -41,6 +41,17 @@ namespace PowerNote {
                     (DataContext as PartInstanceVM).addPartClassToEntry(autoCompleteBox.Text);
                 }
                 autoCompleteBox.Text = null;
+            }
+        }
+
+        public void showProperties_Click(object sender, EventArgs e) {
+            MenuItem menuItem = sender as MenuItem;
+            if (menuItem != null) {
+                EntryPropertiesWindow subWindow = new EntryPropertiesWindow();
+                object temp = subWindow.DataContext; //yes, it is null.
+                subWindow.DataContext = DataContext;
+                subWindow.Show();         
+                //AHAH! So with windows, it seems the binding is not done, until call SHOW!!!
             }
         }
 

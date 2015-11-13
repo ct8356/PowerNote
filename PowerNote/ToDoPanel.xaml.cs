@@ -30,7 +30,7 @@ namespace PowerNote {
         public void insertTask_Click(Object sender, EventArgs e) {
             MenuItem menuItem = (MenuItem)sender;
             if (menuItem != null) {
-                (DataContext as TaskVM).insertTask();
+                (DataContext as TaskVM).insertTask(DataContext as TaskVM);
             }
         }
 

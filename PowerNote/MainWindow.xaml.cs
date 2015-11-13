@@ -13,28 +13,12 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace PowerNote {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window{
-        Grid grid;
-        MainPanel mainPanel;
-        Button button1;
-        Button button2;
 
         public MainWindow() {
             WindowState = WindowState.Maximized;
-            //WINDOW STUFF
-            //grid = new MyGrid();
-            button1 = new Button();
-            button2 = new Button();
-            button1.Content = "one";
-            button2.Content = "two";
-            mainPanel = new MainPanel();
-            //NOTE, this window can only have one child.
-            //SO Main panel is always, the main panel.
-            AddChild(mainPanel);
             InitializeComponent();
         }
+
     }
 }

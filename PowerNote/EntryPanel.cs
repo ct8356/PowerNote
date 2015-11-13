@@ -32,17 +32,15 @@ namespace PowerNote {
         }
 
         public void conditionalSubscribe() {
-            if ((DataContext as EntryVM).MainPanel.DisplayPanel
-                .EntriesView.WaitingForParentSelection)
+            if ((DataContext as EntryVM).TreeVM.WaitingForParentSelection)
                 this.MouseUp += sendToFosterParent;
         }
 
         public void sendToFosterParent(object sender, RoutedEventArgs e) {
-            (DataContext as EntryVM).MainPanel.DisplayPanel
-                .EntriesView.WaitingForParentSelection = false;
+            (DataContext as EntryVM).TreeVM.WaitingForParentSelection = false;
             this.MouseUp -= sendToFosterParent; //unsubscribe
             EntryPanel selectedParentPanel = sender as EntryPanel;
-            (selectedParentPanel.DataContext as EntryVM).adoptChild();
+            (selectedParentPanel.DataContext as EntryVM).adoptChildFromTreeVM();
         }
 
         public void changeParent_Click(object sender, RoutedEventArgs e) {
@@ -59,7 +57,7 @@ namespace PowerNote {
             //Put an if statement in there, to stop something being saved twice.
             if (e.Key == Key.Return) {
                 AutoCompleteBox autoCompleteBox = sender as AutoCompleteBox;
-                List<Tag> tags = (DataContext as EntryVM).Context.Tags.ToList<Tag>();
+                List<Tag> tags = (DataContext as EntryVM).DbContext.Tags.ToList<Tag>();
                 if (tags.Select(t => t.Title).Contains(autoCompleteBox.Text)) {
                     //i.e. IF course exists already, then say "selection Changed!".
                     //This method no longer needed, but keep it, just in case.
@@ -84,8 +82,8 @@ namespace PowerNote {
         }
 
         public void filterAndSortTagsShown() {
-            IEnumerable<int> filterCourseIDs = (DataContext as EntryVM).MainPanel.DisplayPanel
-                .FilterPanel.Filter.Objects.Select(c => (c as Tag).TagID);
+            IEnumerable<int> filterCourseIDs = 
+                (DataContext as EntryVM).Filter.Objects.Select(c => (c as Tag).TagID);
             var alphabeticalCourses = (DataContext as EntryVM)
                 .Entry.Tags.Where(c => !filterCourseIDs.Contains(c.TagID)).OrderBy(c => c.Title);
         }
