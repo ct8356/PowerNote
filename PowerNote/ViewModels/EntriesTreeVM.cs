@@ -29,7 +29,7 @@ namespace PowerNote.ViewModels {
 
         public EntriesTreeVM(MainVM parentVM) {
             ParentVM = parentVM;
-            DbContext = parentVM.Context;
+            DbContext = parentVM.DbContext;
             TypePanelVM = parentVM.TypePanelVM;
             StructurePanelVM = parentVM.StructurePanelVM;
             Filter = parentVM.FilterPanelVM;
@@ -207,9 +207,10 @@ namespace PowerNote.ViewModels {
                         //EntryVM parentVM = AllEntryVMs.Where(eVM => eVM.Entry == child.Sensor).Single();
                         EntryVM parentVM = AllEntryVMs.Where(EntryEqualsChildsProperty<T>(child, columnName).Compile()).First();
                         //OH YEAH! Queryables can take expressions, Enumerables must take delegates!
-                        EntryVM entryVM = wrapInCorrectVM(child);
-                        parentVM.adoptChild(entryVM);
-                        AllEntryVMs.Add(entryVM);
+                        EntryVM childVM = wrapInCorrectVM(child);
+                        parentVM.Children.Add(childVM);
+                        childVM.Parent = parentVM;
+                        AllEntryVMs.Add(childVM);
                     }
                     catch (Exception e) {
                         //Do nothing

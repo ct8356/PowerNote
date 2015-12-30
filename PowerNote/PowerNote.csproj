@@ -114,7 +114,6 @@
     <Compile Include="FilterPanel.xaml.cs">
       <DependentUpon>FilterPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Models\OldEntry.cs" />
     <Compile Include="OptionsPanel.xaml.cs">
       <DependentUpon>OptionsPanel.xaml</DependentUpon>
     </Compile>
@@ -156,6 +155,7 @@
     </Compile>
     <Compile Include="TagListPanel.cs" />
     <Compile Include="ViewModels\EntriesTreeVM.cs" />
+    <Compile Include="ViewModels\Filter.cs" />
     <Compile Include="ViewModels\OldEntryVM.cs" />
     <Compile Include="ViewModels\FilterPanelVM.cs" />
     <Compile Include="ViewModels\ListBoxPanelVM.cs" />

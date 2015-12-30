@@ -41,5 +41,9 @@ namespace PowerNote {
                 panel.updateEntries(); //Should not have to, since I will only delete ones with NO attachments. For now.
             }
         }
+
+        public void Seed_Click(object sender, RoutedEventArgs args) {
+            (DataContext as MainVM).seedDatabase();
+        }
     }
 }

@@ -17,7 +17,7 @@ namespace PowerNote.ViewModels {
         public bool ShowAllChildren { get; set; }
 
         public OptionsPanelVM(MainVM parentVM) {
-            this.context = parentVM.Context;
+            this.context = parentVM.DbContext;
         }
 
     }

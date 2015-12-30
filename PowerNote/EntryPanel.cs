@@ -83,7 +83,7 @@ namespace PowerNote {
 
         public void filterAndSortTagsShown() {
             IEnumerable<int> filterCourseIDs = 
-                (DataContext as EntryVM).Filter.Objects.Select(c => (c as Tag).TagID);
+                (DataContext as EntryVM).FilterPanelVM.Objects.Select(c => (c as Tag).TagID);
             var alphabeticalCourses = (DataContext as EntryVM)
                 .Entry.Tags.Where(c => !filterCourseIDs.Contains(c.TagID)).OrderBy(c => c.Title);
         }

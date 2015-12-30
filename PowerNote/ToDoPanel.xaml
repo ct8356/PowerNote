@@ -7,7 +7,8 @@
              mc:Ignorable="d"
              d:DesignWidth="300"
              Orientation="Horizontal">
-    <TextBox Name="TextBox" Text="{Binding Entry.Contents}" BorderBrush="{StaticResource BackgroundBrush}">
+    <TextBox Name="TextBox" Width ="200" Text="{Binding Entry.Contents}" 
+             BorderBrush="{StaticResource BackgroundBrush}">
         <TextBox.ContextMenu>
             <ContextMenu>
                 <MenuItem Header="Insert task" Click="insertTask_Click"></MenuItem>
@@ -17,6 +18,10 @@
         </TextBox.ContextMenu>
     </TextBox>
     <TextBox Name="Priority" Text="{Binding Entry.Priority}" BorderBrush="{StaticResource BackgroundBrush}"/>
+    <TextBox Name="Duration" Text="{Binding Entry.Duration}" BorderBrush="{StaticResource BackgroundBrush}"
+             ToolTip="Duration"/>
+    <CheckBox Name="Completed" IsChecked="{Binding Entry.Completed}" Content="Completed"/>
+    <CheckBox Name="Template" IsChecked="{Binding Entry.Template}" Content="Template"/>
     <local:MyListBox ItemsSource="{Binding Entry.Tags}"/>
     <local:MyAutoCompleteBox x:Name="MyAutoCompleteBox" ItemsSource="{Binding AllTags}"/>
 </local:EntryPanel>

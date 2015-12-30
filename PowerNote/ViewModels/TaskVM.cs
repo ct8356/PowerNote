@@ -12,9 +12,9 @@ namespace PowerNote.ViewModels {
 
     public class TaskVM : EntryVM {
 
-        public TaskVM(Task student, EntriesTreeVM treeVM) {
+        public TaskVM(Task task, EntriesTreeVM treeVM) {
             //NOTE: this constructor just WRAPS a student in a VM.
-            initialize(student, treeVM);
+            initialize(task, treeVM);
         }
 
         public TaskVM(String name, EntriesTreeVM treeVM) {
@@ -22,6 +22,11 @@ namespace PowerNote.ViewModels {
             Task newTask = new Task(name);
             initialize(newTask, treeVM);
             DbContext.ToDos.Add(newTask);
+        }
+
+        public void initialize(Task task, EntriesTreeVM treeVM) {
+            ListBoxPanelVM = new FilterPanelVM(treeVM.ParentVM); //NOW bind to this!!!
+            base.initialize(task, treeVM);
         }
 
         public void insertTask(TaskVM selectedVM) {

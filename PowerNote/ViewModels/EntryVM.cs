@@ -20,17 +20,19 @@ namespace PowerNote.ViewModels {
         public MyContext DbContext { get; set; }
         public ObservableCollection<string> AllProperties { get; set; }
         public ObservableCollection<Tag> AllTags { get; set; }
+        public ListBoxPanelVM ListBoxPanelVM { get; set; }
+        //WANT to make this GENERIC, AND bind it to a particular LIST, in Entry... CBTL CURRENT
         public EntryVM Parent { get; set; }
         //NOTE! I think proper way to do this, is to just MODIFY the entry,
         //BUT because the the EntryVM is bound to it, it will update itself accordingly!
         //i.e. this entryVM just has a public Entry Parent.
-        //NOW, whene that Entry is deleted, the EntryVM deletes itself. SO this EntryVM,
+        //NOW, when that Entry is deleted, the EntryVM deletes itself. SO this EntryVM,
         //does not even need to know its own ParentVM???? maybe... not sure yet.
         public ObservableCollection<EntryVM> Children { get; set; }
         //DON'T want others adding to children. If I make it private, will that stop binding?
         //No, it won't, provided you KEEP this property public!!!
         //BUT problem is, then you can still add to Children...issue...
-        public FilterPanelVM Filter { get; set; }
+        public FilterPanelVM FilterPanelVM { get; set; }
         public bool IsExpanded { get; set; }
 
         //SHOULD there be an option to emanciate??? (free from parent?)
@@ -44,11 +46,13 @@ namespace PowerNote.ViewModels {
             bindToEntry(entry);
             TreeVM = treeVM;
             Children = new ObservableCollection<EntryVM>();
-            Filter = treeVM.Filter;
+            FilterPanelVM = treeVM.Filter;
             DbContext = treeVM.DbContext;
             AllProperties = new ObservableCollection<string>();
             DbContext.Tags.Load();
-            AllTags = DbContext.Tags.Local; 
+            AllTags = DbContext.Tags.Local;
+            //SUBSCRIBE
+            Entry.PropertyChanged += Entry_PropertyChanged;
         }
 
         public void addNewTagToEntry(object sender, string text) {
@@ -70,10 +74,11 @@ namespace PowerNote.ViewModels {
             }
         }
 
-        public void adoptChild(EntryVM entryVM) {
-            Children.Add(entryVM); //Does this do the trick? Yes it seems to...
-            entryVM.Parent = this;
-            Entry.Children.Add(entryVM.Entry);
+        public void adoptChild(EntryVM childVM) {
+            //NOTE: This method should only be used if want to ADD children to ENTRY!!
+            Children.Add(childVM); //Does this do the trick? Yes it seems to...
+            childVM.Parent = this;
+            Entry.Children.Add(childVM.Entry);
         }
 
         public void adoptSibling(EntryVM entryVM) {
@@ -110,13 +115,17 @@ namespace PowerNote.ViewModels {
             //TreeVM.ParentVM.updateEntries(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.
         }
 
+        public void Entry_PropertyChanged(object sender, PropertyChangedEventArgs args) {
+            DbContext.SaveChanges();
+        }
+
         public void insertEntry(EntryVM entryVM, EntryVM selectedVM) {
             if (Parent != null) {//IF it has a parent: make new one a sibling.
                 adoptSibling(entryVM);
             } else { //else put it in FirstLevelVMs
                 TreeVM.FirstGenEntryVMs.Add(entryVM);
             }
-            foreach (Tag tag in Filter.SelectedObjects) {
+            foreach (Tag tag in FilterPanelVM.SelectedObjects) {
                 entryVM.Entry.Tags.Add(tag);
             }
             DbContext.SaveChanges();
@@ -125,7 +134,7 @@ namespace PowerNote.ViewModels {
 
         public void insertSubEntry(EntryVM entryVM, EntryVM selectedVM) {
             adoptChild(entryVM);
-            foreach (Tag tag in Filter.SelectedObjects) {
+            foreach (Tag tag in FilterPanelVM.SelectedObjects) {
                 entryVM.Entry.Tags.Add(tag);
             }
             DbContext.SaveChanges();

@@ -18,7 +18,7 @@ namespace PowerNote.ViewModels {
 
         public EntryClassOptionsVM(MainVM parentVM) {
             ParentVM = parentVM;
-            this.context = parentVM.Context;
+            this.context = parentVM.DbContext;
             Type = parentVM.TypePanelVM.SelectedObjects.First() as Type;
             PropertyNames = Type.GetProperties().Select(x => x.Name);
         }
