@@ -21,12 +21,15 @@ namespace PowerNote.ViewModels {
             //NOTE: this one creates the Entry, and THEN wraps it!!!
             Task newTask = new Task(name);
             initialize(newTask, treeVM);
-            DbContext.ToDos.Add(newTask);
+            DbContext.Tasks.Add(newTask);
         }
 
         public void initialize(Task task, EntriesTreeVM treeVM) {
-            ListBoxPanelVM = new FilterPanelVM(treeVM.ParentVM); //NOW bind to this!!!
             base.initialize(task, treeVM);
+        }
+
+        public void initializePropertyList() {
+            //revisit
         }
 
         public void insertTask(TaskVM selectedVM) {

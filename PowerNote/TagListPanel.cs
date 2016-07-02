@@ -15,13 +15,13 @@ using System.Windows.Input;
 namespace PowerNote {
     //NO LONGER USED! but keep for reference.
     class TagListPanel : StackPanel {
-        MyContext context;
+        DAL.DbContext context;
         MyAutoCompleteBox autoCompleteBox;
         TaggedObject taggedObject;
         List<Label> labelList;
         DisplayPanel displayPanel; 
 
-        public TagListPanel(TaggedObject taggedObject, MyContext context) {
+        public TagListPanel(TaggedObject taggedObject, DAL.DbContext context) {
             this.taggedObject = taggedObject;
             this.context = context;
             //PANEL
@@ -69,9 +69,9 @@ namespace PowerNote {
             AutoCompleteBox autoCompleteBox = (AutoCompleteBox)sender;
             Tag selectedCourse = (Tag)autoCompleteBox.SelectedItem;
             addCourseToStudent(selectedCourse);
-            displayPanel = (DisplayPanel)((FilterPanel)Parent).Parent;
-            MainPanel mainPanel = (MainPanel)displayPanel.Parent;
-            mainPanel.updateEntries(); //CBTL lazy but I don't care.
+            //displayPanel = (DisplayPanel)((FilterPanel)Parent).Parent;
+            //MainPanel mainPanel = (MainPanel)displayPanel.Parent;
+            //mainPanel.updateEntries(); //CBTL lazy but I don't care.
         }
 
         public void addCourseToStudent(Tag selectedCourse) {

@@ -47,7 +47,7 @@ namespace PowerNote {
         public void showProperties_Click(object sender, EventArgs e) {
             MenuItem menuItem = sender as MenuItem;
             if (menuItem != null) {
-                EntryPropertiesWindow subWindow = new EntryPropertiesWindow();
+                Window subWindow = new Window();
                 object temp = subWindow.DataContext; //yes, it is null.
                 subWindow.DataContext = DataContext;
                 subWindow.Show();         

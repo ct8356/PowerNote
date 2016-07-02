@@ -21,14 +21,6 @@ namespace PowerNote {
         public MainPanel() {
             //ADD DISPLAY PANELS
             DisplayPanels = new List<DisplayPanel>();
-            //DISP 1
-            //DisplayPanels.Add(DisplayPanel);
-            //SetDock(DisplayPanel, Dock.Left);
-            //DISP 2
-            //DisplayPanel disp2 = new DisplayPanel(context, this);
-            //DisplayPanels.Add(disp2);
-            //Children.Add(disp2);
-            //SetDock(disp2, Dock.Left);
             //SIDE-NOTE
             //SideNotePanel sideNotePanel = new SideNotePanel(context, this);
             //Children.Add(sideNotePanel);
@@ -44,6 +36,12 @@ namespace PowerNote {
 
         public void Seed_Click(object sender, RoutedEventArgs args) {
             (DataContext as MainVM).seedDatabase();
+        }
+
+        public void DoTheThing(object sender, EventArgs args) {
+            //PropsPanel.updateControls();
+            (DisplayPanel.ComboBox.DataContext as TypePanelVM).SelectedObjects.Add("poop");
+
         }
     }
 }

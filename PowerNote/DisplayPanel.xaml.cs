@@ -18,40 +18,21 @@ using PowerNote.Migrations;
 
 namespace PowerNote {
     public partial class DisplayPanel : DockPanel {
-        Label title;
-        //public TypePanel TypePanel { get; set; }
-        //public StructurePanel StructurePanel { get; set; }
-        //public FilterPanel FilterPanel { get; set; }
         //public SortPanel SortPanel { get; set; }
-        //public OptionsPanel OptionsPanel { get; set; }
         public EntriesTreeView EntriesTreeView { get; set; }
         public List<String> ColumnNames { get; set; }
         public MainVM MainVM { get; set; }
 
         public DisplayPanel() {
             InitializeComponent(); //NEED to do this first, so EntriesTreeView can reference OptionsPanel
+            ComboBox.DisplayMemberPath = "Name";
+            //ComboBox.ValueMemberPath = "Name";
             //PANEL
-            //Filter by TYPE
-            //TypePanel = new TypePanel();
-            //Children.Add(TypePanel);
-            //SetDock(TypePanel, Dock.Top);
-            //STRUCTURE PANEL
-            //StructurePanel = new StructurePanel();
-            //Children.Add(StructurePanel);
-            //SetDock(StructurePanel, Dock.Top);
-            //FILTER PANEL
-            //FilterPanel = new FilterPanel();
-            //Children.Add(FilterPanel);
-            //SetDock(FilterPanel, Dock.Top);
             //SORT PANEL
             //SortPanel = new SortPanel();
             //Children.Add(SortPanel);
             //SetDock(SortPanel, Dock.Top);
             //SortPanel.ComboBox.SelectionChanged += ComboBox_SelectionChanged; //subscribe
-            //OPTIONS PANEL
-            //OptionsPanel = new OptionsPanel();
-            //Children.Add(OptionsPanel);
-            //SetDock(OptionsPanel, Dock.Top);
             //ENTRIES TREEVIEW
             EntriesTreeView = new EntriesTreeView(this);
             Children.Add(EntriesTreeView);
@@ -61,16 +42,19 @@ namespace PowerNote {
             ColumnNames = new List<String>() { "Contents", "Priority" };
             //OTHER
             LastChildFill = false;
-
         }
 
         public void ComboBox_SelectionChanged(object sender, RoutedEventArgs e) {
             //START a ORDER BY QUERY. I say, just call to UPDATE methods, BUT with NEW INPUT.
+            ComboBox comboBox = sender as ComboBox;
+            (DataContext as MainVM).ComboBoxVM.updateSelectedObject(comboBox.SelectedItem);
             updateEntries();
         }
 
         public void updateEntries() {
-            (EntriesTreeView.DataContext as EntriesTreeVM).updateEntries();
+            if (EntriesTreeView.DataContext != null) {
+                (EntriesTreeView.DataContext as EntriesTreeVM).updateEntries();
+            }
             //uc.addTo();
         }
     }

@@ -25,6 +25,7 @@ namespace PowerNote.ViewModels {
         public static string SelectedStructure { get; set; }
         //NOTE: might be a good idea to make own DbSet class,
         //AND then put these statics, in there.
+        public IEnumerable<PartClass> NickNames { get; set; }
 
         public PartInstanceVM(Entry entry, EntriesTreeVM parentVM) {
             //NOTE: this constructor just WRAPS an entry in a VM.
@@ -48,7 +49,18 @@ namespace PowerNote.ViewModels {
             base.initialize(entry, parentVM);
             IQueryable<PartInstance> partInstances = DbContext.PartInstances;
             PropertyNames = typeof(PartInstance).GetProperties().Select(x => x.Name);
+            NickNames = DbContext.Parts;
         }//NOTE: new, means, this is NOT called, if call EntryVM.initialize, and happens to be a partInstance.
+
+        public override void initializePropertyList() {
+            base.initializePropertyList();
+            AllProperties.Add(new Property("Function text", (Entry as PartInstance).FunctionText, InfoType.TextBox, true, this));
+            AllProperties.Add(new Property("Part class", (Entry as PartInstance).PartClass, InfoType.TextBox, false, this));
+            AllProperties.Add(new Property("Parent part", (Entry as PartInstance).ParentPartInstance, InfoType.TextBox, false, this));
+            AllProperties.Add(new Property("Children parts", (Entry as PartInstance).ChildPartInstances, InfoType.ListBox, false, this));
+            AllProperties.Add(new Property("Tasks", (Entry as PartInstance).ChildTasks, InfoType.ListBox, false, this));
+            AllProperties.Add(new Property("Sensor", (Entry as PartInstance).Sensor, InfoType.TextBox, false, this));
+        }
 
         public void addPartClassToEntry(string text) {
             IQueryable<PartClass> partClasses = DbContext.Parts;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data;
-using System.Data.SqlClient;
+using System.Data.SqlClient; //NOTE: should learn a bit about this library.
 using System.Configuration;
 
 namespace PowerNote {

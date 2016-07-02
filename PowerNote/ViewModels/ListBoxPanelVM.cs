@@ -5,25 +5,27 @@ using System.Text;
 using System.Collections.ObjectModel;
 using PowerNote.DAL;
 using System.ComponentModel; //this allows INotifyPropertyChanged
+using PowerNote.Models;
 
 namespace PowerNote.ViewModels {
-    public abstract class ListBoxPanelVM : INotifyPropertyChanged {
+    public class ListBoxVM<T> : INotifyPropertyChanged {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ObservableCollection<object> Objects { get; set; }
+        public ObservableCollection<T> Objects { get; set; }
 
-        private ObservableCollection<object> selectedObjects;
-        public ObservableCollection<object> SelectedObjects {
+        private ObservableCollection<T> selectedObjects;
+        public ObservableCollection<T> SelectedObjects {
             get { return selectedObjects; }
             set { selectedObjects = value; NotifyPropertyChanged("SelectedObjects"); }
         }
+        public List<string> TestString { get; set; } = new List<string>() { "fah", "lah" };
 
-        public MyContext DbContext { get; set; }
+        public DbContext DbContext { get; set; }
         public MainVM ParentVM { get; set; }
 
-        public ListBoxPanelVM(MainVM parentVM) {
-            Objects = new ObservableCollection<object>();
-            SelectedObjects = new ObservableCollection<object>();
+        public ListBoxVM(MainVM parentVM) {
+            Objects = new ObservableCollection<T>();
+            SelectedObjects = new ObservableCollection<T>();
             DbContext = parentVM.DbContext;
             ParentVM = parentVM;
         }

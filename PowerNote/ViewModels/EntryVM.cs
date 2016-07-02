@@ -17,11 +17,14 @@ namespace PowerNote.ViewModels {
         public EntriesTreeVM TreeVM { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
         public Entry Entry { get; set; }
-        public MyContext DbContext { get; set; }
-        public ObservableCollection<string> AllProperties { get; set; }
+        public DAL.DbContext DbContext { get; set; }
+        public ObservableCollection<Property> AllProperties { get; set; }
         public ObservableCollection<Tag> AllTags { get; set; }
-        public ListBoxPanelVM ListBoxPanelVM { get; set; }
+        public ListBoxVM<object> TagsVM { get; set; }
         //WANT to make this GENERIC, AND bind it to a particular LIST, in Entry... CBTL CURRENT
+        public String MyString { get; set; }
+        public ObservableCollection<string> TestString { get; set; } = new ObservableCollection<string>() { "fah", "lah" };
+
         public EntryVM Parent { get; set; }
         //NOTE! I think proper way to do this, is to just MODIFY the entry,
         //BUT because the the EntryVM is bound to it, it will update itself accordingly!
@@ -43,16 +46,25 @@ namespace PowerNote.ViewModels {
         }
 
         public void initialize(Entry entry, EntriesTreeVM treeVM) {
-            bindToEntry(entry);
             TreeVM = treeVM;
             Children = new ObservableCollection<EntryVM>();
             FilterPanelVM = treeVM.Filter;
             DbContext = treeVM.DbContext;
-            AllProperties = new ObservableCollection<string>();
             DbContext.Tags.Load();
             AllTags = DbContext.Tags.Local;
+            bindToEntry(entry);
+            //PROPERTIES
+            initializePropertyList();
             //SUBSCRIBE
             Entry.PropertyChanged += Entry_PropertyChanged;
+        }
+
+        public virtual void initializePropertyList() {
+            AllProperties = new ObservableCollection<Property>();
+            AllProperties.Add(new Property("Entry ID", Entry.EntryID, InfoType.TextBox, false, this));
+            AllProperties.Add(new Property("Creation date", Entry.CreationDate, InfoType.TextBox, false, this));
+            AllProperties.Add(new Property("Parent", Entry.Parent, InfoType.TextBox, false, this));
+            AllProperties.Add(new Property("Children", Entry.Children, InfoType.ListBox, false, this));
         }
 
         public void addNewTagToEntry(object sender, string text) {
@@ -93,6 +105,15 @@ namespace PowerNote.ViewModels {
 
         public void bindToEntry(Entry entry) {
             Entry = entry;
+            TagsVM = new ListBoxVM<object>(TreeVM.ParentVM);
+            //AND need to BIND THIS to the ENTRYs Tags!
+            foreach (Tag tag in DbContext.Tags.Local) {
+                TagsVM.Objects.Add(tag);
+            }
+            foreach (Tag tag in Entry.Tags) {
+                TagsVM.SelectedObjects.Add(tag); //Not a proper binding really...
+            }
+            //NOW bind to this, in the XAML!
         }
 
         public void changeParent() {
@@ -142,6 +163,16 @@ namespace PowerNote.ViewModels {
             //is entry.Children observable? Yes. BUT real issue is: is it adding a VM? No!
             //so make it do so!
             //DONE! CBTL, works, but could be more issues here...
+        }
+
+        protected void NotifyPropertyChanged(String propertyName) {
+            if (PropertyChanged != null) {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        public void updateSelectedEntry(EntryVM entryVM) {
+            TreeVM.ParentVM.SelectedEntryVM = entryVM;
         }
     }
 }

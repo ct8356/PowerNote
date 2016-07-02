@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{74A6579A-5844-45A9-9DBD-64F2B051FFAE}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PowerNote</RootNamespace>
+    <AssemblyName>PowerNote</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>C:\Users\Chris\Desktop\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <AutorunEnabled>true</AutorunEnabled>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>EE535A6305C3540DE8660485E7378783C9DD363B</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>PowerNote_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ControlPanel.cs" />
+    <Compile Include="DisplayPanel.xaml.cs">
+      <DependentUpon>DisplayPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EntryClassOptionsPanel.xaml.cs">
+      <DependentUpon>EntryClassOptionsPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EntryPanel2.cs" />
+    <Compile Include="EntryPropertiesPanel.xaml.cs">
+      <DependentUpon>EntryPropertiesPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PartInstancePropertiesPanel.xaml.cs">
+      <DependentUpon>PartInstancePropertiesPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EntryPropertiesWindow.xaml.cs">
+      <DependentUpon>EntryPropertiesWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ListBoxPanel.cs" />
+    <Compile Include="MainPanel.xaml.cs">
+      <DependentUpon>MainPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="OptionsPanel.xaml.cs">
+      <DependentUpon>OptionsPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PropertyPanel.cs" />
+    <Compile Include="TypePanel.xaml.cs">
+      <DependentUpon>TypePanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PartInstancePanel.xaml.cs">
+      <DependentUpon>PartInstancePanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DAL\MyContext.cs" />
+    <Compile Include="EntryPanel.cs" />
+    <Compile Include="Models\PartInstance.cs" />
+    <Compile Include="ToDoPanel.xaml.cs">
+      <DependentUpon>ToDoPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Entry.cs" />
+    <Compile Include="Models\PartClass.cs" />
+    <Compile Include="Models\Tag.cs" />
+    <Compile Include="Models\Task.cs" />
+    <Compile Include="Models\TaggedObject.cs" />
+    <Compile Include="MyAutoCompleteBox.xaml.cs">
+      <DependentUpon>MyAutoCompleteBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EntriesTreeView.xaml.cs">
+      <DependentUpon>EntriesTreeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PartClassPanel.xaml.cs">
+      <DependentUpon>PartClassPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SideEntry.cs" />
+    <Compile Include="SideNotePanel.cs" />
+    <Compile Include="SortPanel.cs" />
+    <Compile Include="MyListBox.xaml.cs">
+      <DependentUpon>MyListBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TagListPanel.cs" />
+    <Compile Include="ViewModels\InfoType.cs" />
+    <Compile Include="ViewModels\EntriesTreeVM.cs" />
+    <Compile Include="ViewModels\Property.cs" />
+    <Compile Include="ViewModels\Filter.cs" />
+    <Compile Include="ViewModels\OldEntryVM.cs" />
+    <Compile Include="ViewModels\FilterPanelVM.cs" />
+    <Compile Include="ViewModels\ListBoxPanelVM.cs" />
+    <Compile Include="ViewModels\EntryClassOptionsVM.cs" />
+    <Compile Include="ViewModels\OptionsPanelVM.cs" />
+    <Compile Include="ViewModels\TypePanelVM.cs" />
+    <Compile Include="ViewModels\StructurePanelVM.cs" />
+    <Compile Include="ViewModels\PartInstanceVM.cs" />
+    <Compile Include="ViewModels\EntryVM.cs" />
+    <Compile Include="ViewModels\PartClassVM.cs" />
+    <Compile Include="ViewModels\TaskVM.cs" />
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DAL\Database.cs" />
+    <Compile Include="ViewModels\MainVM.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MyGrid.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="PowerNote_TemporaryKey.pfx" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ItemGroup>
+    <ReferencePath Include="C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\EntityFramework.dll" />
+    <ReferencePath Include="C:\Program Files\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\Profile\Client\Microsoft.CSharp.dll" />
+    <ReferencePath Include="C:\Program Files\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\Profile\Client\mscorlib.dll" />
+    <ReferencePath Include="C:\Program Files\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\Profile\Client\PresentationCore.dll" />
+    <ReferencePath Include="C:\Program Files\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\Profile\Client\PresentationFramework.dll" />
+    <ReferencePath Include="C:\Program Files\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\Profile\Client\System.ComponentModel.DataAnnotations.dll" />
+    <ReferencePath Include="C:\Program Files\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\Profile\Client\System.Configuration.dll" />
+    <ReferencePath Include="C:\Program Files\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\Profile\Client\System.Core.dll" />
+    <ReferencePath Include="C:\Program Files\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\Profile\Client\System.Data.DataSetExtensions.dll" />
+    <ReferencePath Include="C:\Program Files\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\Profile\Client\System.Data.dll" />
+    <ReferencePath Include="C:\Program Files\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\Profile\Client\System.dll" />
+    <ReferencePath Include="C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\bin\Debug\System.Windows.Controls.Input.Toolkit.dll" />
+    <ReferencePath Include="C:\Program Files\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\Profile\Client\System.Xaml.dll" />
+    <ReferencePath Include="C:\Program Files\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\Profile\Client\System.Xml.dll" />
+    <ReferencePath Include="C:\Program Files\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\Profile\Client\System.Xml.Linq.dll" />
+    <ReferencePath Include="C:\Program Files\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\Profile\Client\WindowsBase.dll" />
+    <ReferencePath Include="C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\bin\Debug\WPFToolkit.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\DisplayPanel.g.cs" />
+    <Compile Include="C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\EntryClassOptionsPanel.g.cs" />
+    <Compile Include="C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\EntryPropertiesPanel.g.cs" />
+    <Compile Include="C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PartInstancePropertiesPanel.g.cs" />
+    <Compile Include="C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\EntryPropertiesWindow.g.cs" />
+    <Compile Include="C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\MainPanel.g.cs" />
+    <Compile Include="C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\OptionsPanel.g.cs" />
+    <Compile Include="C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\TypePanel.g.cs" />
+    <Compile Include="C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PartInstancePanel.g.cs" />
+    <Compile Include="C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\ToDoPanel.g.cs" />
+    <Compile Include="C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\MainWindow.g.cs" />
+    <Compile Include="C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\MyAutoCompleteBox.g.cs" />
+    <Compile Include="C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\EntriesTreeView.g.cs" />
+    <Compile Include="C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PartClassPanel.g.cs" />
+    <Compile Include="C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\MyListBox.g.cs" />
+    <Compile Include="C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\App.g.cs" />
+    <Compile Include="C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs" />
+  </ItemGroup>
+</Project>

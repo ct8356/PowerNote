@@ -16,10 +16,12 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace PowerNote {
-    public partial class EntryPanel : StackPanel {
+    public class EntryPanel : StackPanel {
         public TextBox TextBox { get; set; }
 
         public EntryPanel() {
+            TextBox = new TextBox();
+            Orientation = Orientation.Horizontal;
             //conditionalSubscribe(); //OF COURSE! WON'T WORK, coz datacontext don't exist yet.
             //REALLY, need to do conditional subscribe in XAML? But, complex, CBTL.
             //RIGHT CLICKS
@@ -29,6 +31,8 @@ namespace PowerNote {
             //autoCompleteBox.LostFocus += autoCompleteBox_LostFocus;
             //TRY KEEPING below method here, BUT, call it from sub class...
             //MyAutoCompleteBox.KeyUp += autoCompleteBox_KeyUp;
+            //SUBSCRIBE TO EVENTS
+            this.MouseUp += this_MouseUp;
         }
 
         public void conditionalSubscribe() {
@@ -51,6 +55,14 @@ namespace PowerNote {
         public void deleteEntry_Click(object sender, RoutedEventArgs e) {
             (DataContext as EntryVM).deleteEntry();
         }
+
+        public void this_MouseUp(object sender, EventArgs e) {
+            (DataContext as EntryVM).updateSelectedEntry(DataContext as EntryVM);
+        } //AHAH! perhaps you just need to call the DATACONTEXT of this,
+        //THEN CALL the datacontext of the treeview,
+        //THEN to the datacontext of the propertiesPanel,
+        //THEN properties panel SEES it has changed, and so updates itself...
+        //AND THAT is the case when THEN need a listener!!! listening to Datacontext, property changed!
 
         public void autoCompleteBox_KeyUp(object sender, KeyEventArgs e) {
             //Oddly, this is called twice when you click in the dropdown box. I guess, lets accept that, and work around it.

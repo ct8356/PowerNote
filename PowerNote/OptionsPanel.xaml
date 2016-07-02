@@ -5,8 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PowerNote"
              mc:Ignorable="d" 
-             Orientation="Horizontal"
-             d:DesignHeight="300" d:DesignWidth="300">
+             Orientation="Horizontal">
     <CheckBox Name="ShowAllEntriesCBox" Content="Show all entries" IsChecked="{Binding ShowAllEntries, Mode=TwoWay}"></CheckBox>
     <CheckBox Name="ShowAllChildrenCBox" Content="Show all children" IsChecked="{Binding ShowAllChildren}"></CheckBox>
 </StackPanel>

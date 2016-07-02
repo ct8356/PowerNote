@@ -5,6 +5,7 @@ using System.Text;
 using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 using System.ComponentModel;
 namespace PowerNote.Models {
@@ -15,9 +16,12 @@ namespace PowerNote.Models {
             get { return functionText; }
             set { functionText = value; NotifyPropertyChanged("FunctionText"); }
         }
+        [Display(Name = "My String Display Name")]
         public String MyString { get { return "my string"; } set { value = value; } }
-        public PartClass PartClass { get; set; }
+        public virtual PartClass PartClass { get; set; }
         public virtual PartInstance ParentPartInstance { get; set; }
+        //virtual is there to take advantage of lazy loading
+        //Navigation properties HAVE to be marked virtual.
         public virtual ObservableCollection<PartInstance> ChildPartInstances { get; set; }      
         public virtual ObservableCollection<Task> ChildTasks { get; set; }
         [InverseProperty("Sensor")]

@@ -37,7 +37,7 @@ namespace PowerNote {
     /// <summary>
     /// MyListBox
     /// </summary>
-    public partial class MyListBox : System.Windows.Controls.ListBox, System.Windows.Markup.IComponentConnector {
+    public partial class ListBox : System.Windows.Controls.ListBox, System.Windows.Markup.IComponentConnector {
         
         private bool _contentLoaded;
         

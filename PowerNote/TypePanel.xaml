@@ -6,16 +6,12 @@
              mc:Ignorable="d"
              xmlns:local="clr-namespace:PowerNote"
              xmlns:models="clr-namespace:PowerNote.Models"
-             xmlns:VMs="clr-namespace:PowerNote.ViewModels"
-             d:DesignHeight="300" d:DesignWidth="300"
-             Orientation="Horizontal">
-    <Label Content="Filter by type:"></Label>
-    <local:MyListBox x:Name="MyListBox" ItemsSource="{Binding SelectedObjects}" />
-    <local:MyAutoCompleteBox x:Name="MyChoiceBox" ItemsSource="{Binding Objects}">
+             xmlns:VMs="clr-namespace:PowerNote.ViewModels">
+    <!--<local:ListBoxPanel.AutoCompleteBox>
         <local:MyAutoCompleteBox.ItemTemplate>
             <DataTemplate>
                 <TextBlock Text="{Binding Name}"></TextBlock>
             </DataTemplate>
         </local:MyAutoCompleteBox.ItemTemplate>
-    </local:MyAutoCompleteBox>
+    </local:ListBoxPanel.AutoCompleteBox>-->
 </local:ListBoxPanel>

@@ -5,13 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:PowerNote"
              xmlns:models="clr-namespace:PowerNote.Models"
-             mc:Ignorable="d"
-             d:DesignWidth="300"
-             Orientation="Horizontal">
-    <!--<local:EntryPanel.TextBox Text="{Binding Entry.NickName}" BorderBrush="WhiteSmoke"/>-->
+             xmlns:CJT="clr-namespace:CJT;assembly=CJT"  
+             mc:Ignorable="d">
+    <local:EntryPanel.TextBox><!-- NOTE: Cannot set props on property elements!-->
+        <TextBox Text="fud"></TextBox>
+    </local:EntryPanel.TextBox>
     <!--Above won't work without defining dependency properties. SO best approach, just define ItemMenus here-->
     <!--Well no, actually, just define textBox in cs. Fair play, since XAML won't let you define a base view in XAML-->
-    <TextBox Text="{Binding Entry.NickName}" BorderBrush="{StaticResource BackgroundBrush}">
+    <!--<TextBox Text="{Binding Entry.NickName}" BorderBrush="{StaticResource BackgroundBrush}">
         <TextBox.ContextMenu>
             <ContextMenu>
                 <MenuItem Header="Insert part class" Click="insertPart_Click"></MenuItem>
@@ -20,7 +21,7 @@
                 <MenuItem Header="Change parent" Click="changeParent_Click"></MenuItem>
             </ContextMenu>
         </TextBox.ContextMenu>
-    </TextBox>
-    <local:MyListBox ItemsSource="{Binding Entry.Tags}"/>
+    </TextBox>-->
+    <CJT:ListBox ItemsSource="{Binding Entry.Tags}"/>
     <local:MyAutoCompleteBox x:Name="MyAutoCompleteBox" ItemsSource="{Binding AllTags}"/>
 </local:EntryPanel>

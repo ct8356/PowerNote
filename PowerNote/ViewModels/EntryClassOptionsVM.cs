@@ -10,7 +10,7 @@ using System.Collections.ObjectModel;
 namespace PowerNote.ViewModels {
     public class EntryClassOptionsVM {
         MainVM ParentVM { get; set; }
-        MyContext context;
+        DbContext context;
         Type Type { get; set; }
         ObservableCollection<object> Properties { get; set; } //Prop Names better for now, since you use
         //strings to specify your columnNames!
@@ -19,8 +19,8 @@ namespace PowerNote.ViewModels {
         public EntryClassOptionsVM(MainVM parentVM) {
             ParentVM = parentVM;
             this.context = parentVM.DbContext;
-            Type = parentVM.TypePanelVM.SelectedObjects.First() as Type;
-            PropertyNames = Type.GetProperties().Select(x => x.Name);
+            //Type = parentVM.TypePanelVM.SelectedObjects.First() as Type;
+            //PropertyNames = Type.GetProperties().Select(x => x.Name);
         }
 
     }

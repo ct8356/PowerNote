@@ -12,14 +12,16 @@ using PowerNote.Models;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using ListBox = CJT.ListBox;
+using CJT;
 
 namespace PowerNote {
     public class ControlPanel : DockPanel {
-        MyContext context;
+        DAL.DbContext context;
         MainPanel mainPanel;
         ListBox ListBox { get; set; }
 
-        public ControlPanel(MyContext context, MainPanel mainPanel) {
+        public ControlPanel(DAL.DbContext context, MainPanel mainPanel) {
             //LETS leave this out for a bit.
             this.context = context;
             this.mainPanel = mainPanel;
@@ -30,7 +32,7 @@ namespace PowerNote {
             SetDock(title, Dock.Top);
             title.FontWeight = FontWeights.Bold;
             //COLLECTION OF TAG LABELS
-            ListBox = new ListBox();
+            ListBox = new System.Windows.Controls.ListBox() as ListBox;
             context.Tags.OrderBy(c => c.Title).Load(); //explicit load. I.e. submit query now.
             ListBox.ItemsSource = context.Tags.Local;
             ListBox.Items.SortDescriptions.Add(new SortDescription("Title", ListSortDirection.Ascending)); //"" is for property name.
@@ -46,8 +48,8 @@ namespace PowerNote {
         public void delete_menuItem_Click(Object sender, EventArgs e) {   
             MenuItem menuItem = (MenuItem)sender;
             if (menuItem != null) {
-                ContextMenu contextMenu = (ContextMenu)menuItem.Parent;      
-                ListBox listBox = (ListBox)contextMenu.PlacementTarget;
+                ContextMenu contextMenu = (ContextMenu)menuItem.Parent;
+                System.Windows.Controls.ListBox listBox = (System.Windows.Controls.ListBox)contextMenu.PlacementTarget;
                 //ListBox listBox = (ListBox)menuItem.DataContext;
                 if (listBox.SelectedIndex == -1) return;
                 Tag selectedCourse = (Tag)listBox.Items[listBox.SelectedIndex]; //the line i was missing.

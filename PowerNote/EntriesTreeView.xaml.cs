@@ -15,7 +15,7 @@ namespace PowerNote {
         Type type;
         DisplayPanel DisplayPanel { get; set; }
         FilterPanelVM filter;
-        ToDoPanel newEntry; //keep for now
+        TaskPanel newEntry; //keep for now
         public Entry Orphan {get; set;}
         public bool WaitingForParentSelection { get; set; }
 
@@ -42,7 +42,7 @@ namespace PowerNote {
         public void newEntry_LostFocus(object sender, System.Windows.RoutedEventArgs e) {
             if (newEntry.TextBox.Text != null && newEntry.TextBox.Text != "") {
                 Task newStudent = new Task(newEntry.TextBox.Text);
-                (DataContext as EntriesTreeVM).DbContext.ToDos.Add(newStudent);
+                (DataContext as EntriesTreeVM).DbContext.Tasks.Add(newStudent);
                 (DataContext as EntriesTreeVM).DbContext.SaveChanges();
                 (DataContext as EntriesTreeVM).updateEntries(); //CBTL. Lazy way. (rather than using events). But ok for now.   
             }

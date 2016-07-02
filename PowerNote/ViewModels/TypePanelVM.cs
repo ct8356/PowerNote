@@ -7,9 +7,7 @@ using PowerNote.Models;
 using PowerNote.DAL;
 
 namespace PowerNote.ViewModels {
-    public class TypePanelVM : ListBoxPanelVM {
-        //public ObservableCollection<Type> Types { get; set; }
-        //public ObservableCollection<Type> SelectedTypes { get; set; }
+    public class TypePanelVM : ListBoxVM<object> {
 
         public TypePanelVM(MainVM parentVM) : base(parentVM) {
             //SO YOU CAN make object = something. BUT with lists, for some reason,it gets complicated. 
@@ -19,11 +17,10 @@ namespace PowerNote.ViewModels {
             SelectedObjects.Add(Objects.Where(o => (o as Type) == typeof(PartInstance)).First());
         }
 
-        public override void addSelectedItem(object selectedItem) {
-            SelectedObjects.Clear();
-            SelectedObjects.Add(selectedItem as Type);
-            base.addSelectedItem(selectedItem);
+        public void updateSelectedObject(object selectedObject) {
+            SelectedObjects.Add(selectedObject);
         }
+
 
     }
 }

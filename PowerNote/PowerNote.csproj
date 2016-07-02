@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PowerNote</RootNamespace>
     <AssemblyName>PowerNote</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -42,6 +43,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -51,6 +53,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>EE535A6305C3540DE8660485E7378783C9DD363B</ManifestCertificateThumbprint>
@@ -62,11 +65,22 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
-      <HintPath>.\EntityFramework.dll</HintPath>
+    <Reference Include="CJT">
+      <HintPath>..\..\CJT\CJT\bin\Debug\CJT.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -98,39 +112,32 @@
     <Compile Include="DisplayPanel.xaml.cs">
       <DependentUpon>DisplayPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="EntryClassOptionsPanel.xaml.cs">
-      <DependentUpon>EntryClassOptionsPanel.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="GenericEntryPanel.cs" />
     <Compile Include="EntryPropertiesPanel.xaml.cs">
       <DependentUpon>EntryPropertiesPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="EntryPropertiesWindow.xaml.cs">
-      <DependentUpon>EntryPropertiesWindow.xaml</DependentUpon>
+    <Compile Include="PartInstancePropertiesPanel.xaml.cs">
+      <DependentUpon>PartInstancePropertiesPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="ListBoxPanel.cs" />
     <Compile Include="MainPanel.xaml.cs">
       <DependentUpon>MainPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FilterPanel.xaml.cs">
-      <DependentUpon>FilterPanel.xaml</DependentUpon>
-    </Compile>
     <Compile Include="OptionsPanel.xaml.cs">
       <DependentUpon>OptionsPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="PropertyPanel.cs" />
     <Compile Include="TypePanel.xaml.cs">
       <DependentUpon>TypePanel.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="StructurePanel.xaml.cs">
-      <DependentUpon>StructurePanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="PartInstancePanel.xaml.cs">
       <DependentUpon>PartInstancePanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DAL\MyContext.cs" />
+    <Compile Include="DAL\DbContext.cs" />
     <Compile Include="EntryPanel.cs" />
     <Compile Include="Models\PartInstance.cs" />
-    <Compile Include="ToDoPanel.xaml.cs">
-      <DependentUpon>ToDoPanel.xaml</DependentUpon>
+    <Compile Include="TaskPanel.xaml.cs">
+      <DependentUpon>TaskPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Entry.cs" />
@@ -150,18 +157,18 @@
     <Compile Include="SideEntry.cs" />
     <Compile Include="SideNotePanel.cs" />
     <Compile Include="SortPanel.cs" />
-    <Compile Include="MyListBox.xaml.cs">
-      <DependentUpon>MyListBox.xaml</DependentUpon>
-    </Compile>
     <Compile Include="TagListPanel.cs" />
+    <Compile Include="ViewModels\TypePanelVM.cs" />
+    <Compile Include="ViewModels\InfoType.cs" />
     <Compile Include="ViewModels\EntriesTreeVM.cs" />
+    <Compile Include="ViewModels\Property.cs" />
     <Compile Include="ViewModels\Filter.cs" />
     <Compile Include="ViewModels\OldEntryVM.cs" />
     <Compile Include="ViewModels\FilterPanelVM.cs" />
     <Compile Include="ViewModels\ListBoxPanelVM.cs" />
     <Compile Include="ViewModels\EntryClassOptionsVM.cs" />
     <Compile Include="ViewModels\OptionsPanelVM.cs" />
-    <Compile Include="ViewModels\TypePanelVM.cs" />
+    <Compile Include="ViewModels\ComboBoxVM.cs" />
     <Compile Include="ViewModels\StructurePanelVM.cs" />
     <Compile Include="ViewModels\PartInstanceVM.cs" />
     <Compile Include="ViewModels\EntryVM.cs" />
@@ -171,23 +178,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="EntryClassOptionsPanel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="EntryPropertiesPanel.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="EntryPropertiesWindow.xaml">
+    <Page Include="PartInstancePropertiesPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainPanel.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="FilterPanel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -199,15 +198,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="StructurePanel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="PartInstancePanel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="ToDoPanel.xaml">
+    <Page Include="TaskPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -237,13 +232,8 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MyListBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyGrid.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -262,6 +252,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="app.config" />
+    <None Include="packages.config" />
     <None Include="PowerNote_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

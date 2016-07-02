@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 
 namespace PowerNote {
     public partial class OptionsPanel : StackPanel {
+
         public OptionsPanel() {
             InitializeComponent();
         }

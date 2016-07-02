@@ -17,7 +17,7 @@ namespace PowerNote.ViewModels {
         public EntriesTreeVM TreeVM { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
         public Entry Entry { get; set; }
-        public MyContext Context { get; set; }
+        public DAL.DbContext Context { get; set; }
         public ObservableCollection<string> AllProperties { get; set; }
         public ObservableCollection<Tag> AllTags { get; set; }
         public EntryVM Parent { get; set; }

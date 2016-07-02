@@ -6,7 +6,6 @@
              xmlns:local="clr-namespace:PowerNote"
              xmlns:VMs="clr-namespace:PowerNote.ViewModels"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300"
              DataContext="{Binding EntriesTreeVM}"
              ItemsSource = "{Binding FirstGenEntryVMs}"
              Background="{StaticResource BackgroundBrush}"
@@ -26,10 +25,10 @@
     </TreeView.ItemContainerStyle>
     <TreeView.Resources>
         <HierarchicalDataTemplate DataType="{x:Type VMs:TaskVM}"  ItemsSource="{Binding Children}">
-            <local:ToDoPanel/>
+            <local:TaskPanel/>
         </HierarchicalDataTemplate>
         <HierarchicalDataTemplate DataType="{x:Type VMs:PartClassVM}"  ItemsSource="{Binding Children}">
-            <local:PartClassPanel/>
+            <local:GenericEntryPanel/>
             <!--IT is recognising that it needs partPanel, I think-->
         </HierarchicalDataTemplate>
         <HierarchicalDataTemplate DataType="{x:Type VMs:PartInstanceVM}"  ItemsSource="{Binding Children}">

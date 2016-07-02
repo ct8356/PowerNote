@@ -13,9 +13,10 @@ using System.Linq.Expressions;
 namespace PowerNote.ViewModels {
     public class EntriesTreeVM {
         public MainVM ParentVM { get; set; }
-        public MyContext DbContext { get; set; }
+        public DbContext DbContext { get; set; }
         Type type;
         public TypePanelVM TypePanelVM { get; set; }
+        public ComboBoxVM ComboBoxVM { get; set; }
         public StructurePanelVM StructurePanelVM { get; set; }
         public FilterPanelVM Filter { get; set; }
         public OptionsPanelVM OptionsPanelVM { get; set; }
@@ -30,7 +31,7 @@ namespace PowerNote.ViewModels {
         public EntriesTreeVM(MainVM parentVM) {
             ParentVM = parentVM;
             DbContext = parentVM.DbContext;
-            TypePanelVM = parentVM.TypePanelVM;
+            ComboBoxVM = parentVM.ComboBoxVM;
             StructurePanelVM = parentVM.StructurePanelVM;
             Filter = parentVM.FilterPanelVM;
             OptionsPanelVM = parentVM.OptionsPanelVM;
@@ -43,7 +44,7 @@ namespace PowerNote.ViewModels {
             //newEntry.KeyUp += new KeyEventHandler(newEntry_KeyUp);
         }
 
-        public void filterSortAndShowEntries() {
+        public void filterSortAndShowEntries0() {
             if (TypePanelVM.SelectedObjects.Count > 0) {
                 Type selectedType = TypePanelVM.SelectedObjects.First() as Type;
                 if (selectedType == typeof(Entry))
@@ -53,7 +54,21 @@ namespace PowerNote.ViewModels {
                 if (selectedType == typeof(PartInstance))
                     processEntries<PartInstance>((DbContext.PartInstances));
                 if (selectedType == typeof(Task))
-                    processEntries<Task>(DbContext.ToDos);
+                    processEntries<Task>(DbContext.Tasks);
+            }
+        }
+
+        public void filterSortAndShowEntries() {
+            if (ComboBoxVM.SelectedObject != null) {
+                Type selectedType = ComboBoxVM.SelectedObject as Type;
+                if (selectedType == typeof(Entry))
+                    processEntries<Entry>(DbContext.Entrys);
+                if (selectedType == typeof(PartClass)) //is does not work here. it says selected type is Type.
+                    processEntries<PartClass>(DbContext.Parts);
+                if (selectedType == typeof(PartInstance))
+                    processEntries<PartInstance>((DbContext.PartInstances));
+                if (selectedType == typeof(Task))
+                    processEntries<Task>(DbContext.Tasks);
             }
         }
 
@@ -172,7 +187,7 @@ namespace PowerNote.ViewModels {
         public IQueryable<T> showFirstLevel<T>(IQueryable<T> entries, string columnName) where T : Entry {
             IEnumerable<int> filterTagIDs = Filter.Objects.Select(o => (o as Tag).TagID);
             IQueryable<T> filteredParents = null;
-            Type selectedType = TypePanelVM.SelectedObjects.First() as Type;
+            Type selectedType = ComboBoxVM.SelectedObject as Type;
             if (OptionsPanelVM.ShowAllEntries) {
                 filteredParents = filterEntries<T>(entries, PropertyEqualsNull<T>(columnName));
                 //PERHAPS, really DO want to do 3 filters, one for each type...

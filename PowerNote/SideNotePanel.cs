@@ -14,12 +14,12 @@ using System.Windows.Input;
 namespace PowerNote {
     class SideNotePanel : DockPanel {
         Label title;
-        MyContext context;
+        DAL.DbContext context;
         SideEntry sideEntry;
         Button newEntry_button;
         MainPanel mainPanel;
 
-        public SideNotePanel(MyContext context, MainPanel mainPanel) {
+        public SideNotePanel(DAL.DbContext context, MainPanel mainPanel) {
             this.context = context;
             this.mainPanel = mainPanel;
             //PANEL
@@ -52,7 +52,7 @@ namespace PowerNote {
         public void sideEntry_LostFocus(object sender, RoutedEventArgs e) {
             if (sideEntry.textBox.Text != null && sideEntry.textBox.Text != "") {
                 Task newStudent = new Task(sideEntry.textBox.Text);
-                context.ToDos.Add(newStudent);
+                context.Tasks.Add(newStudent);
                 context.SaveChanges();
                 //mainPanel.DisplayPanel.updateEntries();
                 //CBTL

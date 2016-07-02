@@ -5,9 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:PowerNote"
              xmlns:models="clr-namespace:PowerNote.Models"
+             xmlns:CJT="clr-namespace:CJT;assembly=CJT"
              mc:Ignorable="d"
-             d:DesignWidth="300"
-             Orientation="Horizontal">
+             d:DesignWidth="300">
     <TextBox Text="{Binding Entry.FunctionText}" BorderBrush="{StaticResource BackgroundBrush}">
         <TextBox.ContextMenu>
             <ContextMenu>
@@ -22,6 +22,6 @@
     <Label Name="PartClassNickName" DataContext="{Binding Entry.PartClass}" Content="{Binding NickName}"></Label>
     <Label Name="Manufacturer" DataContext="{Binding Entry.PartClass}" Content="{Binding Manufacturer}"></Label>
     <local:MyAutoCompleteBox x:Name="PropertyAutoCompleteBox" ItemsSource="{Binding NickNames}"/>
-    <local:MyListBox ItemsSource="{Binding Entry.Tags}"/>
+    <CJT:ListBox ItemsSource="{Binding Entry.Tags}"/>
     <local:MyAutoCompleteBox x:Name="MyAutoCompleteBox" ItemsSource="{Binding AllTags}"/>
 </local:EntryPanel>

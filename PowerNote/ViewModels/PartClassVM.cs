@@ -14,9 +14,12 @@ namespace PowerNote.ViewModels {
     public class PartClassVM : EntryVM {
         //HELL! Just have a go at BINDING the VIEW (own EntryPanel for PARTS),
         //STRAIGHT to the MODEL. (BUT, the model contained HERE!!!).
-        //OR of course, the model just binds to THIS VIEWMODEL:
+        //OR of course, the view just binds to THIS VIEWMODEL:
         //THEN this VIEWMODEL NATURALLY just tells view how to show stuff.
         //I.E. this viewModel, acts bit like a view!!
+
+        //NOTE: Perhaps better to put some STATIC properties in here as well,
+        //So can try and bind to them, and this is reflected in ALL PartClassVMs!
 
         //NOTE: I think COULD get away, with just ONE type of VM. But keep as is for now.
         public PartClassVM(PartClass part, EntriesTreeVM parentVM) {
@@ -30,6 +33,13 @@ namespace PowerNote.ViewModels {
             initialize(part, parentVM);
             DbContext.Parts.Add(part); //YES!!
             DbContext.SaveChanges(); //remember this.
+        }
+
+        public override void initializePropertyList() {
+            base.initializePropertyList();
+            AllProperties.Add(new Property("Nickname", (Entry as PartClass).NickName, InfoType.TextBox, true, this));
+            AllProperties.Add(new Property("Order number", (Entry as PartClass).OrderNumber, InfoType.TextBox, true, this));
+            AllProperties.Add(new Property("Manufacturer", (Entry as PartClass).Manufacturer, InfoType.TextBox, true, this));
         }
 
         public void deletePart() {

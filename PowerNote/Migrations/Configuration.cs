@@ -4,23 +4,24 @@ using System.Data.Entity.Migrations;
 using System.Linq;
 using PowerNote.Models;
 using PowerNote.DAL;
-using System.Collections.ObjectModel;
 
 namespace PowerNote.Migrations {
 
-    internal sealed class Configuration : DbMigrationsConfiguration<MyContext> {
+    internal sealed class Configuration : DbMigrationsConfiguration<DbContext> {
         public Configuration() {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true; //was False, but error suggested
+            //I change it to true
         }
 
-        public void callSeed(MyContext context) {
+        public void callSeed(DbContext context) {
             Seed(context);
         }
         //RIGHT, so this configuration, WON'T DO nice migrations.
         //BUT, can look into that, when really need it.
         //For now, can just delete, and recreate the database.
+        //NOW I have updated to EF v6, will it do nice migs now?
 
-        protected override void Seed(MyContext context) {
+        protected override void Seed(DbContext context) {
             //OK! Perhaps, it is actually THIS method, that creates the database.
             //NOT the create context instantiation...
             //(I guess create(), will still do the trick. but NOT context instantiation...nec.) ??
@@ -49,7 +50,7 @@ namespace PowerNote.Migrations {
                 new Task { Contents = "Ask for shelves"},
                 new Task { Contents = "Fix your pannier"}
             };
-            tasks.ForEach(student => context.ToDos.AddOrUpdate(s => s.Contents, student));
+            tasks.ForEach(student => context.Tasks.AddOrUpdate(s => s.Contents, student));
             context.SaveChanges();
 
             var partClasses = new List<PartClass>();
@@ -103,7 +104,7 @@ namespace PowerNote.Migrations {
             context.SaveChanges();
         }
 
-        public PartInstance createPartInstance(string functionText, string partClassNickName, List<string> tags, MyContext context) {
+        public PartInstance createPartInstance(string functionText, string partClassNickName, List<string> tags, DbContext context) {
             PartInstance part = new PartInstance(functionText);
             context.PartInstances.AddOrUpdate(p => p.FunctionText, part);
             context.SaveChanges(); //must save it before adding partClass and tags?
@@ -115,7 +116,7 @@ namespace PowerNote.Migrations {
             return part;
         }
 
-        public void AddOrUpdateTag(MyContext context, int entryID, string tagTitle) {
+        public void AddOrUpdateTag(DbContext context, int entryID, string tagTitle) {
             var entry = context.Entrys.SingleOrDefault(e => e.EntryID == entryID);
             var tag = entry.Tags.SingleOrDefault(t => t.Title == tagTitle);
             if (tag == null)

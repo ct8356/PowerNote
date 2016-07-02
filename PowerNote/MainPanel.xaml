@@ -8,5 +8,7 @@
             <MenuItem Header="Seed the database" Click="Seed_Click"/>
         </MenuItem>
     </Menu>
-    <local:DisplayPanel DockPanel.Dock="Left"></local:DisplayPanel>
+    <Button Content="Do the thing" Click="DoTheThing" DockPanel.Dock="Bottom"></Button>
+    <local:DisplayPanel x:Name="DisplayPanel" DockPanel.Dock="Left"></local:DisplayPanel>
+    <local:EntryPropertiesPanel x:Name="PropsPanel" DockPanel.Dock="Left" DataContext="{Binding SelectedEntryVM}"></local:EntryPropertiesPanel>
 </DockPanel>

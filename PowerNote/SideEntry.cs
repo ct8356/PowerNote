@@ -16,7 +16,7 @@ using System.Windows.Input;
 
 namespace PowerNote {
     class SideEntry : StackPanel {
-        MyContext context;
+        DAL.DbContext context;
         Task Student { get; set; }
         List<Tag> courseList;
         List<Label> labelList;
@@ -37,7 +37,7 @@ namespace PowerNote {
             Children.Add(textBox);
         }
 
-        public SideEntry(MyContext context, SideNotePanel sideNotePanel) : this() {
+        public SideEntry(DAL.DbContext context, SideNotePanel sideNotePanel) : this() {
             this.context = context;
             this.sideNotePanel = sideNotePanel;
             //BASICALLY, got to make it CREATE it, 
