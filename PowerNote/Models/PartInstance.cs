@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Data;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using CJT;
 
 using System.ComponentModel;
 namespace PowerNote.Models {

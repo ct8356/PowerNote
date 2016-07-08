@@ -4,22 +4,29 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:PowerNote"
+             xmlns:CJT="clr-namespace:CJT;assembly=CJT"
              mc:Ignorable="d"
             Width="500">
     <Label FontWeight="Bold" DockPanel.Dock="Top">Display Panel</Label>
     <Label DockPanel.Dock="Top">Children to show:</Label>
     <local:PropertyPanel DockPanel.Dock="Top">
         <Label>Filter by type:</Label>
-        <ComboBox x:Name="ComboBox" DataContext="{Binding ComboBoxVM}" ItemsSource="{Binding Objects}" SelectedItem="{Binding SelectedObject}" SelectionChanged="ComboBox_SelectionChanged" />
+        <ComboBox x:Name="ComboBox" DataContext="{Binding ComboBoxVM}" 
+                  ItemsSource="{Binding Objects}" SelectedItem="{Binding SelectedObject}" 
+                  SelectionChanged="ComboBox_SelectionChanged" />
     </local:PropertyPanel>
     <local:PropertyPanel DockPanel.Dock="Top">
         <Label>Structure by properties:</Label>
-        <local:ListBoxPanel x:Name="StructurePanel" DataContext="{Binding StructurePanelVM}"></local:ListBoxPanel>
+        <ComboBox x:Name="StructurePanel" DataContext="{Binding StructurePanelVM}"
+                  ItemsSource="{Binding Objects}" SelectedItem="{Binding SelectedObject}" 
+                  SelectionChanged="ComboBox_SelectionChanged" />
     </local:PropertyPanel>
     <local:PropertyPanel DockPanel.Dock="Top">
         <Label>Filter by tags:</Label>
-        <local:ListBoxPanel x:Name="FilterPanel" DataContext="{Binding FilterPanelVM}">
-        </local:ListBoxPanel>
+        <CJT:ListBox DataContext="{Binding FilterPanelVM}"
+                 ItemsSource="{Binding SelectedObjects}"/>
+        <CJT:AutoCompleteBox DataContext="{Binding FilterPanelVM}"
+                             ItemsSource="{Binding Objects}"/>
     </local:PropertyPanel>
-    <local:OptionsPanel x:Name="OptionsPanel" DataContext="{Binding OptionsPanelVM}" DockPanel.Dock="Top"></local:OptionsPanel>
+    <local:OptionsPanel x:Name="OptionsPanel" DataContext="{Binding OptionsPanelVM}" DockPanel.Dock="Top"/>
 </DockPanel>

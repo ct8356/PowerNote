@@ -116,9 +116,6 @@
     <Compile Include="EntryPropertiesPanel.xaml.cs">
       <DependentUpon>EntryPropertiesPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PartInstancePropertiesPanel.xaml.cs">
-      <DependentUpon>PartInstancePropertiesPanel.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ListBoxPanel.cs" />
     <Compile Include="MainPanel.xaml.cs">
       <DependentUpon>MainPanel.xaml</DependentUpon>
@@ -130,46 +127,30 @@
     <Compile Include="TypePanel.xaml.cs">
       <DependentUpon>TypePanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PartInstancePanel.xaml.cs">
-      <DependentUpon>PartInstancePanel.xaml</DependentUpon>
-    </Compile>
     <Compile Include="DAL\DbContext.cs" />
     <Compile Include="EntryPanel.cs" />
     <Compile Include="Models\PartInstance.cs" />
-    <Compile Include="TaskPanel.xaml.cs">
-      <DependentUpon>TaskPanel.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\Entry.cs" />
     <Compile Include="Models\PartClass.cs" />
-    <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\Task.cs" />
     <Compile Include="Models\TaggedObject.cs" />
-    <Compile Include="MyAutoCompleteBox.xaml.cs">
-      <DependentUpon>MyAutoCompleteBox.xaml</DependentUpon>
-    </Compile>
     <Compile Include="EntriesTreeView.xaml.cs">
       <DependentUpon>EntriesTreeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PartClassPanel.xaml.cs">
-      <DependentUpon>PartClassPanel.xaml</DependentUpon>
-    </Compile>
     <Compile Include="SideEntry.cs" />
     <Compile Include="SideNotePanel.cs" />
-    <Compile Include="SortPanel.cs" />
     <Compile Include="TagListPanel.cs" />
-    <Compile Include="ViewModels\TypePanelVM.cs" />
+    <Compile Include="ViewModels\GenericTreeVM.cs" />
+    <Compile Include="ViewModels\GenericEntryVM.cs" />
     <Compile Include="ViewModels\InfoType.cs" />
     <Compile Include="ViewModels\EntriesTreeVM.cs" />
     <Compile Include="ViewModels\Property.cs" />
     <Compile Include="ViewModels\Filter.cs" />
     <Compile Include="ViewModels\OldEntryVM.cs" />
-    <Compile Include="ViewModels\FilterPanelVM.cs" />
     <Compile Include="ViewModels\ListBoxPanelVM.cs" />
     <Compile Include="ViewModels\EntryClassOptionsVM.cs" />
     <Compile Include="ViewModels\OptionsPanelVM.cs" />
     <Compile Include="ViewModels\ComboBoxVM.cs" />
-    <Compile Include="ViewModels\StructurePanelVM.cs" />
     <Compile Include="ViewModels\PartInstanceVM.cs" />
     <Compile Include="ViewModels\EntryVM.cs" />
     <Compile Include="ViewModels\PartClassVM.cs" />
@@ -182,10 +163,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="PartInstancePropertiesPanel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainPanel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -197,14 +174,6 @@
     <Page Include="TypePanel.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="PartInstancePanel.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TaskPanel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -220,15 +189,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="MyAutoCompleteBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="EntriesTreeView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="PartClassPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

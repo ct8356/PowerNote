@@ -9,16 +9,17 @@ using PowerNote.ViewModels;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Linq.Expressions;
+using CJT;
+using AutoCompleteBox = CJT.AutoCompleteBox;
 
 namespace PowerNote.ViewModels {
     public class EntriesTreeVM {
         public MainVM ParentVM { get; set; }
         public DbContext DbContext { get; set; }
         Type type;
-        public TypePanelVM TypePanelVM { get; set; }
         public ComboBoxVM ComboBoxVM { get; set; }
-        public StructurePanelVM StructurePanelVM { get; set; }
-        public FilterPanelVM Filter { get; set; }
+        public ComboBoxVM StructurePanelVM { get; set; }
+        public ListBoxPanelVM<Tag> Filter { get; set; }
         public OptionsPanelVM OptionsPanelVM { get; set; }
         public ObservableCollection<EntryVM> FirstGenEntryVMs { get; set; }
         //needed for treeview to bind to
@@ -42,20 +43,6 @@ namespace PowerNote.ViewModels {
             //INITIALIZE
             //newEntry.LostFocus += new RoutedEventHandler(newEntry_LostFocus);
             //newEntry.KeyUp += new KeyEventHandler(newEntry_KeyUp);
-        }
-
-        public void filterSortAndShowEntries0() {
-            if (TypePanelVM.SelectedObjects.Count > 0) {
-                Type selectedType = TypePanelVM.SelectedObjects.First() as Type;
-                if (selectedType == typeof(Entry))
-                    processEntries<Entry>(DbContext.Entrys);
-                if (selectedType == typeof(PartClass)) //is does not work here. it says selected type is Type.
-                    processEntries<PartClass>(DbContext.Parts);
-                if (selectedType == typeof(PartInstance))
-                    processEntries<PartInstance>((DbContext.PartInstances));
-                if (selectedType == typeof(Task))
-                    processEntries<Task>(DbContext.Tasks);
-            }
         }
 
         public void filterSortAndShowEntries() {
@@ -85,7 +72,7 @@ namespace PowerNote.ViewModels {
         public IEnumerable<Entry> filterByType(IQueryable<Entry> filteredEntries) {
             //string typeName = ((displayPanel.TypePanel.DataContext as TypePanelVM).SelectedObjects.First() as Type).FullName;
             //Type type = Type.GetType(typeName);
-            Type type = TypePanelVM.SelectedObjects.First() as Type;
+            Type type = ComboBoxVM.SelectedObject as Type;
             IEnumerable<Entry> filteredEntriesEnum = filteredEntries.AsEnumerable<Entry>()
                 .Where(e => e.GetType() == type);
             return filteredEntriesEnum;
@@ -93,7 +80,7 @@ namespace PowerNote.ViewModels {
         //can turn this method into a "construct SQL" query, maybe...
 
         public IQueryable<T> filterByTag<T>(IQueryable<T> entries) where T : Entry {
-            IEnumerable<int> filterCourseIDs = Filter.SelectedObjects.Select(o => (o as Tag).TagID);
+            IEnumerable<int> filterCourseIDs = Filter.Objects.Select(o => (o as Tag).TagID);
             if (!OptionsPanelVM.ShowAllEntries)
                 return entries.Where(s => !filterCourseIDs.Except(s.Tags.Select(c => c.TagID)).Any());
             //NOTE: can I think of EXCEPTS means EXCLUDES?
@@ -114,7 +101,8 @@ namespace PowerNote.ViewModels {
         //}
 
         public void processEntries<T>(IQueryable<T> entries) where T : Entry {
-            IQueryable<T> filteredEntries = filterByTag<T>(entries);
+            IQueryable<T> filteredEntries = entries;//REVISIT HACK!
+            //IQueryable<T> filteredEntries = filterByTag<T>(entries);
             //orderBy(); //does nothing yet
             showLevels<T>(filteredEntries);
         }
@@ -173,14 +161,14 @@ namespace PowerNote.ViewModels {
 
         public void showLevels<T>(IQueryable<T> entries) where T : Entry {
             string columnName = null;
-            if (StructurePanelVM.SelectedObjects.Count > 0 )
-                columnName = StructurePanelVM.SelectedObjects.First() as string;
+            //if (StructurePanelVM.SelectedObjects.Count > 0 )
+                columnName = StructurePanelVM.SelectedObject as string;
             //string columnName = "Sensor"; //HARDWIRE
-            IQueryable<T> filteredParents = showFirstLevel(entries, columnName);
+            IQueryable<T> filteredParents = showFirstLevel<T>(entries, columnName);
             Expression<Func<T, bool>> expression = PropertyNotNull<T>(columnName);
             for (int gen = 2; gen <= 5; gen++) {
                 //filteredParents = showMoreLevels(filteredParents, child => child.Parent != null);
-                filteredParents = showMoreLevels(entries, filteredParents, columnName, expression.Compile());
+                filteredParents = showMoreLevels<T>(entries, filteredParents, columnName, expression.Compile());
             }
         }
 
@@ -197,10 +185,12 @@ namespace PowerNote.ViewModels {
                 //filteredParents = entries.Where(e => filterTagIDs.Except(e.Parent.Tags.Select(t => t.TagID)).Any());
                 //WHERE it has NO parent that matches the filter.
             }
+            int count0 = entries.Count();
+            int count = filteredParents.Count();
             foreach (T entry in filteredParents) {
                 EntryVM entryVM = wrapInCorrectVM(entry);
                 FirstGenEntryVMs.Add(entryVM);
-                AllEntryVMs.Add(entryVM);
+                AllEntryVMs.Add(entryVM); //CURRENT PROBLEM! Code does not reach this line! REVISIT!
             }
             return filteredParents;
         }

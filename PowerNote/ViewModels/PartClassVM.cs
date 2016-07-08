@@ -35,22 +35,19 @@ namespace PowerNote.ViewModels {
             DbContext.SaveChanges(); //remember this.
         }
 
-        public override void initializePropertyList() {
+        protected override void initializePropertyList() {
             base.initializePropertyList();
-            AllProperties.Add(new Property("Nickname", (Entry as PartClass).NickName, InfoType.TextBox, true, this));
-            AllProperties.Add(new Property("Order number", (Entry as PartClass).OrderNumber, InfoType.TextBox, true, this));
-            AllProperties.Add(new Property("Manufacturer", (Entry as PartClass).Manufacturer, InfoType.TextBox, true, this));
+            AllProperties.Add(new Property("Nickname", (Entry as PartClass).NickName, InfoType.TextBox, true, DbContext));
+            AllProperties.Add(new Property("Order number", (Entry as PartClass).OrderNumber, InfoType.TextBox, true, DbContext));
+            AllProperties.Add(new Property("Manufacturer", (Entry as PartClass).Manufacturer, InfoType.TextBox, true, DbContext));
         }
 
-        public void deletePart() {
-        }
-
-        public void insertPart(EntryVM selectedEntryVM) {
+        public override void insertEntry(EntryVM selectedEntryVM) {
             PartClassVM entryVM = new PartClassVM("blank", TreeVM);
             insertEntry(entryVM, selectedEntryVM);
         }
 
-        public void insertSubPart(PartClassVM parentVM) {
+        public override void insertSubEntry(EntryVM parentVM) {
             PartClassVM entryVM = new PartClassVM((parentVM.Entry as PartClass).NickName + " child", TreeVM); //create part.
             insertSubEntry(entryVM, parentVM);
         }

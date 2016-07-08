@@ -4,6 +4,7 @@ using System.Data.Entity.Migrations;
 using System.Linq;
 using PowerNote.Models;
 using PowerNote.DAL;
+using CJT;
 
 namespace PowerNote.Migrations {
 

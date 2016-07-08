@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.ComponentModel; //this allows INotifyPropertyChanged
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
+using CJT;
 
 namespace PowerNote.Models {
 

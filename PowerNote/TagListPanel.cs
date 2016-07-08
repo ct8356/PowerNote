@@ -11,12 +11,14 @@ using PowerNote.Migrations;
 using System.Windows.Data;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using CJT;
+using AutoCompleteBox = CJT.AutoCompleteBox;
 
 namespace PowerNote {
     //NO LONGER USED! but keep for reference.
     class TagListPanel : StackPanel {
         DAL.DbContext context;
-        MyAutoCompleteBox autoCompleteBox;
+        AutoCompleteBox autoCompleteBox;
         TaggedObject taggedObject;
         List<Label> labelList;
         DisplayPanel displayPanel; 
@@ -30,7 +32,7 @@ namespace PowerNote {
             labelList = new List<Label>();
             addTagLabels();//courseList.Property changed += courseList_PropertyChanged;
             //AUTOCOMPLETEBOX
-            autoCompleteBox = new MyAutoCompleteBox();
+            autoCompleteBox = new AutoCompleteBox();
             context.Tags.Load();
             autoCompleteBox.ItemsSource = context.Tags.Local;
             Children.Add(autoCompleteBox);
@@ -90,9 +92,9 @@ namespace PowerNote {
             foreach (Tag course in taggedObject.Tags) {
                 Label label = new Label();
                 labelList.Add(label);
-                Binding binding2 = new Binding("Title"); //This is the MODEL property it binds to.
-                binding2.Source = course; // the binding source (which must fire a PROP CHANGED event).
-                label.SetBinding(Label.ContentProperty, binding2);
+                Binding binding = new Binding("Title"); //This is the MODEL property it binds to.
+                binding.Source = course; // the binding source (which must fire a PROP CHANGED event).
+                label.SetBinding(Label.ContentProperty, binding);
                 //RIGHT CLICKS
                 MenuItem delete_menuItem = new MenuItem();
                 delete_menuItem.Click += remove_menuItem_Click;

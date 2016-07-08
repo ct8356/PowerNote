@@ -6,39 +6,33 @@ using System.Collections.ObjectModel;
 using PowerNote.DAL;
 using System.ComponentModel; //this allows INotifyPropertyChanged
 using PowerNote.Models;
+using CJT;
 
 namespace PowerNote.ViewModels {
-    public class ListBoxVM<T> : INotifyPropertyChanged {
-        public event PropertyChangedEventHandler PropertyChanged;
-
+    public class ListBoxPanelVM<T> : BaseClass, INotifyInputConfirmed where T : Entry {
+        public delegate void ObjectEventHandler(object sender, ObjectEventArgs<T> e);
+        public event ObjectEventHandler InputConfirmed;
+        public DbContext DbContext { get; set; }
         public ObservableCollection<T> Objects { get; set; }
-
         private ObservableCollection<T> selectedObjects;
         public ObservableCollection<T> SelectedObjects {
             get { return selectedObjects; }
             set { selectedObjects = value; NotifyPropertyChanged("SelectedObjects"); }
         }
-        public List<string> TestString { get; set; } = new List<string>() { "fah", "lah" };
 
-        public DbContext DbContext { get; set; }
-        public MainVM ParentVM { get; set; }
-
-        public ListBoxVM(MainVM parentVM) {
+        public ListBoxPanelVM(DbContext dbContext) {
             Objects = new ObservableCollection<T>();
             SelectedObjects = new ObservableCollection<T>();
-            DbContext = parentVM.DbContext;
-            ParentVM = parentVM;
+            DbContext = dbContext;
         }
 
-        public virtual void addSelectedItem(object selectedItem) {
-            ParentVM.updateEntries();
-            //FIRE an event... or not....
+        public virtual void addSelectedItem(T selectedItem) {
+            SelectedObjects.Add(selectedItem);
+            //FIRE an event... or not.... use NotifyPropChanged?
         }
 
-        protected void NotifyPropertyChanged(String propertyName) {
-            if (PropertyChanged != null) {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+        public void NotifyInputConfirmed(object input) {
+            InputConfirmed(this, new ObjectEventArgs<T>(input as T));
         }
 
     }

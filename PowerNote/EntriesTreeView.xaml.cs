@@ -9,13 +9,14 @@ using PowerNote.ViewModels;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Linq.Expressions;
+using CJT;
 
 namespace PowerNote {
     public partial class EntriesTreeView : TreeView {
         Type type;
         DisplayPanel DisplayPanel { get; set; }
-        FilterPanelVM filter;
-        TaskPanel newEntry; //keep for now
+        List<Tag> filter;
+        EntryPanel newEntry; //keep for now
         public Entry Orphan {get; set;}
         public bool WaitingForParentSelection { get; set; }
 
@@ -40,8 +41,8 @@ namespace PowerNote {
         }
 
         public void newEntry_LostFocus(object sender, System.Windows.RoutedEventArgs e) {
-            if (newEntry.TextBox.Text != null && newEntry.TextBox.Text != "") {
-                Task newStudent = new Task(newEntry.TextBox.Text);
+            if (newEntry.TextBlock.Text != null && newEntry.TextBlock.Text != "") {
+                Task newStudent = new Task(newEntry.TextBlock.Text);
                 (DataContext as EntriesTreeVM).DbContext.Tasks.Add(newStudent);
                 (DataContext as EntriesTreeVM).DbContext.SaveChanges();
                 (DataContext as EntriesTreeVM).updateEntries(); //CBTL. Lazy way. (rather than using events). But ok for now.   

@@ -5,6 +5,7 @@ using System.Text;
 using CJT;
 using System.ComponentModel; //this allows INotifyPropertyChanged
 using System.Collections.ObjectModel;
+using PowerNote.DAL;
 
 namespace PowerNote.ViewModels {
     public class Property : BaseClass {
@@ -18,24 +19,23 @@ namespace PowerNote.ViewModels {
         public bool IsVisibleInEntryPanel { get; set; }
         public bool IsVisibleInPropertyPanel { get; set; }
         public object Value { get; set; }
-        public EntryVM ParentVM { get; set; }
-
+        public DbContext DbContext { get; set; }
         public Property() {
             //do nothing
         }
 
-        public Property(string name, object value, InfoType type, bool isVisible, EntryVM parentVM) {
+        public Property(string name, object value, InfoType type, bool isVisible, DbContext dbContext) {
             Name = name;
             Value = value;
             Type = type;
             IsVisibleInEntryPanel = isVisible;
             IsVisibleInPropertyPanel = true;
-            ParentVM = parentVM;
+            DbContext = dbContext;
             PropertyChanged += This_PropertyChanged;
         }
 
         public void This_PropertyChanged(object sender, PropertyChangedEventArgs args) {
-            ParentVM.DbContext.SaveChanges();
+            DbContext.SaveChanges();
         } //HMMM! probs best to TRY this in separate project,
         //to see if its possible (binding to list entries i mean, dynamically!).
         //IN MEAN TIME, make good model, make genericvm with an entry,

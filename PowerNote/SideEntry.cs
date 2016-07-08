@@ -13,6 +13,8 @@ using PowerNote.Models;
 using PowerNote.DAL;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using CJT;
+using AutoCompleteBox = CJT.AutoCompleteBox;
 
 namespace PowerNote {
     class SideEntry : StackPanel {
@@ -20,7 +22,7 @@ namespace PowerNote {
         Task Student { get; set; }
         List<Tag> courseList;
         List<Label> labelList;
-        MyAutoCompleteBox autoCompleteBox;
+        AutoCompleteBox autoCompleteBox;
         CheckBox checkBox { get; set; }
         public TextBox textBox { get; set; }
         DisplayPanel displayPanel;
@@ -48,7 +50,7 @@ namespace PowerNote {
             labelList = new List<Label>();
             //addTagLabels();//courseList.Property changed += courseList_PropertyChanged;
             //AUTOCOMPLETEBOX
-            autoCompleteBox = new MyAutoCompleteBox();
+            autoCompleteBox = new AutoCompleteBox();
             //need to call the load, local thing here.
             addAutoCompleteBox();
             //SUBSCRIBE TO STUFF

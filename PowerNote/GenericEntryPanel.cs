@@ -15,6 +15,9 @@ using PowerNote.ViewModels;
 using PowerNote.DAL;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using CJT;
+using AutoCompleteBox = CJT.AutoCompleteBox;
+using ListBox = CJT.ListBox;
 
 namespace PowerNote {
     public class GenericEntryPanel : StackPanel {
@@ -93,7 +96,7 @@ namespace PowerNote {
 
         public void filterAndSortTagsShown() {
             IEnumerable<int> filterCourseIDs = 
-                (DataContext as EntryVM).FilterPanelVM.Objects.Select(c => (c as Tag).TagID);
+                (DataContext as EntryVM).TagsInputVM.Objects.Select(c => (c as Tag).TagID);
             var alphabeticalCourses = (DataContext as EntryVM)
                 .Entry.Tags.Where(c => !filterCourseIDs.Contains(c.TagID)).OrderBy(c => c.Title);
         }

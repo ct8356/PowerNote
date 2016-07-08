@@ -17,6 +17,7 @@ using PowerNote.Models;
 using PowerNote.ViewModels;
 using PowerNote.Migrations;
 using System.Collections.ObjectModel;
+using CJT;
 
 namespace PowerNote.ViewModels {
     public class PartInstanceVM : EntryVM {
@@ -52,14 +53,14 @@ namespace PowerNote.ViewModels {
             NickNames = DbContext.Parts;
         }//NOTE: new, means, this is NOT called, if call EntryVM.initialize, and happens to be a partInstance.
 
-        public override void initializePropertyList() {
+        protected override void initializePropertyList() {
             base.initializePropertyList();
-            AllProperties.Add(new Property("Function text", (Entry as PartInstance).FunctionText, InfoType.TextBox, true, this));
-            AllProperties.Add(new Property("Part class", (Entry as PartInstance).PartClass, InfoType.TextBox, false, this));
-            AllProperties.Add(new Property("Parent part", (Entry as PartInstance).ParentPartInstance, InfoType.TextBox, false, this));
-            AllProperties.Add(new Property("Children parts", (Entry as PartInstance).ChildPartInstances, InfoType.ListBox, false, this));
-            AllProperties.Add(new Property("Tasks", (Entry as PartInstance).ChildTasks, InfoType.ListBox, false, this));
-            AllProperties.Add(new Property("Sensor", (Entry as PartInstance).Sensor, InfoType.TextBox, false, this));
+            AllProperties.Add(new Property("Function text", (Entry as PartInstance).FunctionText, InfoType.TextBox, true, DbContext));
+            AllProperties.Add(new Property("Part class", (Entry as PartInstance).PartClass, InfoType.TextBox, false, DbContext));
+            AllProperties.Add(new Property("Parent part", (Entry as PartInstance).ParentPartInstance, InfoType.TextBox, false, DbContext));
+            AllProperties.Add(new Property("Children parts", (Entry as PartInstance).ChildPartInstances, InfoType.ListBox, false, DbContext));
+            AllProperties.Add(new Property("Tasks", (Entry as PartInstance).ChildTasks, InfoType.ListBox, false, DbContext));
+            AllProperties.Add(new Property("Sensor", (Entry as PartInstance).Sensor, InfoType.TextBox, false, DbContext));
         }
 
         public void addPartClassToEntry(string text) {
@@ -72,12 +73,12 @@ namespace PowerNote.ViewModels {
             //nav property? lack of update entries?
         }
 
-        public void insertPart(PartInstanceVM selectedVM) {
+        public override void insertEntry(EntryVM selectedVM) {
             PartInstanceVM entryVM = new PartInstanceVM("blank", TreeVM);
             insertEntry(entryVM, selectedVM);
         }
 
-        public void insertSubPart(PartInstanceVM parentVM) {
+        public override void insertSubEntry(EntryVM parentVM) {
             PartInstanceVM entryVM = new PartInstanceVM((parentVM.Entry as PartInstance).FunctionText + " child", 
                 TreeVM); //create part.
             insertSubEntry(entryVM, parentVM);

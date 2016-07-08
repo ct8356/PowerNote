@@ -7,15 +7,19 @@
     using System.Data.Entity;
     using PowerNote.DAL;
     using PowerNote.Migrations;
+    using PowerNote.Models;
     using System.ComponentModel;
+    using System.Collections.ObjectModel;
+    using CJT;
 
 namespace PowerNote.ViewModels {
     public class MainVM : INotifyPropertyChanged {
         public event PropertyChangedEventHandler PropertyChanged;
         public DAL.DbContext DbContext { get; set; }
         public ComboBoxVM ComboBoxVM { get; set; }
-        public StructurePanelVM StructurePanelVM { get; set; }
-        public FilterPanelVM FilterPanelVM { get; set; }
+        public ComboBoxVM StructurePanelVM { get; set; }
+        public ObservableCollection<Tag> AllTags { get; set; }
+        public ListBoxPanelVM<Tag> FilterPanelVM { get; set; }
         public OptionsPanelVM OptionsPanelVM { get; set; }
         public EntryClassOptionsVM EntryClassOptionsVM { get; set; }
         public EntriesTreeVM EntriesTreeVM { get; set; }
@@ -29,15 +33,23 @@ namespace PowerNote.ViewModels {
             createDbContext();
             //seedDatabase();
             ComboBoxVM = new ComboBoxVM(this);
-            StructurePanelVM = new StructurePanelVM(this);
-            FilterPanelVM = new FilterPanelVM(this);
+            StructurePanelVM = new ComboBoxVM(this);
+            StructurePanelVM.Objects = new ObservableCollection<object>() { "Parent", "Sensor" };
+            StructurePanelVM.SelectedObject = StructurePanelVM.Objects.First();
+            AllTags = new ObservableCollection<Tag>();
+            DbContext.Tags.Load();
+            foreach (Tag tag in DbContext.Tags.Local) {
+                AllTags.Add(tag);
+            }
+            FilterPanelVM = new ListBoxPanelVM<Tag>(DbContext); //NOTE does not seem to have anything in its lists REVISIT CURRENT
+            FilterPanelVM.Objects = new ObservableCollection<Tag>(AllTags);
+            FilterPanelVM.SelectedObjects.Add(AllTags.First());
             OptionsPanelVM = new OptionsPanelVM(this);
             EntriesTreeVM = new EntriesTreeVM(this);
             SelectedEntryVM = EntriesTreeVM.FirstGenEntryVMs.First<EntryVM>();
             //AHAH! CBTL! CURRENT. BEST way to do this, is to instantiate the childVM here. and name it.
             //THEN, WHEN make new view in XAML, set its DataContext to this childVM!!!
             //SUBSCRIBE
-
         }
 
         public void createDbContext() {

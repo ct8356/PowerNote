@@ -14,18 +14,19 @@ using PowerNote.ViewModels;
 using PowerNote.DAL;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using CJT;
+using AutoCompleteBox = CJT.AutoCompleteBox;
 
 namespace PowerNote {
     public class EntryPanel : StackPanel {
-        public TextBox TextBox { get; set; }
+        public TextBlock TextBlock { get; set; }
 
         public EntryPanel() {
-            TextBox = new TextBox();
+            TextBlock = new TextBlock();
+            Children.Add(TextBlock);
             Orientation = Orientation.Horizontal;
             //conditionalSubscribe(); //OF COURSE! WON'T WORK, coz datacontext don't exist yet.
             //REALLY, need to do conditional subscribe in XAML? But, complex, CBTL.
-            //RIGHT CLICKS
-            //DependencyProps is the real proper way anyway.
             //AUTOCOMPLETEBOX
             //autoCompleteBox.SelectionChanged += autoCompleteBox_SelectionChanged;
             //autoCompleteBox.LostFocus += autoCompleteBox_LostFocus;
@@ -33,18 +34,12 @@ namespace PowerNote {
             //MyAutoCompleteBox.KeyUp += autoCompleteBox_KeyUp;
             //SUBSCRIBE TO EVENTS
             this.MouseUp += this_MouseUp;
+            DataContextChanged += This_DataContextChanged;
         }
 
         public void conditionalSubscribe() {
             if ((DataContext as EntryVM).TreeVM.WaitingForParentSelection)
                 this.MouseUp += sendToFosterParent;
-        }
-
-        public void sendToFosterParent(object sender, RoutedEventArgs e) {
-            (DataContext as EntryVM).TreeVM.WaitingForParentSelection = false;
-            this.MouseUp -= sendToFosterParent; //unsubscribe
-            EntryPanel selectedParentPanel = sender as EntryPanel;
-            (selectedParentPanel.DataContext as EntryVM).adoptChildFromTreeVM();
         }
 
         public void changeParent_Click(object sender, RoutedEventArgs e) {
@@ -55,14 +50,6 @@ namespace PowerNote {
         public void deleteEntry_Click(object sender, RoutedEventArgs e) {
             (DataContext as EntryVM).deleteEntry();
         }
-
-        public void this_MouseUp(object sender, EventArgs e) {
-            (DataContext as EntryVM).updateSelectedEntry(DataContext as EntryVM);
-        } //AHAH! perhaps you just need to call the DATACONTEXT of this,
-        //THEN CALL the datacontext of the treeview,
-        //THEN to the datacontext of the propertiesPanel,
-        //THEN properties panel SEES it has changed, and so updates itself...
-        //AND THAT is the case when THEN need a listener!!! listening to Datacontext, property changed!
 
         public void autoCompleteBox_KeyUp(object sender, KeyEventArgs e) {
             //Oddly, this is called twice when you click in the dropdown box. I guess, lets accept that, and work around it.
@@ -95,7 +82,7 @@ namespace PowerNote {
 
         public void filterAndSortTagsShown() {
             IEnumerable<int> filterCourseIDs = 
-                (DataContext as EntryVM).FilterPanelVM.Objects.Select(c => (c as Tag).TagID);
+                (DataContext as EntryVM).TagsInputVM.Objects.Select(c => (c as Tag).TagID);
             var alphabeticalCourses = (DataContext as EntryVM)
                 .Entry.Tags.Where(c => !filterCourseIDs.Contains(c.TagID)).OrderBy(c => c.Title);
         }
@@ -103,6 +90,40 @@ namespace PowerNote {
         public void courseList_PropertyChanged(Object sender, EventArgs e) {
             updateTagLabels();
         }
+
+        public void sendToFosterParent(object sender, RoutedEventArgs e) {
+            (DataContext as EntryVM).TreeVM.WaitingForParentSelection = false;
+            this.MouseUp -= sendToFosterParent; //unsubscribe
+            EntryPanel selectedParentPanel = sender as EntryPanel;
+            (selectedParentPanel.DataContext as EntryVM).adoptChildFromTreeVM();
+        }
+
+        public void This_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e) {
+            //RIGHT CLICKS
+            //DependencyProps is the real proper way anyway.
+            EntryVM dataContext = DataContext as EntryVM;
+            MenuItem insertEntry = new MenuItem() { Header = "Insert entry" };
+            insertEntry.Click += delegate { dataContext.insertEntry(dataContext); };//USE polymorphism!
+            MenuItem insertSubEntry = new MenuItem() { Header = "Insert sub-entry" };
+            insertSubEntry.Click += delegate { dataContext.insertSubEntry(dataContext); };
+            MenuItem deleteEntry = new MenuItem() { Header = "Delete entry" };
+            deleteEntry.Click += delegate { dataContext.deleteEntry(); };
+            ContextMenu contextMenu = new ContextMenu();
+            contextMenu.Items.Add(insertEntry);
+            contextMenu.Items.Add(insertSubEntry);
+            contextMenu.Items.Add(deleteEntry);
+            ContextMenu = contextMenu;
+            //TITLE
+            TextBlock.Text = (DataContext as EntryVM).ToString();
+        }
+
+        public void this_MouseUp(object sender, EventArgs e) {
+            (DataContext as EntryVM).updateSelectedEntry(DataContext as EntryVM);
+        } //AHAH! perhaps you just need to call the DATACONTEXT of this,
+        //THEN CALL the datacontext of the treeview,
+        //THEN to the datacontext of the propertiesPanel,
+        //THEN properties panel SEES it has changed, and so updates itself...
+        //AND THAT is the case when THEN need a listener!!! listening to Datacontext, property changed!
 
         public void updateTagLabels() {
             filterAndSortTagsShown();

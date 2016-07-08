@@ -5,6 +5,7 @@ using System.Text;
 using System.Collections.ObjectModel;
 using PowerNote.Models;
 using PowerNote.DAL;
+using CJT;
 
 namespace PowerNote.ViewModels {
     public class ComboBoxVM {

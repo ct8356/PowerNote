@@ -11,17 +11,20 @@ using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using System.Windows.Data;
+using CJT;
+using AutoCompleteBox = CJT.AutoCompleteBox;
+using ListBox = CJT.ListBox;
 
 namespace PowerNote {
     public class ListBoxPanel : StackPanel {
         public ListBox ListBox { get; set; }
-        public MyAutoCompleteBox AutoCompleteBox { get; set; }
+        public AutoCompleteBox AutoCompleteBox { get; set; }
 
         public ListBoxPanel() {
             Orientation = Orientation.Horizontal;
             ListBox = new ListBox();
             Children.Add(ListBox);
-            AutoCompleteBox = new MyAutoCompleteBox();
+            AutoCompleteBox = new AutoCompleteBox();
             Children.Add(AutoCompleteBox);
             DataContextChanged += this_DataContextChanged;
             AutoCompleteBox.KeyUp += autoCompleteBox_KeyUp;
@@ -36,7 +39,7 @@ namespace PowerNote {
 
         public void autoCompleteBox_SelectionChanged(object sender, RoutedEventArgs e) {
             AutoCompleteBox autoCompleteBox = (AutoCompleteBox)sender;
-            (DataContext as ListBoxVM<object>).addSelectedItem(autoCompleteBox.SelectedItem);
+            (DataContext as ListBoxPanelVM<Tag>).addSelectedItem(autoCompleteBox.SelectedItem as Tag);
             //IF THIS works HERE, then it will work EVERYWHERE! DO IT! CURRENT!
             autoCompleteBox.Text = null;
             //CURRENT! OF COURSE, problem is, this called twice. TEXT set to null!!
@@ -57,12 +60,13 @@ namespace PowerNote {
         }
 
         public virtual void updateControls() {
-            ListBox.ItemsSource = (DataContext as ListBoxVM<object>).SelectedObjects; //SHOULD WORK!
-            AutoCompleteBox.ItemsSource = (DataContext as ListBoxVM<object>).Objects;
+            ListBox.ItemsSource = (DataContext as ListBoxPanelVM<Entry>).SelectedObjects; //SHOULD WORK!
+            //NOTE! trying to make this work, BUT dont think even need it, if bind in XAML!!!!
+            AutoCompleteBox.ItemsSource = (DataContext as ListBoxPanelVM<Entry>).Objects;
             //LISTBOX
-            //Binding binding2 = new Binding();
-            //binding2.Path = new PropertyPath("taskItems");
-            //BindingOperations.SetBinding(ListBox, ListView.ItemsSourceProperty, binding2);
+            //Binding binding = new Binding();
+            //binding.Path = new PropertyPath("taskItems");
+            //BindingOperations.SetBinding(ListBox, ListView.ItemsSourceProperty, binding);
         }
 
         //OK! might need to make a COMMON viewModel too, CBTL

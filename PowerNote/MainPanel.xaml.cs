@@ -40,7 +40,6 @@ namespace PowerNote {
 
         public void DoTheThing(object sender, EventArgs args) {
             //PropsPanel.updateControls();
-            (DisplayPanel.ComboBox.DataContext as TypePanelVM).SelectedObjects.Add("poop");
 
         }
     }

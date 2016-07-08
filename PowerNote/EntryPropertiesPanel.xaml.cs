@@ -14,6 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using PowerNote.ViewModels;
 using PowerNote.Models;
+using CJT;
+using ListBox = CJT.ListBox;
 
 namespace PowerNote {
     public partial class EntryPropertiesPanel : StackPanel {
@@ -47,7 +49,7 @@ namespace PowerNote {
                         case InfoType.ComboBox:
                             break;
                         case InfoType.ListBox:
-                            propertyPanel.Children.Add(new ListBox() { ItemsSource = property.Value as ObservableCollection<Entry> });
+                            propertyPanel.Children.Add(new ListBox() { ItemsSource = property.Value as ObservableCollection<Entry>});
                             break;
                         case InfoType.CheckBox:
                             break;

@@ -28,16 +28,17 @@ namespace PowerNote.ViewModels {
             base.initialize(task, treeVM);
         }
 
-        public void initializePropertyList() {
+        protected override void initializePropertyList() {
+            base.initializePropertyList();
             //revisit
         }
 
-        public void insertTask(TaskVM selectedVM) {
+        public override void insertEntry(EntryVM selectedVM) {
             TaskVM entryVM = new TaskVM("blank", TreeVM);
             insertEntry(entryVM, selectedVM);
         }
 
-        public void insertSubTask(TaskVM selectedVM) {
+        public override void insertSubEntry(EntryVM selectedVM) {
             TaskVM entryVM = new TaskVM((selectedVM.Entry as Task).Contents + " child", TreeVM); 
             //this creates an entry too!
             insertSubEntry(entryVM, selectedVM);

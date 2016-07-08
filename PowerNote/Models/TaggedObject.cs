@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel; //this allows INotifyPropertyChanged
+using CJT;
+using AutoCompleteBox = CJT.AutoCompleteBox;
 
 namespace PowerNote.Models {
     public class TaggedObject : INotifyPropertyChanged {

@@ -4,6 +4,7 @@ using System.Windows.Data;
 using System.Windows.Controls;
 using System.ComponentModel; //this allows INotifyPropertyChanged
 using System.Collections.ObjectModel;
+using CJT;
 
 namespace PowerNote.Models {
 
@@ -46,6 +47,10 @@ namespace PowerNote.Models {
 
         public Task(string contents) : this() {
             this.content = contents;
+        }
+
+        public override string ToString() {
+            return Contents;
         }
 
         public int sumOfChildrensDurations() {

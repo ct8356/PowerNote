@@ -11,6 +11,8 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Windows.Input;
 using System.Windows.Navigation;
 using System.Windows;
+using CJT;
+using AutoCompleteBox = CJT.AutoCompleteBox;
 
 namespace PowerNote.ViewModels {
     public class OldEntryVM : INotifyPropertyChanged {
@@ -22,7 +24,7 @@ namespace PowerNote.ViewModels {
         public ObservableCollection<Tag> AllTags { get; set; }
         public EntryVM Parent { get; set; }
         public ObservableCollection<EntryVM> Children { get; set; }
-        public FilterPanelVM Filter { get; set; }
+        public ListBoxPanelVM<Tag> Filter { get; set; }
         public bool IsExpanded { get; set; }
 
         public OldEntryVM() {

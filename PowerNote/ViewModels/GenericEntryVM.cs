@@ -15,20 +15,20 @@ using CJT;
 using AutoCompleteBox = CJT.AutoCompleteBox;
 
 namespace PowerNote.ViewModels {
-    public class EntryVM : BaseClass {
-        public EntriesTreeVM TreeVM { get; set; }
-        public Entry Entry { get; set; }
+    public class EntryVM<T> : BaseClass where T : Entry {
+        public GenericTreeVM<T> TreeVM { get; set; }
+        public T Entry { get; set; }
         public DAL.DbContext DbContext { get; set; }
         public ObservableCollection<Property> AllProperties { get; set; }
         public ListBoxVM<Tag> TagsVM { get; set; }
         public InputVM<Tag> TagsInputVM { get; set; }
-        public EntryVM Parent { get; set; }
+        public EntryVM<T> Parent { get; set; }
         //NOTE! I think proper way to do this, is to just MODIFY the entry,
         //BUT because the the EntryVM is bound to it, it will update itself accordingly!
         //i.e. this entryVM just has a public Entry Parent.
         //NOW, when that Entry is deleted, the EntryVM deletes itself. SO this EntryVM,
         //does not even need to know its own ParentVM???? maybe... not sure yet.
-        public ObservableCollection<EntryVM> Children { get; set; }
+        public ObservableCollection<EntryVM<T>> Children { get; set; }
         //DON'T want others adding to children. If I make it private, will that stop binding?
         //No, it won't, provided you KEEP this property public!!!
         //BUT problem is, then you can still add to Children...issue...
@@ -42,9 +42,9 @@ namespace PowerNote.ViewModels {
             //NOTE: is this called? maybe. Even if it is, does not matter.
         }
 
-        protected void initialize(Entry entry, EntriesTreeVM treeVM) {
+        protected void initialize(T entry, GenericTreeVM<T> treeVM) {
             TreeVM = treeVM;
-            Children = new ObservableCollection<EntryVM>();
+            Children = new ObservableCollection<EntryVM<T>>();
             FilterTags = treeVM.Filter;
             DbContext = treeVM.DbContext;
             bindToEntry(entry);
@@ -82,14 +82,14 @@ namespace PowerNote.ViewModels {
             }
         }
 
-        public void adoptChild(EntryVM childVM) {
+        public void adoptChild(EntryVM<T> childVM) {
             //NOTE: This method should only be used if want to ADD children to ENTRY!!
             Children.Add(childVM); //Does this do the trick? Yes it seems to...
             childVM.Parent = this;
             Entry.Children.Add(childVM.Entry);
         }
 
-        public void adoptSibling(EntryVM entryVM) {
+        public void adoptSibling(EntryVM<T> entryVM) {
             Parent.Children.Add(entryVM);
             entryVM.Parent = Parent;
             Parent.Entry.Children.Add(entryVM.Entry);
@@ -99,7 +99,7 @@ namespace PowerNote.ViewModels {
             Entry.Children.Add(TreeVM.Orphan);
         }
 
-        public void bindToEntry(Entry entry) {
+        public void bindToEntry(T entry) {
             Entry = entry;
             DbContext.Tags.Load();
             TagsInputVM = new InputVM<Tag>();
@@ -116,7 +116,7 @@ namespace PowerNote.ViewModels {
         }
 
         public void changeParent() {
-            Entry parent = Entry.Parent; //just to check if it is anything! if EF works.
+            T parent = Entry.Parent as T; //just to check if it is anything! if EF works.
             //(EVEN if it does work, its a fluke. MUST be a way of FURTHER specifying/Explicitfying link between parent and child).
             Entry.Parent = null;
             TreeVM.waitForParentSelection(Entry);
@@ -139,11 +139,11 @@ namespace PowerNote.ViewModels {
             DbContext.SaveChanges();
         }
 
-        public virtual void insertEntry(EntryVM selectedVM) {
+        public virtual void insertEntry(EntryVM<T> selectedVM) {
             //Do nothing
         }
 
-        public void insertEntry(EntryVM entryVM, EntryVM selectedVM) {
+        public void insertEntry(EntryVM<T> entryVM, EntryVM<T> selectedVM) {
             if (Parent != null) {//IF it has a parent: make new one a sibling.
                 adoptSibling(entryVM);
             } else { //else put it in FirstLevelVMs
@@ -160,7 +160,7 @@ namespace PowerNote.ViewModels {
             //Do nothing
         }
 
-        public void insertSubEntry(EntryVM entryVM, EntryVM selectedVM) {
+        public void insertSubEntry(EntryVM<T> entryVM, EntryVM<T> selectedVM) {
             adoptChild(entryVM);
             foreach (Tag tag in FilterTags.SelectedObjects) {
                 entryVM.Entry.Tags.Add(tag);

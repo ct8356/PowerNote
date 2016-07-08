@@ -25,14 +25,14 @@
     </TreeView.ItemContainerStyle>
     <TreeView.Resources>
         <HierarchicalDataTemplate DataType="{x:Type VMs:TaskVM}"  ItemsSource="{Binding Children}">
-            <local:TaskPanel/>
+            <local:EntryPanel/>
         </HierarchicalDataTemplate>
         <HierarchicalDataTemplate DataType="{x:Type VMs:PartClassVM}"  ItemsSource="{Binding Children}">
-            <local:GenericEntryPanel/>
+            <local:EntryPanel/>
             <!--IT is recognising that it needs partPanel, I think-->
         </HierarchicalDataTemplate>
         <HierarchicalDataTemplate DataType="{x:Type VMs:PartInstanceVM}"  ItemsSource="{Binding Children}">
-            <local:PartInstancePanel/>
+            <local:EntryPanel/>
         </HierarchicalDataTemplate>
     </TreeView.Resources>
 </TreeView>

@@ -23,13 +23,5 @@ namespace PowerNote {
             //AutoCompleteBox.ItemTemplate = new DataTemplate(TextBlock);
         }
 
-        public override void updateControls() {
-            base.updateControls();
-            //LISTBOX
-            //Binding binding2 = new Binding();
-            //binding2.Path = new PropertyPath("taskItems");
-            //BindingOperations.SetBinding(ListBox, ListView.ItemsSourceProperty, binding2);
-        }
-
     }
 }
