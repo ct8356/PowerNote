@@ -13,10 +13,7 @@ namespace PowerNote.ViewModels {
         public object SelectedObject { get; set; }
 
         public ComboBoxVM(MainVM parentVM) {  
-            //SO YOU CAN make object = something. BUT with lists, for some reason,it gets complicated. 
-            //I SAY, just gonna have to iterate, probs...
-            Objects = new ObservableCollection<object> { typeof(Entry), typeof(PartClass), typeof(PartInstance), typeof(Task) };
-            SelectedObject = Objects.First();
+           
         }
 
         public void updateSelectedObject(object selectedObject) {

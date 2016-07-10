@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PowerNote"
              xmlns:VMs="clr-namespace:PowerNote.ViewModels"
+             xmlns:CJT="clr-namespace:CJT;assembly=CJT"
              mc:Ignorable="d"
              DataContext="{Binding EntriesTreeVM}"
              ItemsSource = "{Binding FirstGenEntryVMs}"
@@ -25,14 +26,28 @@
     </TreeView.ItemContainerStyle>
     <TreeView.Resources>
         <HierarchicalDataTemplate DataType="{x:Type VMs:TaskVM}"  ItemsSource="{Binding Children}">
-            <local:EntryPanel/>
+            <local:EntryPanel>
+                <CJT:ListBox ItemsSource="{Binding TagsVM.Objects}"/>
+                <CJT:AutoCompleteBox ItemsSource="{Binding TagsInputVM.Objects}"/>
+            </local:EntryPanel>
         </HierarchicalDataTemplate>
         <HierarchicalDataTemplate DataType="{x:Type VMs:PartClassVM}"  ItemsSource="{Binding Children}">
-            <local:EntryPanel/>
-            <!--IT is recognising that it needs partPanel, I think-->
+            <local:EntryPanel>
+                <CJT:ListBox ItemsSource="{Binding TagsVM.Objects}"/>
+                <CJT:AutoCompleteBox ItemsSource="{Binding TagsInputVM.Objects}"/>
+            </local:EntryPanel>
         </HierarchicalDataTemplate>
         <HierarchicalDataTemplate DataType="{x:Type VMs:PartInstanceVM}"  ItemsSource="{Binding Children}">
-            <local:EntryPanel/>
+            <local:EntryPanel>
+                <CJT:ListBox ItemsSource="{Binding TagsVM.Objects}"/>
+                <CJT:AutoCompleteBox ItemsSource="{Binding TagsInputVM.Objects}"/>
+            </local:EntryPanel>
+        </HierarchicalDataTemplate>
+        <HierarchicalDataTemplate DataType="{x:Type VMs:TagVM}"  ItemsSource="{Binding Children}">
+            <local:EntryPanel>
+                <CJT:ListBox ItemsSource="{Binding TagsVM.Objects}"/>
+                <CJT:AutoCompleteBox ItemsSource="{Binding TagsInputVM.Objects}"/>
+            </local:EntryPanel>
         </HierarchicalDataTemplate>
     </TreeView.Resources>
 </TreeView>

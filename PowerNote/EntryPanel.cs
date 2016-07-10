@@ -16,10 +16,11 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using CJT;
 using AutoCompleteBox = CJT.AutoCompleteBox;
+using TextBlock = CJT.TextBlock;
 
 namespace PowerNote {
     public class EntryPanel : StackPanel {
-        public TextBlock TextBlock { get; set; }
+        public TextBlock TextBlock { get; set; } //NOTE: NEED THIS!
 
         public EntryPanel() {
             TextBlock = new TextBlock();
@@ -36,6 +37,15 @@ namespace PowerNote {
             this.MouseUp += this_MouseUp;
             DataContextChanged += This_DataContextChanged;
         }
+
+        protected void bindTextBlock(TextBlock textBox, Entry entry, string propertyName) {
+            //SADLY, don't think TextDependencyProperty exists for both Box and Block together.
+            Binding binding = new Binding(propertyName); //This is the MODEL property it binds to.
+            binding.Source = entry; // the binding source (which must fire a PROP CHANGED event).
+            textBox.SetBinding(TextBlock.TextProperty, binding); //fortunately, textBox already fires an event when changed.
+            //YOU created the event for the dataSource. SO HOPEFULLY, we have 2 way binding now... we do :)
+        }//SINCE gonna use this method in lots of VIEWS,
+        //MIGHT be worth putting it in A SPECIAL CLASS as a static method!
 
         public void conditionalSubscribe() {
             if ((DataContext as EntryVM).TreeVM.WaitingForParentSelection)
@@ -82,9 +92,9 @@ namespace PowerNote {
 
         public void filterAndSortTagsShown() {
             IEnumerable<int> filterCourseIDs = 
-                (DataContext as EntryVM).TagsInputVM.Objects.Select(c => (c as Tag).TagID);
+                (DataContext as EntryVM).TagsInputVM.Objects.Select(c => (c as Tag).EntryID);
             var alphabeticalCourses = (DataContext as EntryVM)
-                .Entry.Tags.Where(c => !filterCourseIDs.Contains(c.TagID)).OrderBy(c => c.Title);
+                .Entry.Tags.Where(c => !filterCourseIDs.Contains(c.EntryID)).OrderBy(c => c.Title);
         }
 
         public void courseList_PropertyChanged(Object sender, EventArgs e) {
@@ -114,7 +124,9 @@ namespace PowerNote {
             contextMenu.Items.Add(deleteEntry);
             ContextMenu = contextMenu;
             //TITLE
-            TextBlock.Text = (DataContext as EntryVM).ToString();
+            //TextBlock.Text = (DataContext as EntryVM).ToString();
+            //NOT really good enough. Should be a binding (or it wont update at right time)
+            bindTextBlock(TextBlock, (DataContext as EntryVM).Entry, "Name");
         }
 
         public void this_MouseUp(object sender, EventArgs e) {

@@ -6,27 +6,29 @@
              xmlns:local="clr-namespace:PowerNote"
              xmlns:CJT="clr-namespace:CJT;assembly=CJT"
              mc:Ignorable="d"
-            Width="500">
-    <Label FontWeight="Bold" DockPanel.Dock="Top">Display Panel</Label>
-    <Label DockPanel.Dock="Top">Children to show:</Label>
+             Width="400">
+    <CJT:TextBlock FontWeight="Bold" DockPanel.Dock="Top">Display Panel</CJT:TextBlock>
+    <CJT:TextBlock DockPanel.Dock="Top">Children to show:</CJT:TextBlock>
     <local:PropertyPanel DockPanel.Dock="Top">
-        <Label>Filter by type:</Label>
-        <ComboBox x:Name="ComboBox" DataContext="{Binding ComboBoxVM}" 
+        <CJT:TextBlock Width="150">Filter by type:</CJT:TextBlock>
+        <ComboBox x:Name="TypePanel" 
+                  DataContext="{Binding TypePanelVM}" 
+                  Width="150"
                   ItemsSource="{Binding Objects}" SelectedItem="{Binding SelectedObject}" 
                   SelectionChanged="ComboBox_SelectionChanged" />
     </local:PropertyPanel>
     <local:PropertyPanel DockPanel.Dock="Top">
-        <Label>Structure by properties:</Label>
-        <ComboBox x:Name="StructurePanel" DataContext="{Binding StructurePanelVM}"
+        <CJT:TextBlock Width="150">Structure by properties:</CJT:TextBlock>
+        <ComboBox x:Name="StructurePanel" 
+                  Width="150"
+                  DataContext="{Binding StructurePanelVM}"
                   ItemsSource="{Binding Objects}" SelectedItem="{Binding SelectedObject}" 
-                  SelectionChanged="ComboBox_SelectionChanged" />
+                  SelectionChanged="StructurePanel_SelectionChanged" />
     </local:PropertyPanel>
-    <local:PropertyPanel DockPanel.Dock="Top">
-        <Label>Filter by tags:</Label>
-        <CJT:ListBox DataContext="{Binding FilterPanelVM}"
-                 ItemsSource="{Binding SelectedObjects}"/>
-        <CJT:AutoCompleteBox DataContext="{Binding FilterPanelVM}"
-                             ItemsSource="{Binding Objects}"/>
+    <local:PropertyPanel DataContext="{Binding FilterPanelVM}" DockPanel.Dock="Top">
+        <CJT:TextBlock Width="150">Filter by tags:</CJT:TextBlock>
+        <CJT:ListBox ItemsSource="{Binding SelectedObjects}"/>
+        <CJT:AutoCompleteBox ItemsSource="{Binding Objects}"/>
     </local:PropertyPanel>
     <local:OptionsPanel x:Name="OptionsPanel" DataContext="{Binding OptionsPanelVM}" DockPanel.Dock="Top"/>
 </DockPanel>

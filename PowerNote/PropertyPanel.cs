@@ -5,21 +5,22 @@ using System.Text;
 using PowerNote.ViewModels;
 using System.Windows.Controls;
 using System.Windows;
+using TextBlock = CJT.TextBlock;
 
 namespace PowerNote {
     class PropertyPanel : StackPanel {
 
-        public Label Label { get; set; }
+        public TextBlock TextBlock { get; set; }
         
         public PropertyPanel() {
             Orientation = Orientation.Horizontal;
         }
 
         public PropertyPanel(string name) : this() {
-            Label = new Label();
-            Label.Content = name + ":";
-            Label.Width = 100;
-            Children.Add(Label);
+            TextBlock = new TextBlock();
+            TextBlock.Text = name + ":";
+            TextBlock.Width = 100;
+            Children.Add(TextBlock);
         }
     }
 }

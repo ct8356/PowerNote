@@ -22,6 +22,7 @@ namespace PowerNote.ViewModels {
         //So can try and bind to them, and this is reflected in ALL PartClassVMs!
 
         //NOTE: I think COULD get away, with just ONE type of VM. But keep as is for now.
+
         public PartClassVM(PartClass part, EntriesTreeVM parentVM) {
             //NOTE: this constructor just WRAPS a student in a VM.
             initialize(part, parentVM);
@@ -33,24 +34,29 @@ namespace PowerNote.ViewModels {
             initialize(part, parentVM);
             DbContext.Parts.Add(part); //YES!!
             DbContext.SaveChanges(); //remember this.
-        }
+        }//easiest to keep here. (SINCE new is difficult with T generic classes!)
 
         protected override void initializePropertyList() {
             base.initializePropertyList();
-            AllProperties.Add(new Property("Nickname", (Entry as PartClass).NickName, InfoType.TextBox, true, DbContext));
-            AllProperties.Add(new Property("Order number", (Entry as PartClass).OrderNumber, InfoType.TextBox, true, DbContext));
-            AllProperties.Add(new Property("Manufacturer", (Entry as PartClass).Manufacturer, InfoType.TextBox, true, DbContext));
+            ImportantProperties.Add(new Property("Nickname", (Entry as PartClass).NickName, InfoType.TextBox, true, DbContext));
+            ImportantProperties.Add(new Property("Order number", (Entry as PartClass).OrderNumber, InfoType.TextBox, true, DbContext));
+            ImportantProperties.Add(new Property("Manufacturer", (Entry as PartClass).Manufacturer, InfoType.TextBox, true, DbContext));
         }
 
         public override void insertEntry(EntryVM selectedEntryVM) {
             PartClassVM entryVM = new PartClassVM("blank", TreeVM);
             insertEntry(entryVM, selectedEntryVM);
-        }
+        }//easiest to keep here. (SINCE new is difficult with T generic classes!)
+        //SO conclusion is, NOT really worth making the generic EntryVM.
+        //SPECIALLY when I am under such time pressure!
 
         public override void insertSubEntry(EntryVM parentVM) {
             PartClassVM entryVM = new PartClassVM((parentVM.Entry as PartClass).NickName + " child", TreeVM); //create part.
             insertSubEntry(entryVM, parentVM);
-        }
+        }//easiest to keep here.
+        //This fails as generic because CANNOT create new() in generics with ANY PARAMETER!
+        //Only way to do it is to pass constructor as a FUNCTION. Functional programming.
+        //TOO COMPLICATED for now!
 
         //NOTE: Say, ASSEMBLY, can have parts.
         //PARTS all have 1 PARENT assembly, that they belong to.

@@ -116,7 +116,7 @@
     <Compile Include="EntryPropertiesPanel.xaml.cs">
       <DependentUpon>EntryPropertiesPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ListBoxPanel.cs" />
+    <Compile Include="LinkedTextBlock.cs" />
     <Compile Include="MainPanel.xaml.cs">
       <DependentUpon>MainPanel.xaml</DependentUpon>
     </Compile>
@@ -124,9 +124,6 @@
       <DependentUpon>OptionsPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="PropertyPanel.cs" />
-    <Compile Include="TypePanel.xaml.cs">
-      <DependentUpon>TypePanel.xaml</DependentUpon>
-    </Compile>
     <Compile Include="DAL\DbContext.cs" />
     <Compile Include="EntryPanel.cs" />
     <Compile Include="Models\PartInstance.cs" />
@@ -140,8 +137,6 @@
     <Compile Include="SideEntry.cs" />
     <Compile Include="SideNotePanel.cs" />
     <Compile Include="TagListPanel.cs" />
-    <Compile Include="ViewModels\GenericTreeVM.cs" />
-    <Compile Include="ViewModels\GenericEntryVM.cs" />
     <Compile Include="ViewModels\InfoType.cs" />
     <Compile Include="ViewModels\EntriesTreeVM.cs" />
     <Compile Include="ViewModels\Property.cs" />
@@ -154,6 +149,7 @@
     <Compile Include="ViewModels\PartInstanceVM.cs" />
     <Compile Include="ViewModels\EntryVM.cs" />
     <Compile Include="ViewModels\PartClassVM.cs" />
+    <Compile Include="ViewModels\TagVM.cs" />
     <Compile Include="ViewModels\TaskVM.cs" />
     <Page Include="DisplayPanel.xaml">
       <SubType>Designer</SubType>
@@ -170,10 +166,6 @@
     <Page Include="OptionsPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="TypePanel.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

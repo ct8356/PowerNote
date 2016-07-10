@@ -55,12 +55,12 @@ namespace PowerNote.ViewModels {
 
         protected override void initializePropertyList() {
             base.initializePropertyList();
-            AllProperties.Add(new Property("Function text", (Entry as PartInstance).FunctionText, InfoType.TextBox, true, DbContext));
-            AllProperties.Add(new Property("Part class", (Entry as PartInstance).PartClass, InfoType.TextBox, false, DbContext));
-            AllProperties.Add(new Property("Parent part", (Entry as PartInstance).ParentPartInstance, InfoType.TextBox, false, DbContext));
-            AllProperties.Add(new Property("Children parts", (Entry as PartInstance).ChildPartInstances, InfoType.ListBox, false, DbContext));
-            AllProperties.Add(new Property("Tasks", (Entry as PartInstance).ChildTasks, InfoType.ListBox, false, DbContext));
-            AllProperties.Add(new Property("Sensor", (Entry as PartInstance).Sensor, InfoType.TextBox, false, DbContext));
+            ImportantProperties.Add(new Property("FunctionText", (Entry as PartInstance).FunctionText, InfoType.TextBox, true, DbContext));
+            ImportantProperties.Add(new Property("PartClass", (Entry as PartInstance).PartClass, InfoType.TextBlock, false, DbContext));
+            ImportantProperties.Add(new Property("ParentPartInstance", (Entry as PartInstance).ParentPartInstance, InfoType.TextBlock, false, DbContext));
+            ImportantProperties.Add(new Property("Children parts", (Entry as PartInstance).ChildPartInstances, InfoType.ListBox, false, DbContext));
+            ImportantProperties.Add(new Property("Tasks", (Entry as PartInstance).ChildTasks, InfoType.ListBox, false, DbContext));
+            ImportantProperties.Add(new Property("Sensor", (Entry as PartInstance).Sensor, InfoType.TextBlock, false, DbContext));
         }
 
         public void addPartClassToEntry(string text) {
@@ -68,7 +68,7 @@ namespace PowerNote.ViewModels {
             PartClass partClass = partClasses.Where(pc => pc.NickName == text).First();
             (Entry as PartInstance).PartClass = partClass;
             DbContext.SaveChanges();
-            TreeVM.updateEntries();
+            TreeVM.UpdateEntries();
             //CBTL, why was this not working before?
             //nav property? lack of update entries?
         }

@@ -95,7 +95,7 @@ namespace PowerNote.Migrations {
             context.SaveChanges();
 
             //FORCE SOME CHILDREN IN
-            var entry = context.Entrys.SingleOrDefault(e => e.EntryID == 9);
+            var entry = context.Entries.SingleOrDefault(e => e.EntryID == 9);
             Entry newEntry;
             entry.Children.Add( newEntry = new PartClass { NickName = "child" } );
             newEntry.Children.Add(new PartClass { NickName = "child child" });
@@ -118,7 +118,7 @@ namespace PowerNote.Migrations {
         }
 
         public void AddOrUpdateTag(DbContext context, int entryID, string tagTitle) {
-            var entry = context.Entrys.SingleOrDefault(e => e.EntryID == entryID);
+            var entry = context.Entries.SingleOrDefault(e => e.EntryID == entryID);
             var tag = entry.Tags.SingleOrDefault(t => t.Title == tagTitle);
             if (tag == null)
                 entry.Tags.Add(context.Tags.Single(t => t.Title == tagTitle));

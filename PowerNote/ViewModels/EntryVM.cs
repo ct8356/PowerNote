@@ -16,10 +16,13 @@ using AutoCompleteBox = CJT.AutoCompleteBox;
 
 namespace PowerNote.ViewModels {
     public class EntryVM : BaseClass {
+        //NOTE: MIGHT be able to make a generic version of this class,
+        //BUT it is hard! lots of changing necessary. 
+        //TOO MUCH CHANGING considering how short on time I am!
         public EntriesTreeVM TreeVM { get; set; }
         public Entry Entry { get; set; }
         public DAL.DbContext DbContext { get; set; }
-        public ObservableCollection<Property> AllProperties { get; set; }
+        public ObservableCollection<Property> ImportantProperties { get; set; }
         public ListBoxVM<Tag> TagsVM { get; set; }
         public InputVM<Tag> TagsInputVM { get; set; }
         public EntryVM Parent { get; set; }
@@ -56,24 +59,24 @@ namespace PowerNote.ViewModels {
         }
 
         protected virtual void initializePropertyList() {
-            AllProperties = new ObservableCollection<Property>();
-            AllProperties.Add(new Property("Entry ID", Entry.EntryID, InfoType.TextBox, false, DbContext));
-            AllProperties.Add(new Property("Creation date", Entry.CreationDate, InfoType.TextBox, false, DbContext));
-            AllProperties.Add(new Property("Parent", Entry.Parent, InfoType.TextBox, false, DbContext));
-            AllProperties.Add(new Property("Children", Entry.Children, InfoType.ListBox, false, DbContext));
+            ImportantProperties = new ObservableCollection<Property>();
+            ImportantProperties.Add(new Property("Entry ID", Entry.EntryID, InfoType.TextBlock, false, DbContext));
+            ImportantProperties.Add(new Property("Creation date", Entry.CreationDate, InfoType.TextBlock, false, DbContext));
+            ImportantProperties.Add(new Property("Parent", Entry.Parent, InfoType.TextBlock, false, DbContext));
+            ImportantProperties.Add(new Property("Children", Entry.Children, InfoType.ListBox, false, DbContext));
+            ImportantProperties.Add(new Property("Tags", Entry.Tags, InfoType.ListBox, true, DbContext));
         }
 
         public void addNewTagToEntry(object sender, string text) {
-            Tag newTag = new Tag(); newTag.Title = text;
-            DbContext.Tags.Add(newTag); DbContext.SaveChanges();
+            Tag newTag = new Tag();
+            newTag.Title = text;
+            DbContext.Tags.Add(newTag);
+            DbContext.SaveChanges();
             addTagToEntry(sender, newTag);
         }
 
         public void addTagToEntry(object sender, Tag selectedCourse) {
-            if (Entry.Tags.Contains(selectedCourse)) {
-                //do nothing
-            }
-            else {
+            if (!Entry.Tags.Contains(selectedCourse)) {
                 Entry.Tags.Add(selectedCourse);
                 DbContext.SaveChanges();
                 //ParentVM.ParentVM.updateEntries(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.  
@@ -123,7 +126,7 @@ namespace PowerNote.ViewModels {
         }
 
         public void deleteEntry() {
-            DbContext.Entrys.Remove(Entry);
+            DbContext.Entries.Remove(Entry);
             if (Parent != null) {//IF it has a parent: delete self from children
                 Parent.Children.Remove(this);
             }

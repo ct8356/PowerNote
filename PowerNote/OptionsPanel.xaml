@@ -6,6 +6,6 @@
              xmlns:local="clr-namespace:PowerNote"
              mc:Ignorable="d" 
              Orientation="Horizontal">
-    <CheckBox Name="ShowAllEntriesCBox" Content="Show all entries" IsChecked="{Binding ShowAllEntries, Mode=TwoWay}"></CheckBox>
-    <CheckBox Name="ShowAllChildrenCBox" Content="Show all children" IsChecked="{Binding ShowAllChildren}"></CheckBox>
+    <CheckBox Margin="3" Name="ShowAllEntriesCBox" Content="Show all entries" IsChecked="{Binding ShowAllEntries, Mode=TwoWay}"></CheckBox>
+    <CheckBox Margin="3" Name="ShowAllChildrenCBox" Content="Show all children" IsChecked="{Binding ShowAllChildren}"></CheckBox>
 </StackPanel>

@@ -4,5 +4,5 @@ using System.Linq;
 using System.Text;
 
 namespace PowerNote.ViewModels {
-    public enum InfoType { TextBox, ComboBox, ListBox, CheckBox, Link }
+    public enum InfoType { TextBlock, TextBox, ComboBox, ListBox, CheckBox }
 }

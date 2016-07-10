@@ -32,7 +32,7 @@ namespace PowerNote.ViewModels {
         public EntriesTreeVM(MainVM parentVM) {
             ParentVM = parentVM;
             DbContext = parentVM.DbContext;
-            ComboBoxVM = parentVM.ComboBoxVM;
+            ComboBoxVM = parentVM.TypePanelVM;
             StructurePanelVM = parentVM.StructurePanelVM;
             Filter = parentVM.FilterPanelVM;
             OptionsPanelVM = parentVM.OptionsPanelVM;
@@ -47,27 +47,24 @@ namespace PowerNote.ViewModels {
 
         public void filterSortAndShowEntries() {
             if (ComboBoxVM.SelectedObject != null) {
-                Type selectedType = ComboBoxVM.SelectedObject as Type;
+                Type selectedType = ComboBoxVM.SelectedObject as Type; //REVISIT CURRENT here is problem!
                 if (selectedType == typeof(Entry))
-                    processEntries<Entry>(DbContext.Entrys);
+                    processEntries<Entry>(DbContext.Entries);
                 if (selectedType == typeof(PartClass)) //is does not work here. it says selected type is Type.
                     processEntries<PartClass>(DbContext.Parts);
                 if (selectedType == typeof(PartInstance))
                     processEntries<PartInstance>((DbContext.PartInstances));
                 if (selectedType == typeof(Task))
                     processEntries<Task>(DbContext.Tasks);
+                if (selectedType == typeof(Tag))
+                    processEntries<Tag>(DbContext.Tags);
             }
         }
 
-        public IQueryable<T> filterEntries<T>(IQueryable<T> entries, Expression<Func<T, bool>> exp) {
+        protected IQueryable<T> filterEntries<T>(IQueryable<T> entries, Expression<Func<T, bool>> exp) {
             IQueryable<T> filteredEntries = entries.Where(exp);
             return filteredEntries;
         }
-
-        //public IQueryable<T> filterByType<T>(IQueryable<Entry> entries) {
-        //    IQueryable<T> filteredEntries = entries.Where(e => e.Type == typeof(T).FullName);
-        //    return filteredEntries;
-        //} //OMG! DUH! THERE IS NO NEED TO FILTER BY TYPE! YOU JUST QUERY THE RIGHT TABLE IN FIRST PLACE!
 
         public IEnumerable<Entry> filterByType(IQueryable<Entry> filteredEntries) {
             //string typeName = ((displayPanel.TypePanel.DataContext as TypePanelVM).SelectedObjects.First() as Type).FullName;
@@ -78,31 +75,20 @@ namespace PowerNote.ViewModels {
             return filteredEntriesEnum;
         }//LATER if decide it takes too long to do several queries,
         //can turn this method into a "construct SQL" query, maybe...
-
+  
         public IQueryable<T> filterByTag<T>(IQueryable<T> entries) where T : Entry {
-            IEnumerable<int> filterCourseIDs = Filter.Objects.Select(o => (o as Tag).TagID);
+            IEnumerable<int> filterTagIDs = Filter.SelectedObjects.Select(o => (o as Tag).EntryID);
             if (!OptionsPanelVM.ShowAllEntries)
-                return entries.Where(s => !filterCourseIDs.Except(s.Tags.Select(c => c.TagID)).Any());
-            //NOTE: can I think of EXCEPTS means EXCLUDES?
-            //SO above means, show it if FILTERCOURSEIDs iNCLUDES it, includes EVERY one!...YES!
-            //OR show it if it does NOT EXCLUDE ANY of them!! i.e. has to include ALL of them!
-            //ALTHOUGH, not quite right... other way round. entryTAGS, has to include ALL of filterTags!
-            //SO really saying, show it, ONLY if filterCourse does not ESCAPE ANY of them!
+                return entries.Where(e => !filterTagIDs.Except(e.Tags.Select(t => t.EntryID)).Any());  
+            //entryTAGS, has to include ALL of filterTags!
+            //SO really saying, show it, ONLY if filterTags does not ESCAPE ANY of them!
             //IF it ESCAPES any of them, (i.e. it has a Tag, that entry does NOT have) then don't show entry!
             else return entries;
         } //CBTL HERE LIES THE PROBLEM! returning null!
 
-        //public void orderBy() {
-        //    //ORDERBY
-        //    switch (SortPanelVM.ComboBox.SelectedItem.ToString()) {
-        //        case "ID": break;
-        //        case "Priority": break;
-        //    }
-        //}
-
         public void processEntries<T>(IQueryable<T> entries) where T : Entry {
-            IQueryable<T> filteredEntries = entries;//REVISIT HACK!
-            //IQueryable<T> filteredEntries = filterByTag<T>(entries);
+            //IQueryable<T> filteredEntries = entries;//REVISIT HACK!
+            IQueryable<T> filteredEntries = filterByTag<T>(entries);
             //orderBy(); //does nothing yet
             showLevels<T>(filteredEntries);
         }
@@ -149,16 +135,6 @@ namespace PowerNote.ViewModels {
             return Expression.Lambda<Func<T, bool>>(exp, parameter);
         }
 
-        //public void sortTasks() {
-        //    switch (displayPanel.SortPanel.ComboBox.SelectedItem.ToString()) {
-        //        case "ID":
-        //            break;
-        //        case "Priority":
-        //            //filteredStudents = filteredStudents.OrderBy(s => s.Priority);
-        //            break;
-        //    }
-        //}
-
         public void showLevels<T>(IQueryable<T> entries) where T : Entry {
             string columnName = null;
             //if (StructurePanelVM.SelectedObjects.Count > 0 )
@@ -173,7 +149,7 @@ namespace PowerNote.ViewModels {
         }
 
         public IQueryable<T> showFirstLevel<T>(IQueryable<T> entries, string columnName) where T : Entry {
-            IEnumerable<int> filterTagIDs = Filter.Objects.Select(o => (o as Tag).TagID);
+            //IEnumerable<int> filterTagIDs = Filter.SelectedObjects.Select(o => (o as Tag).TagID);
             IQueryable<T> filteredParents = null;
             Type selectedType = ComboBoxVM.SelectedObject as Type;
             if (OptionsPanelVM.ShowAllEntries) {
@@ -225,7 +201,7 @@ namespace PowerNote.ViewModels {
             return filteredChildren;
         }
 
-        public EntryVM wrapInCorrectVM(Entry entry) {
+        protected EntryVM wrapInCorrectVM(Entry entry) {
             EntryVM entryVM = null;
             if (entry is PartClass)
                 entryVM = new PartClassVM(entry as PartClass, this);
@@ -233,6 +209,8 @@ namespace PowerNote.ViewModels {
                 entryVM = new PartInstanceVM(entry as PartInstance, this);
             if (entry is Task)
                 entryVM = new TaskVM(entry as Task, this);
+            if (entry is Tag)
+                entryVM = new TagVM(entry as Tag, this);
             return entryVM;
         } //AHAH! CURRENT! Really need to AVOID creating NEW vms here, or lose your VM metadata!
 
@@ -242,7 +220,7 @@ namespace PowerNote.ViewModels {
         //    }
         //}
 
-        public void updateEntries() {
+        public void UpdateEntries() {
             FirstGenEntryVMs.Clear();
             AllEntryVMs.Clear();
             filterSortAndShowEntries();
@@ -251,7 +229,7 @@ namespace PowerNote.ViewModels {
         public void waitForParentSelection(Entry entry) {
             WaitingForParentSelection = true;
             Orphan = entry;
-            updateEntries();
+            UpdateEntries();
             //this will update the treeView, AND if this is true,
             //it will be redrawn with certain colour scheme, to make the waiting, obvious.
             //drag and drop won't be too hard, BUT start here. easier.

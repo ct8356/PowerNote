@@ -16,7 +16,7 @@ namespace PowerNote.ViewModels {
     public class MainVM : INotifyPropertyChanged {
         public event PropertyChangedEventHandler PropertyChanged;
         public DAL.DbContext DbContext { get; set; }
-        public ComboBoxVM ComboBoxVM { get; set; }
+        public ComboBoxVM TypePanelVM { get; set; }
         public ComboBoxVM StructurePanelVM { get; set; }
         public ObservableCollection<Tag> AllTags { get; set; }
         public ListBoxPanelVM<Tag> FilterPanelVM { get; set; }
@@ -31,8 +31,10 @@ namespace PowerNote.ViewModels {
 
         public MainVM() {
             createDbContext();
-            //seedDatabase();
-            ComboBoxVM = new ComboBoxVM(this);
+            seedDatabase();
+            TypePanelVM = new ComboBoxVM(this);
+            TypePanelVM.Objects = new ObservableCollection<object> { typeof(Entry), typeof(PartClass), typeof(PartInstance), typeof(Task) };
+            TypePanelVM.SelectedObject = TypePanelVM.Objects.First();
             StructurePanelVM = new ComboBoxVM(this);
             StructurePanelVM.Objects = new ObservableCollection<object>() { "Parent", "Sensor" };
             StructurePanelVM.SelectedObject = StructurePanelVM.Objects.First();
@@ -41,9 +43,8 @@ namespace PowerNote.ViewModels {
             foreach (Tag tag in DbContext.Tags.Local) {
                 AllTags.Add(tag);
             }
-            FilterPanelVM = new ListBoxPanelVM<Tag>(DbContext); //NOTE does not seem to have anything in its lists REVISIT CURRENT
+            FilterPanelVM = new ListBoxPanelVM<Tag>(this); //NOTE does not seem to have anything in its lists REVISIT CURRENT
             FilterPanelVM.Objects = new ObservableCollection<Tag>(AllTags);
-            FilterPanelVM.SelectedObjects.Add(AllTags.First());
             OptionsPanelVM = new OptionsPanelVM(this);
             EntriesTreeVM = new EntriesTreeVM(this);
             SelectedEntryVM = EntriesTreeVM.FirstGenEntryVMs.First<EntryVM>();
@@ -60,8 +61,8 @@ namespace PowerNote.ViewModels {
             //IT PROBS still thinks that they exist. Yes I reckon. BUT then why when I changed Context class name, did it not make NEW one?
         }
 
-        public void updateEntries() {
-            EntriesTreeVM.updateEntries();
+        public void UpdateEntries() {
+            EntriesTreeVM.UpdateEntries();
         }
 
         public void deleteDatabase() {
@@ -77,8 +78,9 @@ namespace PowerNote.ViewModels {
         }
 
         public void seedDatabase() {
-            if (DbContext.Database.Exists()) { }
-            DbContext.Database.Delete();
+            if (DbContext.Database.Exists()) {
+                DbContext.Database.Delete();
+            }
             DbContext.Database.Create();
             Configuration configuration = new Configuration();
             configuration.callSeed((DAL.DbContext)DbContext);          

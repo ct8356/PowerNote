@@ -49,7 +49,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>k9Bs7XIecvYOgMEF8IV2Z8xESx+Kp7+z/jfwgeALzAI=</dsig:DigestValue>
+        <dsig:DigestValue>lc3q8XxqPK5fOZlzmCCQlIMfzYd/M6RRCbN1hwwnoN0=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -78,14 +78,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PowerNote.exe" size="82944">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PowerNote.exe" size="78848">
       <assemblyIdentity name="PowerNote" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>tOlymJwED5Mtr3EbOQ74SMkV+g8yxAzYqB9FUQ+UWzk=</dsig:DigestValue>
+        <dsig:DigestValue>Gvk2m7VlM6YroqzIr9Ezl/EMFX/G3oDGGTBmfp4oU7k=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

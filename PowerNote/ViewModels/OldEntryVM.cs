@@ -78,10 +78,10 @@ namespace PowerNote.ViewModels {
         }
 
         public void deleteEntry() {
-            Context.Entrys.Remove(Entry);
+            Context.Entries.Remove(Entry);
             Context.SaveChanges(); //ALSO lazy. CBTL.
             //SO NOTE: OF COURSE, easier you just do these things, IN THE VIEWMODEL!
-            TreeVM.ParentVM.updateEntries(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.
+            TreeVM.ParentVM.UpdateEntries(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.
         }
 
     }

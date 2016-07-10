@@ -25,7 +25,7 @@ namespace PowerNote {
 
         public DisplayPanel() {
             InitializeComponent(); //NEED to do this first, so EntriesTreeView can reference OptionsPanel
-            ComboBox.DisplayMemberPath = "Name";
+            TypePanel.DisplayMemberPath = "Name";
             //ComboBox.ValueMemberPath = "Name";
             //PANEL
             //SORT PANEL
@@ -47,13 +47,19 @@ namespace PowerNote {
         public void ComboBox_SelectionChanged(object sender, RoutedEventArgs e) {
             //START a ORDER BY QUERY. I say, just call to UPDATE methods, BUT with NEW INPUT.
             ComboBox comboBox = sender as ComboBox;
-            (DataContext as MainVM).ComboBoxVM.updateSelectedObject(comboBox.SelectedItem);
+            (DataContext as MainVM).TypePanelVM.updateSelectedObject(comboBox.SelectedItem);
+            updateEntries();
+        }
+
+        public void StructurePanel_SelectionChanged(object sender, EventArgs e) {
+            ComboBox comboBox = sender as ComboBox;
+            (DataContext as MainVM).StructurePanelVM.updateSelectedObject(comboBox.SelectedItem);
             updateEntries();
         }
 
         public void updateEntries() {
             if (EntriesTreeView.DataContext != null) {
-                (EntriesTreeView.DataContext as EntriesTreeVM).updateEntries();
+                (EntriesTreeView.DataContext as EntriesTreeVM).UpdateEntries();
             }
             //uc.addTo();
         }

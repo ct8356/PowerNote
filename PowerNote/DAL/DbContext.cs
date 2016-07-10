@@ -18,7 +18,7 @@ namespace PowerNote.DAL { //DAL stands for Data Access Layer.
         public DbSet<Tag> Tags { get; set; }
         public DbSet<PartClass> Parts { get; set; }
         public DbSet<PartInstance> PartInstances { get; set; }
-        public DbSet<Entry> Entrys { get; set; }
+        public DbSet<Entry> Entries { get; set; }
 
         public delegate PropertyChangedEventHandler Handler(PropertyChangedEventArgs args);
 

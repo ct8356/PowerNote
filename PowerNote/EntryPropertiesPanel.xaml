@@ -5,4 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PowerNote"    
              mc:Ignorable="d">
+    <!--Set the dataContext of this class in class ABOVE it, then should all work nice!-->
+    <!--
+    <local:PropertyPanel></local:PropertyPanel>
+    
+    -->
 </StackPanel>
