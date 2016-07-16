@@ -14,6 +14,8 @@ namespace PowerNote.ViewModels {
         //BECAUSE might find need to add MORE props to the property!
         //NOt sure yet.
         //MAYBE change later though, coz it is turning a bit heavy weight!
+        //NOTE: does not have to hold Entries.
+        //If know it has an entry, can just cast it later.
         public InfoType Type { get; set; }
         public string Name { get; set; }
         public bool IsVisibleInEntryPanel { get; set; }

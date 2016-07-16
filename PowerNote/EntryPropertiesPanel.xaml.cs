@@ -25,6 +25,7 @@ namespace PowerNote {
             InitializeComponent();
             //SUBSCRIBE
             DataContextChanged += this_DataContextChanged;
+            //Loaded += this_DataContextChanged;
         }
 
         protected void bindListBox(ListBox listBox, Entry entry, string propertyName) {
@@ -65,9 +66,7 @@ namespace PowerNote {
                         case InfoType.TextBlock:
                             LinkedTextBlock textBlock = new LinkedTextBlock();
                             bindTextBlock(textBlock, selectedEntryVM.Entry, property.Name);
-                            //textBlock.DataContext = (property.Value as Entry); //REVISIT CURRENT.
-                            //PERHAPS CAN WRAP THIS ENTRY IN A VM? WOULD THAT WORK??? SHOULD!
-                            textBlock.MainVM = selectedEntryVM.TreeVM.ParentVM;
+                            textBlock.DataContext = selectedEntryVM.WrapInCorrectVM(property.Value as Entry);
                             propertyPanel.Children.Add(textBlock);
                             break;
                         case InfoType.TextBox:
@@ -80,6 +79,12 @@ namespace PowerNote {
                             ListBox listBox = new ListBox();
                             bindListBox(listBox, selectedEntryVM.Entry, property.Name);
                             propertyPanel.Children.Add(listBox);
+                            FrameworkElementFactory textBlockFactory = new FrameworkElementFactory(typeof(LinkedTextBlock));
+                            Binding binding = new Binding("Name");
+                            textBlockFactory.SetBinding(LinkedTextBlock.TextProperty, binding); //not needed?
+                            DataTemplate dataTemplate = new DataTemplate();
+                            dataTemplate.VisualTree = textBlockFactory;
+                            //listBox.ItemTemplate = dataTemplate;
                             //{ ItemsSource = property.Value as ObservableCollection<Entry>}
                             //above line won't work because Can't cast anything to ObseColl<Entry>
                             //BUT maybe can try binding?

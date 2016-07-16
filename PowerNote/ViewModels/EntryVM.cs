@@ -182,5 +182,19 @@ namespace PowerNote.ViewModels {
         public void updateSelectedEntry(EntryVM entryVM) {
             TreeVM.ParentVM.SelectedEntryVM = entryVM;
         }
+
+        public EntryVM WrapInCorrectVM(Entry entry) {
+            EntryVM entryVM = null;
+            if (entry is PartClass)
+                entryVM = new PartClassVM(entry as PartClass, TreeVM);
+            if (entry is PartInstance)
+                entryVM = new PartInstanceVM(entry as PartInstance, TreeVM);
+            if (entry is Task)
+                entryVM = new TaskVM(entry as Task, TreeVM);
+            if (entry is Tag)
+                entryVM = new TagVM(entry as Tag, TreeVM);
+            return entryVM;
+        }
+
     }
 }

@@ -163,8 +163,9 @@ namespace PowerNote.ViewModels {
             }
             int count0 = entries.Count();
             int count = filteredParents.Count();
+            EntryVM tempVM = new TaskVM("temp", this);
             foreach (T entry in filteredParents) {
-                EntryVM entryVM = wrapInCorrectVM(entry);
+                EntryVM entryVM = tempVM.WrapInCorrectVM(entry); //SHOULD make this into Constructor really.
                 FirstGenEntryVMs.Add(entryVM);
                 AllEntryVMs.Add(entryVM); //CURRENT PROBLEM! Code does not reach this line! REVISIT!
             }
@@ -188,7 +189,7 @@ namespace PowerNote.ViewModels {
                         //EntryVM parentVM = AllEntryVMs.Where(eVM => eVM.Entry == child.Sensor).Single();
                         EntryVM parentVM = AllEntryVMs.Where(EntryEqualsChildsProperty<T>(child, columnName).Compile()).First();
                         //OH YEAH! Queryables can take expressions, Enumerables must take delegates!
-                        EntryVM childVM = wrapInCorrectVM(child);
+                        EntryVM childVM = parentVM.WrapInCorrectVM(child);
                         parentVM.Children.Add(childVM);
                         childVM.Parent = parentVM;
                         AllEntryVMs.Add(childVM);
@@ -200,19 +201,6 @@ namespace PowerNote.ViewModels {
             }
             return filteredChildren;
         }
-
-        protected EntryVM wrapInCorrectVM(Entry entry) {
-            EntryVM entryVM = null;
-            if (entry is PartClass)
-                entryVM = new PartClassVM(entry as PartClass, this);
-            if (entry is PartInstance)
-                entryVM = new PartInstanceVM(entry as PartInstance, this);
-            if (entry is Task)
-                entryVM = new TaskVM(entry as Task, this);
-            if (entry is Tag)
-                entryVM = new TagVM(entry as Tag, this);
-            return entryVM;
-        } //AHAH! CURRENT! Really need to AVOID creating NEW vms here, or lose your VM metadata!
 
         //public void showUntaggedEntries() {
         //    IQueryable<Task> untaggedStudents = filteredStudents.Where(s => !s.Tags.Any()); //Will this work?
