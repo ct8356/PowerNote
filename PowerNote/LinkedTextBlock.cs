@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 using CJT;
 using PowerNote.ViewModels;
 using System.Windows.Controls;
-using System.ComponentModel.DataAnnotations;
+using System.Windows.Markup;
+using System.Windows.Media;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Windows.Data;
 using TextBlock = CJT.TextBlock;
+using System.Windows;
 
 namespace PowerNote {
     public class LinkedTextBlock : TextBlock {
@@ -17,10 +20,13 @@ namespace PowerNote {
         //AND should make your entryVMs have properties to bind to, RATHER than binding to Entry.
         //BUT as a quick hack, I am going to make this take Entry as a DataContext
         //OR maybe I will allow it to take both... (with if statement).
-        public MainVM MainVM { get; set; }
+        public MainVM MainVM { get; set; } //NEED THIS!
         
         public LinkedTextBlock() : base() {
             Loaded += This_Loaded;
+            //BorderBrush = new SolidColorBrush(Colors.LightGray);
+            Background = new SolidColorBrush(Colors.LightCyan);
+            Padding = new Thickness(2);
         }
 
         //Problem is, the wrapper EntryVM NEEDS to know about the tree,
@@ -46,12 +52,13 @@ namespace PowerNote {
         //IF do, back up before hand!
 
         public void This_Loaded(object sender, EventArgs e) {
-            if (DataContext != null) {
+            if (DataContext is EntryVM) {
                 EntryVM dataContext;
                 dataContext = DataContext as EntryVM; //NEED to set this OUTSIDE it!
                 MainVM = dataContext.TreeVM.ParentVM;
                 MenuItem goToEntry = new MenuItem() { Header = "Go to entry" };
                 goToEntry.Click += delegate { MainVM.SelectedEntryVM = dataContext; };//USE polymorphism!
+                //NOTE, this method is not called for listBox! It has its own method.
                 ContextMenu contextMenu = new ContextMenu();
                 contextMenu.Items.Add(goToEntry);
                 ContextMenu = contextMenu;

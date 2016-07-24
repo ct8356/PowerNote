@@ -36,7 +36,7 @@ namespace PowerNote.ViewModels {
             bindToEntry(entry);
             TreeVM = treeVM;
             Children = new ObservableCollection<EntryVM>();
-            Filter = treeVM.Filter;
+            Filter = treeVM.FilterPanelVM;
             Context = treeVM.DbContext;
             AllProperties = new ObservableCollection<string>();
             Context.Tags.Load();

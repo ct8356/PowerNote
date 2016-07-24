@@ -22,9 +22,9 @@ namespace PowerNote.ViewModels {
         public EntriesTreeVM TreeVM { get; set; }
         public Entry Entry { get; set; }
         public DAL.DbContext DbContext { get; set; }
+        public static ObservableCollection<object> Properties { get; set; }
         public ObservableCollection<Property> ImportantProperties { get; set; }
-        public ListBoxVM<Tag> TagsVM { get; set; }
-        public InputVM<Tag> TagsInputVM { get; set; }
+        public ListBoxPanelVM<Tag> TagsVM { get; set; }
         public EntryVM Parent { get; set; }
         //NOTE! I think proper way to do this, is to just MODIFY the entry,
         //BUT because the the EntryVM is bound to it, it will update itself accordingly!
@@ -45,44 +45,42 @@ namespace PowerNote.ViewModels {
             //NOTE: is this called? maybe. Even if it is, does not matter.
         }
 
+        public EntryVM(EntriesTreeVM treeVM) {
+            TreeVM = treeVM;
+            DbContext = treeVM.DbContext;
+        }
+
         protected void initialize(Entry entry, EntriesTreeVM treeVM) {
             TreeVM = treeVM;
             Children = new ObservableCollection<EntryVM>();
-            FilterTags = treeVM.Filter;
+            FilterTags = treeVM.FilterPanelVM;
             DbContext = treeVM.DbContext;
             bindToEntry(entry);
             //PROPERTIES
             initializePropertyList();
             //SUBSCRIBE
             Entry.PropertyChanged += Entry_PropertyChanged;
-            TagsInputVM.InputConfirmed += TagsVM.This_Add;
+            //TagsInputVM.InputConfirmed += TagsVM.This_Add;
+            //OH MY GOSH! So you are saying, should register to all lists
+            //from here? What a pain in the bum!
+            //SURELY it is much easier to PASS reference of this EntryVM,
+            //TO the inputVM (or just use the ListBoxPanelVM!).
+            //AND call the EntryVM to add, from there!!!
+            //WELL, yes I am...
+            //BUT this way is more flexible!
+            //BUT maybe also a bit stupid.
+            //COZ only reason did it, was so did not have to PASS an EntryVM.
+            //AND you could just make anything with lists attached,
+            //an EntryVM. Or a ListAttachedObject...
         }
 
         protected virtual void initializePropertyList() {
             ImportantProperties = new ObservableCollection<Property>();
-            ImportantProperties.Add(new Property("Entry ID", Entry.EntryID, InfoType.TextBlock, false, DbContext));
-            ImportantProperties.Add(new Property("Creation date", Entry.CreationDate, InfoType.TextBlock, false, DbContext));
-            ImportantProperties.Add(new Property("Parent", Entry.Parent, InfoType.TextBlock, false, DbContext));
-            ImportantProperties.Add(new Property("Children", Entry.Children, InfoType.ListBox, false, DbContext));
-            ImportantProperties.Add(new Property("Tags", Entry.Tags, InfoType.ListBox, true, DbContext));
-        }
-
-        public void addNewTagToEntry(object sender, string text) {
-            Tag newTag = new Tag();
-            newTag.Title = text;
-            DbContext.Tags.Add(newTag);
-            DbContext.SaveChanges();
-            addTagToEntry(sender, newTag);
-        }
-
-        public void addTagToEntry(object sender, Tag selectedCourse) {
-            if (!Entry.Tags.Contains(selectedCourse)) {
-                Entry.Tags.Add(selectedCourse);
-                DbContext.SaveChanges();
-                //ParentVM.ParentVM.updateEntries(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.  
-                //above is bad, because deletes all entryVMs.
-                (sender as AutoCompleteBox).Text = null;
-            }
+            ImportantProperties.Add(new Property("EntryID", Entry.EntryID, InfoType.TextBlock, false, DbContext));
+            ImportantProperties.Add(new Property("CreationDate", Entry.CreationDate, InfoType.TextBlock, false, DbContext));
+            ImportantProperties.Add(new Property("Parent", Entry.Parent, InfoType.LinkedTextBlock, false, DbContext));
+            ImportantProperties.Add(new Property("Children", Children, InfoType.ListBox, false, DbContext));
+            ImportantProperties.Add(new Property("Tags", TagsVM, InfoType.ListBox, true, DbContext));
         }
 
         public void adoptChild(EntryVM childVM) {
@@ -105,16 +103,14 @@ namespace PowerNote.ViewModels {
         public void bindToEntry(Entry entry) {
             Entry = entry;
             DbContext.Tags.Load();
-            TagsInputVM = new InputVM<Tag>();
-            TagsInputVM.Objects = DbContext.Tags.Local;
-            TagsVM = new ListBoxVM<Tag>(); 
+            TagsVM = new ListBoxPanelVM<Tag>(this);
+            TagsVM.SelectableItems = DbContext.Tags.Local;   
             //AND need to BIND THIS to the ENTRYs Tags!
-            foreach (Tag tag in DbContext.Tags.Local) {
-                TagsInputVM.Objects.Add(tag);
-            }
             foreach (Tag tag in Entry.Tags) {
-                TagsVM.Objects.Add(tag); //Not a proper binding really...
+                TagsVM.SelectedItems.Add(tag); //Not a proper binding really...
             }
+            TagsVM.SelectedItems = Entry.Tags; //YES! This actually seems to
+            //create a BINDING between ThisVM and the Entry.Tags!!!
             //NOW bind to this, in the XAML!
         }
 
@@ -152,7 +148,7 @@ namespace PowerNote.ViewModels {
             } else { //else put it in FirstLevelVMs
                 TreeVM.FirstGenEntryVMs.Add(entryVM);
             }
-            foreach (Tag tag in FilterTags.SelectedObjects) {
+            foreach (Tag tag in FilterTags.SelectedItems) {
                 entryVM.Entry.Tags.Add(tag);
             }
             DbContext.SaveChanges();
@@ -165,7 +161,7 @@ namespace PowerNote.ViewModels {
 
         public void insertSubEntry(EntryVM entryVM, EntryVM selectedVM) {
             adoptChild(entryVM);
-            foreach (Tag tag in FilterTags.SelectedObjects) {
+            foreach (Tag tag in FilterTags.SelectedItems) {
                 entryVM.Entry.Tags.Add(tag);
             }
             DbContext.SaveChanges();
@@ -181,19 +177,6 @@ namespace PowerNote.ViewModels {
 
         public void updateSelectedEntry(EntryVM entryVM) {
             TreeVM.ParentVM.SelectedEntryVM = entryVM;
-        }
-
-        public EntryVM WrapInCorrectVM(Entry entry) {
-            EntryVM entryVM = null;
-            if (entry is PartClass)
-                entryVM = new PartClassVM(entry as PartClass, TreeVM);
-            if (entry is PartInstance)
-                entryVM = new PartInstanceVM(entry as PartInstance, TreeVM);
-            if (entry is Task)
-                entryVM = new TaskVM(entry as Task, TreeVM);
-            if (entry is Tag)
-                entryVM = new TagVM(entry as Tag, TreeVM);
-            return entryVM;
         }
 
     }

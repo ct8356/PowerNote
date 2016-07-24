@@ -65,38 +65,9 @@ namespace PowerNote {
         //THEN properties panel SEES it has changed, and so updates itself...
         //AND THAT is the case when THEN need a listener!!! listening to Datacontext, property changed!
 
-        public void autoCompleteBox_KeyUp(object sender, KeyEventArgs e) {
-            //Oddly, this is called twice when you click in the dropdown box. I guess, lets accept that, and work around it.
-            //Put an if statement in there, to stop something being saved twice.
-            if (e.Key == Key.Return) {
-                AutoCompleteBox autoCompleteBox = sender as AutoCompleteBox;
-                List<Tag> tags = (DataContext as EntryVM).DbContext.Tags.ToList<Tag>();
-                if (tags.Select(t => t.Title).Contains(autoCompleteBox.Text)) {
-                    //i.e. IF course exists already, then say "selection Changed!".
-                    //This method no longer needed, but keep it, just in case.
-                    autoCompleteBox_SelectionChanged(sender, e);
-                    //OR, just do nothing, since called anyway, when selection changed.
-                    //WHICH is called first by the way? LostFocus, or SelectionCHanged? lostFocus first. SC, SC. LF.
-                }
-                else {
-                    //IF no, then create new entry.
-                    if (autoCompleteBox.Text != null && autoCompleteBox.Text != "") {
-                        (DataContext as EntryVM).addNewTagToEntry(sender, autoCompleteBox.Text);
-                    }
-                }
-            }
-        }
-
-        public void autoCompleteBox_SelectionChanged(object sender, RoutedEventArgs e) {
-            //Add new tag to Navigation property
-            AutoCompleteBox autoCompleteBox = (AutoCompleteBox)sender;
-            Tag selectedCourse = (Tag)autoCompleteBox.SelectedItem;
-            (DataContext as EntryVM).addTagToEntry(sender, selectedCourse);
-        }
-
         public void filterAndSortTagsShown() {
             IEnumerable<int> filterCourseIDs = 
-                (DataContext as EntryVM).TagsInputVM.Objects.Select(c => (c as Tag).EntryID);
+                (DataContext as EntryVM).TagsVM.SelectableItems.Select(c => (c as Tag).EntryID);
             var alphabeticalCourses = (DataContext as EntryVM)
                 .Entry.Tags.Where(c => !filterCourseIDs.Contains(c.EntryID)).OrderBy(c => c.Title);
         }

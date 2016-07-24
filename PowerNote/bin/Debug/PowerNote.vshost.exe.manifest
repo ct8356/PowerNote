@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CJT.dll" size="19968">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CJT.dll" size="20992">
       <assemblyIdentity name="CJT" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>lc3q8XxqPK5fOZlzmCCQlIMfzYd/M6RRCbN1hwwnoN0=</dsig:DigestValue>
+        <dsig:DigestValue>vXegif3PgeU4Xh8StXEssZJNMaHZHCVdHcksVepzMxI=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -78,14 +78,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PowerNote.exe" size="79872">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="PowerNote.exe" size="80384">
       <assemblyIdentity name="PowerNote" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>ygCjmS6Txp5LRLjCcn1c7JzudL6xIDFWjTE67OA0KE4=</dsig:DigestValue>
+        <dsig:DigestValue>HESimEPpGEppaH8UahjpamRWbG8RH3BosgfOBfq5YN8=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

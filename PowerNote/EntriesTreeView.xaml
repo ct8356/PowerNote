@@ -7,8 +7,7 @@
              xmlns:VMs="clr-namespace:PowerNote.ViewModels"
              xmlns:CJT="clr-namespace:CJT;assembly=CJT"
              mc:Ignorable="d"
-             DataContext="{Binding EntriesTreeVM}"
-             ItemsSource = "{Binding FirstGenEntryVMs}"
+             ItemsSource="{Binding FirstGenEntryVMs}"
              Background="{StaticResource BackgroundBrush}"
              BorderBrush="{StaticResource BackgroundBrush}">
     <!-- I tried Binding to FilteredStudents (the queryable) but did not work. Unsurprising really. 
@@ -27,26 +26,38 @@
     <TreeView.Resources>
         <HierarchicalDataTemplate DataType="{x:Type VMs:TaskVM}"  ItemsSource="{Binding Children}">
             <local:EntryPanel>
-                <CJT:ListBox ItemsSource="{Binding TagsVM.Objects}"/>
-                <CJT:AutoCompleteBox ItemsSource="{Binding TagsInputVM.Objects}"/>
+                <CJT:ListBox DataContext="{Binding TagsVM}" 
+                             ItemsSource="{Binding SelectedItems}"
+                             ItemTemplate="{StaticResource LinkedTextBlock}"/>
+                <CJT:AutoCompleteBox DataContext="{Binding TagsVM}" 
+                                     ItemsSource="{Binding SelectableItems}"/>
             </local:EntryPanel>
         </HierarchicalDataTemplate>
         <HierarchicalDataTemplate DataType="{x:Type VMs:PartClassVM}"  ItemsSource="{Binding Children}">
             <local:EntryPanel>
-                <CJT:ListBox ItemsSource="{Binding TagsVM.Objects}"/>
-                <CJT:AutoCompleteBox ItemsSource="{Binding TagsInputVM.Objects}"/>
+                <CJT:ListBox DataContext="{Binding TagsVM}" 
+                             ItemsSource="{Binding SelectedItems}"
+                             ItemTemplate="{StaticResource LinkedTextBlock}"/>
+                <CJT:AutoCompleteBox DataContext="{Binding TagsVM}" 
+                                     ItemsSource="{Binding SelectableItems}"/>
             </local:EntryPanel>
         </HierarchicalDataTemplate>
         <HierarchicalDataTemplate DataType="{x:Type VMs:PartInstanceVM}"  ItemsSource="{Binding Children}">
             <local:EntryPanel>
-                <CJT:ListBox ItemsSource="{Binding TagsVM.Objects}"/>
-                <CJT:AutoCompleteBox ItemsSource="{Binding TagsInputVM.Objects}"/>
+                <CJT:ListBox DataContext="{Binding TagsVM}" 
+                             ItemsSource="{Binding SelectedItems}"
+                             ItemTemplate="{StaticResource LinkedTextBlock}"/>
+                <CJT:AutoCompleteBox DataContext="{Binding TagsVM}" 
+                                     ItemsSource="{Binding SelectableItems}"/>
             </local:EntryPanel>
         </HierarchicalDataTemplate>
         <HierarchicalDataTemplate DataType="{x:Type VMs:TagVM}"  ItemsSource="{Binding Children}">
             <local:EntryPanel>
-                <CJT:ListBox ItemsSource="{Binding TagsVM.Objects}"/>
-                <CJT:AutoCompleteBox ItemsSource="{Binding TagsInputVM.Objects}"/>
+                <CJT:ListBox DataContext="{Binding TagsVM}" 
+                             ItemsSource="{Binding SelectedItems}"
+                             ItemTemplate="{StaticResource LinkedTextBlock}"/>
+                <CJT:AutoCompleteBox DataContext="{Binding TagsVM}" 
+                                     ItemsSource="{Binding SelectableItems}"/>
             </local:EntryPanel>
         </HierarchicalDataTemplate>
     </TreeView.Resources>

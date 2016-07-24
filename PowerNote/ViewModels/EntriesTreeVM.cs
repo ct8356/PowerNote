@@ -1,30 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Windows.Controls;
-using System.Windows.Input;
+using System.Data.Entity;
 using PowerNote.DAL;
+using PowerNote.Migrations;
 using PowerNote.Models;
-using PowerNote.ViewModels;
+using System.ComponentModel;
 using System.Collections.ObjectModel;
+using CJT;
 using System.Reflection;
 using System.Linq.Expressions;
-using CJT;
 using AutoCompleteBox = CJT.AutoCompleteBox;
 
 namespace PowerNote.ViewModels {
     public class EntriesTreeVM {
         public MainVM ParentVM { get; set; }
-        public DbContext DbContext { get; set; }
+        public DAL.DbContext DbContext { get; set; }
         Type type;
-        public ComboBoxVM ComboBoxVM { get; set; }
+        public EntryVM FilterEntryVM { get; set; }
+        public ComboBoxVM TypePanelVM { get; set; }
         public ComboBoxVM StructurePanelVM { get; set; }
-        public ListBoxPanelVM<Tag> Filter { get; set; }
+        public ListBoxPanelVM<Tag> FilterPanelVM { get; set; }
         public OptionsPanelVM OptionsPanelVM { get; set; }
         public ObservableCollection<EntryVM> FirstGenEntryVMs { get; set; }
         //needed for treeview to bind to
         public ObservableCollection<EntryVM> AllEntryVMs { get; set; }
         //needed to keep track of EntryVMs shown in the treeView (without having to scan tree).
+        public ObservableCollection<Tag> AllTags { get; set; }
         int childLevel;
         public Entry Orphan { get; set; }
         public bool WaitingForParentSelection { get; set; }
@@ -32,10 +36,23 @@ namespace PowerNote.ViewModels {
         public EntriesTreeVM(MainVM parentVM) {
             ParentVM = parentVM;
             DbContext = parentVM.DbContext;
-            ComboBoxVM = parentVM.TypePanelVM;
-            StructurePanelVM = parentVM.StructurePanelVM;
-            Filter = parentVM.FilterPanelVM;
-            OptionsPanelVM = parentVM.OptionsPanelVM;
+            //New stuff
+            FilterEntryVM = new EntryVM(this);
+            TypePanelVM = new ComboBoxVM(parentVM);
+            TypePanelVM.Objects = new ObservableCollection<object> { typeof(Entry), typeof(PartClass), typeof(PartInstance), typeof(Task), typeof(Tag) };
+            TypePanelVM.SelectedObject = TypePanelVM.Objects.First();
+            StructurePanelVM = new ComboBoxVM(parentVM);
+            StructurePanelVM.Objects = new ObservableCollection<object>() { "Parent", "Sensor" };
+            StructurePanelVM.SelectedObject = StructurePanelVM.Objects.First();
+            AllTags = new ObservableCollection<Tag>();
+            DbContext.Tags.Load();
+            foreach (Tag tag in DbContext.Tags.Local) {
+                AllTags.Add(tag);
+            }
+            FilterPanelVM = new ListBoxPanelVM<Tag>(FilterEntryVM); //NOTE does not seem to have anything in its lists REVISIT CURRENT
+            FilterPanelVM.SelectableItems = new ObservableCollection<Tag>(AllTags);
+            OptionsPanelVM = new OptionsPanelVM(parentVM);
+            //OLD SUSTFF
             FirstGenEntryVMs = new ObservableCollection<EntryVM>();
             AllEntryVMs = new ObservableCollection<EntryVM>();
             filterSortAndShowEntries();
@@ -46,8 +63,8 @@ namespace PowerNote.ViewModels {
         }
 
         public void filterSortAndShowEntries() {
-            if (ComboBoxVM.SelectedObject != null) {
-                Type selectedType = ComboBoxVM.SelectedObject as Type; //REVISIT CURRENT here is problem!
+            if (TypePanelVM.SelectedObject != null) {
+                Type selectedType = TypePanelVM.SelectedObject as Type; //REVISIT CURRENT here is problem!
                 if (selectedType == typeof(Entry))
                     processEntries<Entry>(DbContext.Entries);
                 if (selectedType == typeof(PartClass)) //is does not work here. it says selected type is Type.
@@ -69,7 +86,7 @@ namespace PowerNote.ViewModels {
         public IEnumerable<Entry> filterByType(IQueryable<Entry> filteredEntries) {
             //string typeName = ((displayPanel.TypePanel.DataContext as TypePanelVM).SelectedObjects.First() as Type).FullName;
             //Type type = Type.GetType(typeName);
-            Type type = ComboBoxVM.SelectedObject as Type;
+            Type type = TypePanelVM.SelectedObject as Type;
             IEnumerable<Entry> filteredEntriesEnum = filteredEntries.AsEnumerable<Entry>()
                 .Where(e => e.GetType() == type);
             return filteredEntriesEnum;
@@ -77,7 +94,7 @@ namespace PowerNote.ViewModels {
         //can turn this method into a "construct SQL" query, maybe...
   
         public IQueryable<T> filterByTag<T>(IQueryable<T> entries) where T : Entry {
-            IEnumerable<int> filterTagIDs = Filter.SelectedObjects.Select(o => (o as Tag).EntryID);
+            IEnumerable<int> filterTagIDs = FilterPanelVM.SelectedItems.Select(o => (o as Tag).EntryID);
             if (!OptionsPanelVM.ShowAllEntries)
                 return entries.Where(e => !filterTagIDs.Except(e.Tags.Select(t => t.EntryID)).Any());  
             //entryTAGS, has to include ALL of filterTags!
@@ -151,7 +168,7 @@ namespace PowerNote.ViewModels {
         public IQueryable<T> showFirstLevel<T>(IQueryable<T> entries, string columnName) where T : Entry {
             //IEnumerable<int> filterTagIDs = Filter.SelectedObjects.Select(o => (o as Tag).TagID);
             IQueryable<T> filteredParents = null;
-            Type selectedType = ComboBoxVM.SelectedObject as Type;
+            Type selectedType = TypePanelVM.SelectedObject as Type;
             if (OptionsPanelVM.ShowAllEntries) {
                 filteredParents = filterEntries<T>(entries, PropertyEqualsNull<T>(columnName));
                 //PERHAPS, really DO want to do 3 filters, one for each type...
@@ -163,9 +180,8 @@ namespace PowerNote.ViewModels {
             }
             int count0 = entries.Count();
             int count = filteredParents.Count();
-            EntryVM tempVM = new TaskVM("temp", this);
             foreach (T entry in filteredParents) {
-                EntryVM entryVM = tempVM.WrapInCorrectVM(entry); //SHOULD make this into Constructor really.
+                EntryVM entryVM = WrapInCorrectVM(entry); //SHOULD make this into Constructor really.
                 FirstGenEntryVMs.Add(entryVM);
                 AllEntryVMs.Add(entryVM); //CURRENT PROBLEM! Code does not reach this line! REVISIT!
             }
@@ -189,7 +205,7 @@ namespace PowerNote.ViewModels {
                         //EntryVM parentVM = AllEntryVMs.Where(eVM => eVM.Entry == child.Sensor).Single();
                         EntryVM parentVM = AllEntryVMs.Where(EntryEqualsChildsProperty<T>(child, columnName).Compile()).First();
                         //OH YEAH! Queryables can take expressions, Enumerables must take delegates!
-                        EntryVM childVM = parentVM.WrapInCorrectVM(child);
+                        EntryVM childVM = parentVM.TreeVM.WrapInCorrectVM(child);
                         parentVM.Children.Add(childVM);
                         childVM.Parent = parentVM;
                         AllEntryVMs.Add(childVM);
@@ -226,6 +242,19 @@ namespace PowerNote.ViewModels {
             //and WHEN fires,
             //it will call that PANELs dataContext, and its method adoptChild(orphan);
             //WILL JUST HAVE TO UNSUBSCRIBE! It is poss. -=...
+        }
+
+        public EntryVM WrapInCorrectVM(Entry entry) {
+            EntryVM entryVM = null;
+            if (entry is PartClass)
+                entryVM = new PartClassVM(entry as PartClass, this);
+            if (entry is PartInstance)
+                entryVM = new PartInstanceVM(entry as PartInstance, this);
+            if (entry is Task)
+                entryVM = new TaskVM(entry as Task, this);
+            if (entry is Tag)
+                entryVM = new TagVM(entry as Tag, this);
+            return entryVM;
         }
 
     }

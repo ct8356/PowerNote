@@ -11,13 +11,15 @@ namespace PowerNote.ViewModels {
     public class ComboBoxVM {
         public ObservableCollection<object> Objects { get; set; }
         public object SelectedObject { get; set; }
+        public MainVM VM { get; set; }
 
-        public ComboBoxVM(MainVM parentVM) {  
-           
+        public ComboBoxVM(MainVM parentVM) {
+            VM = parentVM;
         }
 
         public void updateSelectedObject(object selectedObject) {
             SelectedObject = selectedObject;
+            VM.UpdateEntries();
         }
 
 

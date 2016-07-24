@@ -27,8 +27,10 @@
     </local:PropertyPanel>
     <local:PropertyPanel DataContext="{Binding FilterPanelVM}" DockPanel.Dock="Top">
         <CJT:TextBlock Width="150">Filter by tags:</CJT:TextBlock>
-        <CJT:ListBox ItemsSource="{Binding SelectedObjects}"/>
-        <CJT:AutoCompleteBox ItemsSource="{Binding Objects}"/>
+        <CJT:ListBox ItemsSource="{Binding SelectedItems}"
+                     ItemTemplate="{StaticResource LinkedTextBlock}"/>
+        <CJT:AutoCompleteBox ItemsSource="{Binding SelectableItems}"/>
     </local:PropertyPanel>
     <local:OptionsPanel x:Name="OptionsPanel" DataContext="{Binding OptionsPanelVM}" DockPanel.Dock="Top"/>
+    <local:EntriesTreeView x:Name="TreeView" DockPanel.Dock="Top"></local:EntriesTreeView>
 </DockPanel>

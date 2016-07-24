@@ -9,6 +9,10 @@
         </MenuItem>
     </Menu>
     <Button Content="Do the thing" Click="DoTheThing" DockPanel.Dock="Bottom"></Button>
-    <local:DisplayPanel x:Name="DisplayPanel" DockPanel.Dock="Left"></local:DisplayPanel>
-    <local:EntryPropertiesPanel x:Name="PropsPanel" DockPanel.Dock="Left" DataContext="{Binding SelectedEntryVM}"></local:EntryPropertiesPanel>
+    <local:DisplayPanel x:Name="DisplayPanel" 
+                        DataContext="{Binding TreeVM}" 
+                        DockPanel.Dock="Left"/>
+    <local:EntryPropertiesPanel x:Name="PropsPanel" 
+                                DataContext="{Binding SelectedEntryVM}"
+                                DockPanel.Dock="Left" />
 </DockPanel>

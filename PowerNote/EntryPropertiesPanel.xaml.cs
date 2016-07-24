@@ -64,10 +64,15 @@ namespace PowerNote {
                 if (property.Value != null) {
                     switch (property.Type) {
                         case InfoType.TextBlock:
-                            LinkedTextBlock textBlock = new LinkedTextBlock();
+                            TextBlock textBlock = new TextBlock();
                             bindTextBlock(textBlock, selectedEntryVM.Entry, property.Name);
-                            textBlock.DataContext = selectedEntryVM.WrapInCorrectVM(property.Value as Entry);
                             propertyPanel.Children.Add(textBlock);
+                            break;
+                        case InfoType.LinkedTextBlock:
+                            LinkedTextBlock linkedTextBlock = new LinkedTextBlock();
+                            bindTextBlock(linkedTextBlock, selectedEntryVM.Entry, property.Name);
+                            linkedTextBlock.DataContext = selectedEntryVM.TreeVM.WrapInCorrectVM(property.Value as Entry);
+                            propertyPanel.Children.Add(linkedTextBlock);
                             break;
                         case InfoType.TextBox:
                             propertyPanel.Children.Add(new TextBox() 
@@ -78,16 +83,21 @@ namespace PowerNote {
                         case InfoType.ListBox:
                             ListBox listBox = new ListBox();
                             bindListBox(listBox, selectedEntryVM.Entry, property.Name);
+                            //ABOVE line is needed to bind the listBox to the list.
+                            listBox.DataContext = property.Value; //AHAH! really easy solve!
+                            //JUST set property.Value for lists, to the TagsVM etc. easy!
+                            //ABOVE line is needed, otherwise pretty sure it just inherits DC from its EntryVM.
                             propertyPanel.Children.Add(listBox);
                             FrameworkElementFactory textBlockFactory = new FrameworkElementFactory(typeof(LinkedTextBlock));
                             Binding binding = new Binding("Name");
                             textBlockFactory.SetBinding(LinkedTextBlock.TextProperty, binding); //not needed?
+                            //I think the above line is needed to bind to the textblock to the entry in the list!
                             DataTemplate dataTemplate = new DataTemplate();
                             dataTemplate.VisualTree = textBlockFactory;
-                            //listBox.ItemTemplate = dataTemplate;
-                            //{ ItemsSource = property.Value as ObservableCollection<Entry>}
-                            //above line won't work because Can't cast anything to ObseColl<Entry>
-                            //BUT maybe can try binding?
+                            listBox.ItemTemplate = dataTemplate;
+                            //FUNNY THING is, DataContext of ListBox,
+                            //Is coming out as a EntryVM.
+                            //When it SHOULD be a ListBoxPanelVM...
                             break;
                         case InfoType.CheckBox:
                             break;

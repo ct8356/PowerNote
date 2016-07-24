@@ -33,10 +33,6 @@ namespace PowerNote {
             //Children.Add(SortPanel);
             //SetDock(SortPanel, Dock.Top);
             //SortPanel.ComboBox.SelectionChanged += ComboBox_SelectionChanged; //subscribe
-            //ENTRIES TREEVIEW
-            EntriesTreeView = new EntriesTreeView(this);
-            Children.Add(EntriesTreeView);
-            SetDock(EntriesTreeView, Dock.Top);
             //COLUMN NAME PANEL
             //var colNames = typeof(Student).GetProperties().Select(a => a.Name).ToList();
             ColumnNames = new List<String>() { "Contents", "Priority" };
@@ -47,18 +43,18 @@ namespace PowerNote {
         public void ComboBox_SelectionChanged(object sender, RoutedEventArgs e) {
             //START a ORDER BY QUERY. I say, just call to UPDATE methods, BUT with NEW INPUT.
             ComboBox comboBox = sender as ComboBox;
-            (DataContext as MainVM).TypePanelVM.updateSelectedObject(comboBox.SelectedItem);
+            (DataContext as EntriesTreeVM).TypePanelVM.updateSelectedObject(comboBox.SelectedItem);
             updateEntries();
         }
 
         public void StructurePanel_SelectionChanged(object sender, EventArgs e) {
             ComboBox comboBox = sender as ComboBox;
-            (DataContext as MainVM).StructurePanelVM.updateSelectedObject(comboBox.SelectedItem);
+            (DataContext as EntriesTreeVM).StructurePanelVM.updateSelectedObject(comboBox.SelectedItem);
             updateEntries();
         }
 
         public void updateEntries() {
-            if (EntriesTreeView.DataContext != null) {
+            if (EntriesTreeView != null && EntriesTreeView.DataContext != null) {//REVISIT. HACK.
                 (EntriesTreeView.DataContext as EntriesTreeVM).UpdateEntries();
             }
             //uc.addTo();

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using CJT;
 
 namespace PowerNote.ViewModels {
-    class TagVM : EntryVM {
+    public class TagVM : EntryVM {
         public TagVM(Tag task, EntriesTreeVM treeVM) {
             //NOTE: this constructor just WRAPS a student in a VM.
             initialize(task, treeVM);

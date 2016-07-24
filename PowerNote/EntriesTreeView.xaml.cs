@@ -17,14 +17,8 @@ namespace PowerNote {
         public Entry Orphan { get; set; }
         public bool WaitingForParentSelection { get; set; }
 
-        public EntriesTreeView(DisplayPanel displayPanel) {
+        public EntriesTreeView() {
             InitializeComponent();
-            DisplayPanel = displayPanel;
-            //DisplayPanel = Parent as DisplayPanel; //OBS won't work, since not added to children until AFTER its construction.
-            //DataContext = (DataContext as MainVM).EntriesTreeVM; //SADLY, looks like DataContext not set until AFTER construction.
-            //SUBSCRIBE
-            DisplayPanel.OptionsPanel.ShowAllEntriesCBox.Click += ShowAllEntries_Click; //subscribe
-            DisplayPanel.OptionsPanel.ShowAllChildrenCBox.Click += ShowAllChildren_Click; //subscribe
         }
 
         public void ShowAllChildren_Click(object sender, EventArgs e) {
