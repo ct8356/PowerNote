@@ -26,7 +26,7 @@ namespace PowerNote.ViewModels {
 
         public MainVM() {
             createDbContext();
-            //seedDatabase();     
+            seedDatabase();     
             TreeVM = new EntriesTreeVM(this);
             SelectedEntryVM = TreeVM.FirstGenEntryVMs.First<EntryVM>();
             //AHAH! CBTL! CURRENT. BEST way to do this, is to instantiate the childVM here. and name it.

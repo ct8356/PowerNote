@@ -1,0 +1,17 @@
+﻿<local:ListBoxPanel x:Class="PowerNote.TypePanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d"
+             xmlns:local="clr-namespace:PowerNote"
+             xmlns:models="clr-namespace:PowerNote.Models"
+             xmlns:VMs="clr-namespace:PowerNote.ViewModels">
+    <!--<local:ListBoxPanel.AutoCompleteBox>
+        <local:MyAutoCompleteBox.ItemTemplate>
+            <DataTemplate>
+                <TextBlock Text="{Binding Name}"></TextBlock>
+            </DataTemplate>
+        </local:MyAutoCompleteBox.ItemTemplate>
+    </local:ListBoxPanel.AutoCompleteBox>-->
+</local:ListBoxPanel>

@@ -4,7 +4,7 @@ using System.Windows.Data;
 using System.Windows.Controls;
 using System.ComponentModel; //this allows INotifyPropertyChanged
 using System.Collections.ObjectModel;
-using PowerNote.Models;
+using CJT.Models;
 using PowerNote.DAL;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
@@ -78,6 +78,7 @@ namespace PowerNote.ViewModels {
             ImportantProperties = new ObservableCollection<Property>();
             ImportantProperties.Add(new Property("EntryID", Entry.EntryID, InfoType.TextBlock, false, DbContext));
             ImportantProperties.Add(new Property("CreationDate", Entry.CreationDate, InfoType.TextBlock, false, DbContext));
+            ImportantProperties.Add(new Property("Name", Entry.Name, InfoType.TextBox, false, DbContext));
             ImportantProperties.Add(new Property("Parent", Entry.Parent, InfoType.LinkedTextBlock, false, DbContext));
             ImportantProperties.Add(new Property("Children", Children, InfoType.ListBox, false, DbContext));
             ImportantProperties.Add(new Property("Tags", TagsVM, InfoType.ListBox, true, DbContext));
@@ -102,13 +103,8 @@ namespace PowerNote.ViewModels {
 
         public void bindToEntry(Entry entry) {
             Entry = entry;
-            DbContext.Tags.Load();
             TagsVM = new ListBoxPanelVM<Tag>(this);
-            TagsVM.SelectableItems = DbContext.Tags.Local;   
-            //AND need to BIND THIS to the ENTRYs Tags!
-            foreach (Tag tag in Entry.Tags) {
-                TagsVM.SelectedItems.Add(tag); //Not a proper binding really...
-            }
+            TagsVM.SelectableItems = TreeVM.AllTags; 
             TagsVM.SelectedItems = Entry.Tags; //YES! This actually seems to
             //create a BINDING between ThisVM and the Entry.Tags!!!
             //NOW bind to this, in the XAML!
@@ -129,9 +125,11 @@ namespace PowerNote.ViewModels {
             else { //else delete self from FirstLevelVMs
                 TreeVM.FirstGenEntryVMs.Remove(this);
             }
-            DbContext.SaveChanges(); //ALSO lazy. CBTL.
-            //SO NOTE: OF COURSE, easier you just do these things, IN THE VIEWMODEL!
-            //TreeVM.ParentVM.updateEntries(); //CBTL. Lazy way to do it. (rather than using events). But ok for now.
+            DbContext.SaveChanges(); //ALSO lazy. BUT more distributed!
+            //Easier you just do these things, IN THE VIEWMODEL!
+            //TreeVM.ParentVM.UpdateEntries();
+            //REVISIT above it lazy, coz does whole tree, rather than just approp ones.
+            //BUT  ok for now.
         }
 
         public void Entry_PropertyChanged(object sender, PropertyChangedEventArgs args) {

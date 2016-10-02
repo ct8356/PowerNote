@@ -127,10 +127,7 @@
     <Compile Include="PropertyPanel.cs" />
     <Compile Include="DAL\DbContext.cs" />
     <Compile Include="EntryPanel.cs" />
-    <Compile Include="Models\PartInstance.cs" />
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\PartClass.cs" />
-    <Compile Include="Models\Task.cs" />
     <Compile Include="Models\TaggedObject.cs" />
     <Compile Include="EntriesTreeView.xaml.cs">
       <DependentUpon>EntriesTreeView.xaml</DependentUpon>

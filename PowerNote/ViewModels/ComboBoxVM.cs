@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections.ObjectModel;
-using PowerNote.Models;
+using CJT.Models;
 using PowerNote.DAL;
 using CJT;
 

@@ -9,7 +9,7 @@ using System.ComponentModel;
 using System.Windows.Data;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using PowerNote.Models;
+using CJT.Models;
 using PowerNote.DAL;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -87,7 +87,7 @@ namespace PowerNote {
                     //IF no, then create new entry.
                     if (autoCompleteBox.Text != null && autoCompleteBox.Text != "") {
                         Tag newCourse = new Tag();
-                        newCourse.Title = autoCompleteBox.Text;
+                        newCourse.Name = autoCompleteBox.Text;
                         context.Tags.Add(newCourse);
                         addCourseToStudent(newCourse);
                     }

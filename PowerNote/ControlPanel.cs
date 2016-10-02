@@ -8,7 +8,7 @@ using System.ComponentModel;
 using System.Windows.Data;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using PowerNote.Models;
+using CJT.Models;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -33,9 +33,9 @@ namespace PowerNote {
             title.FontWeight = FontWeights.Bold;
             //COLLECTION OF TAG LABELS
             ListBox = new System.Windows.Controls.ListBox() as ListBox;
-            context.Tags.OrderBy(c => c.Title).Load(); //explicit load. I.e. submit query now.
+            context.Tags.OrderBy(c => c.Name).Load(); //explicit load. I.e. submit query now.
             ListBox.ItemsSource = context.Tags.Local;
-            ListBox.Items.SortDescriptions.Add(new SortDescription("Title", ListSortDirection.Ascending)); //"" is for property name.
+            ListBox.Items.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending)); //"" is for property name.
             ListBox.ContextMenu = new ContextMenu();
             MenuItem delete_menuItem = new MenuItem();
             ListBox.ContextMenu.Items.Add(delete_menuItem); //PROBLEM! menu belongs to listBox, not ITEM!

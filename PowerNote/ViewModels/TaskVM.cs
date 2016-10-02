@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Data;
 using System.Windows.Controls;
 using System.Collections.ObjectModel;
-using PowerNote.Models;
+using CJT.Models;
 using PowerNote.DAL;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
@@ -39,7 +39,7 @@ namespace PowerNote.ViewModels {
         }
 
         public override void insertSubEntry(EntryVM selectedVM) {
-            TaskVM entryVM = new TaskVM((selectedVM.Entry as Task).Contents + " child", TreeVM); 
+            TaskVM entryVM = new TaskVM((selectedVM.Entry as Task).Name + " child", TreeVM); 
             //this creates an entry too!
             insertSubEntry(entryVM, selectedVM);
         }

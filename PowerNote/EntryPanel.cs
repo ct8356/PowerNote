@@ -9,7 +9,7 @@ using System.ComponentModel;
 using System.Windows.Data;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using PowerNote.Models;
+using CJT.Models;
 using PowerNote.ViewModels;
 using PowerNote.DAL;
 using System.Windows.Controls.Primitives;
@@ -65,7 +65,7 @@ namespace PowerNote {
             IEnumerable<int> filterCourseIDs = 
                 (DataContext as EntryVM).TagsVM.SelectableItems.Select(c => (c as Tag).EntryID);
             var alphabeticalCourses = (DataContext as EntryVM)
-                .Entry.Tags.Where(c => !filterCourseIDs.Contains(c.EntryID)).OrderBy(c => c.Title);
+                .Entry.Tags.Where(c => !filterCourseIDs.Contains(c.EntryID)).OrderBy(c => c.Name);
         }
 
         public void courseList_PropertyChanged(Object sender, EventArgs e) {

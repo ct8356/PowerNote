@@ -6,7 +6,7 @@ using System.Windows.Controls;
 using System.Data.Entity;
 using PowerNote.DAL;
 using PowerNote.Migrations;
-using PowerNote.Models;
+using CJT.Models;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
 using CJT;
@@ -45,24 +45,20 @@ namespace PowerNote.ViewModels {
             StructurePanelVM.Objects = new ObservableCollection<object>() { "Parent", "Sensor" };
             StructurePanelVM.SelectedObject = StructurePanelVM.Objects.First();
             AllTags = new ObservableCollection<Tag>();
-            DbContext.Tags.Load();
-            foreach (Tag tag in DbContext.Tags.Local) {
-                AllTags.Add(tag);
-            }
             FilterPanelVM = new ListBoxPanelVM<Tag>(FilterEntryVM); //NOTE does not seem to have anything in its lists REVISIT CURRENT
-            FilterPanelVM.SelectableItems = new ObservableCollection<Tag>(AllTags);
+            FilterPanelVM.SelectableItems = AllTags;
             OptionsPanelVM = new OptionsPanelVM(parentVM);
             //OLD SUSTFF
             FirstGenEntryVMs = new ObservableCollection<EntryVM>();
             AllEntryVMs = new ObservableCollection<EntryVM>();
-            filterSortAndShowEntries();
+            UpdateEntries();
             //filterToDos();
             //INITIALIZE
             //newEntry.LostFocus += new RoutedEventHandler(newEntry_LostFocus);
             //newEntry.KeyUp += new KeyEventHandler(newEntry_KeyUp);
         }
 
-        public void filterSortAndShowEntries() {
+        public void ChooseAndProcessEntries() {
             if (TypePanelVM.SelectedObject != null) {
                 Type selectedType = TypePanelVM.SelectedObject as Type; //REVISIT CURRENT here is problem!
                 if (selectedType == typeof(Entry))
@@ -225,9 +221,11 @@ namespace PowerNote.ViewModels {
         //}
 
         public void UpdateEntries() {
+            DbContext.Tags.Load();
+            AllTags = DbContext.Tags.Local;
             FirstGenEntryVMs.Clear();
             AllEntryVMs.Clear();
-            filterSortAndShowEntries();
+            ChooseAndProcessEntries();
         }
 
         public void waitForParentSelection(Entry entry) {

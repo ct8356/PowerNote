@@ -4,7 +4,7 @@ using System.Windows.Data;
 using System.Windows.Controls;
 using System.ComponentModel; //this allows INotifyPropertyChanged
 using System.Collections.ObjectModel;
-using PowerNote.Models;
+using CJT.Models;
 using PowerNote.DAL;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
@@ -44,7 +44,7 @@ namespace PowerNote.ViewModels {
         }
 
         public void addNewTagToEntry(object sender, string text) {
-            Tag newTag = new Tag(); newTag.Title = text;
+            Tag newTag = new Tag(); newTag.Name = text;
             Context.Tags.Add(newTag); Context.SaveChanges();
             addTagToEntry(sender, newTag);
         }

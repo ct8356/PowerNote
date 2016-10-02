@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ComponentModel; //this allows INotifyPropertyChanged
-using CJT;
+using CJT.Models;
 using AutoCompleteBox = CJT.AutoCompleteBox;
 
 namespace PowerNote.Models {
@@ -21,5 +21,6 @@ namespace PowerNote.Models {
                 }
             }
         }
+
     }
 }

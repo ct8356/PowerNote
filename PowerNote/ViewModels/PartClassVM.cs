@@ -5,19 +5,14 @@ using System.Windows.Data;
 using System.Windows.Controls;
 using System.ComponentModel; //this allows INotifyPropertyChanged
 using System.Collections.ObjectModel;
-using PowerNote.Models;
+using CJT.Models;
 using PowerNote.DAL;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using CJT;
 
 namespace PowerNote.ViewModels {
     public class PartClassVM : EntryVM {
-        //HELL! Just have a go at BINDING the VIEW (own EntryPanel for PARTS),
-        //STRAIGHT to the MODEL. (BUT, the model contained HERE!!!).
-        //OR of course, the view just binds to THIS VIEWMODEL:
-        //THEN this VIEWMODEL NATURALLY just tells view how to show stuff.
-        //I.E. this viewModel, acts bit like a view!!
-
         //NOTE: Perhaps better to put some STATIC properties in here as well,
         //So can try and bind to them, and this is reflected in ALL PartClassVMs!
 
@@ -38,7 +33,7 @@ namespace PowerNote.ViewModels {
 
         protected override void initializePropertyList() {
             base.initializePropertyList();
-            ImportantProperties.Add(new Property("Nickname", (Entry as PartClass).NickName, InfoType.TextBox, true, DbContext));
+            ImportantProperties.Add(new Property("Name", (Entry as PartClass).Name, InfoType.TextBox, true, DbContext));
             ImportantProperties.Add(new Property("Order number", (Entry as PartClass).OrderNumber, InfoType.TextBox, true, DbContext));
             ImportantProperties.Add(new Property("Manufacturer", (Entry as PartClass).Manufacturer, InfoType.TextBox, true, DbContext));
         }
@@ -51,12 +46,13 @@ namespace PowerNote.ViewModels {
         //SPECIALLY when I am under such time pressure!
 
         public override void insertSubEntry(EntryVM parentVM) {
-            PartClassVM entryVM = new PartClassVM((parentVM.Entry as PartClass).NickName + " child", TreeVM); //create part.
+            PartClassVM entryVM = new PartClassVM((parentVM.Entry as PartClass).Name + " child", TreeVM); //create part.
             insertSubEntry(entryVM, parentVM);
         }//easiest to keep here.
         //This fails as generic because CANNOT create new() in generics with ANY PARAMETER!
         //Only way to do it is to pass constructor as a FUNCTION. Functional programming.
         //TOO COMPLICATED for now!
+        //(WELL another option is to just set the property AFTER construction.)
 
         //NOTE: Say, ASSEMBLY, can have parts.
         //PARTS all have 1 PARENT assembly, that they belong to.

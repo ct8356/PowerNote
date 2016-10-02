@@ -7,7 +7,7 @@ using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using PowerNote.DAL;
 using System.ComponentModel; //this allows INotifyPropertyChanged
-using PowerNote.Models;
+using CJT.Models;
 using CJT;
 
 namespace PowerNote.ViewModels {
@@ -15,12 +15,17 @@ namespace PowerNote.ViewModels {
         //NOTE: this class is not so flexible,
         //BUT it is used so often, that it is worth using!
         public delegate void ObjectEventHandler(object sender, ObjectEventArgs<T> e);
-        public event ObjectEventHandler InputConfirmed;
+        public delegate void MessageEventHandler(object sender, MessageEventArgs e);
+        public event MessageEventHandler InputConfirmed;
         public MainVM MainVM { get; set; }
         public EntryVM EntryVM { get; set; }
         public DAL.DbContext DbContext { get; set; }
         public DbSet<T> DbSet { get; set; }
-        public ObservableCollection<T> SelectableItems { get; set; }
+        private ObservableCollection<T> selectableItems;
+        public ObservableCollection<T> SelectableItems {
+            get { return selectableItems; }
+            set { selectableItems = value; NotifyPropertyChanged("SelectableItems"); }
+        }
         private ObservableCollection<T> selectedItems;
         public ObservableCollection<T> SelectedItems {
             get { return selectedItems; }
@@ -55,29 +60,28 @@ namespace PowerNote.ViewModels {
             SelectedItems = list;
         }
 
-        public void addNewItem(object sender, string text) {
+        public void AddNewItem(string text) {
             T newItem = new T();
             //HEY WOW! THOUGHT it was a real problem that I could not pass arguments to contruct.
             //BUT IS IT? COuld you get away with setting properties afterwards? REVISIT
             newItem.Name = text;
+            SelectableItems.Add(newItem);
+            //Add to DB
             ChooseCorrectDbSet();
             DbSet.Add(newItem as T);
             DbContext.SaveChanges();
-            addItem(sender, newItem);
-            //IS this method even needed???
         }
 
-        public void addItem(object sender, T selectedItem) {
-            if (!EntryVM.Entry.Tags.Contains(selectedItem as Tag)) {
-                EntryVM.Entry.Tags.Add(selectedItem as Tag);
-                //AHAH! What if I pass it DbSet<T> dbSet??
-                //REVISIT, here might be where you need to use expressions again!
-                //OR maybe, all I need to do is save,
-                //SINCE selected items should just be reference to Tags or whatever.
-                DbContext.SaveChanges();
-                //ParentVM.ParentVM.updateEntries();//bad, because deletes all entryVMs.
-                (sender as AutoCompleteBox).Text = null;
-            }
+        public void AddItem(string name) {
+            ChooseCorrectDbSet();
+            T entry = DbSet.Where(e => e.Name == name).First();
+            SelectedItems.Add(entry);
+            //FIRE an event... or not.... use NotifyPropChanged?
+            //ACTUALLY, FOR better DISTRIBUTION,
+            //BETTER if this class just calls TreeVM to update itself!
+            DbContext.SaveChanges();
+            MainVM.UpdateEntries();//bad, because deletes all entryVMs?
+            //(sender as AutoCompleteBox).Text = null;
         }
 
         public void ChooseCorrectDbSet() {
@@ -97,7 +101,7 @@ namespace PowerNote.ViewModels {
 
         public void NotifyInputConfirmed(string input) {
             if (InputConfirmed != null)
-                InputConfirmed(this, new ObjectEventArgs<T>(input as T));
+                InputConfirmed(this, new MessageEventArgs(input));
         }
 
         public void GoTo(object item) {
@@ -108,21 +112,23 @@ namespace PowerNote.ViewModels {
 
         public void Remove(object item) {
             SelectedItems.Remove(item as T);
+            DbContext.SaveChanges();
             MainVM.UpdateEntries();
             //AGAIN perhaps dont want to do this,
             //SINCE it updates whole list? slow!
         }
+        //NOTE if DELETE tag totally, GOT to remove it from AllTags!
+        //REVISIT CURRENT!
 
-        public void This_InputConfirmed(object sender, ObjectEventArgs<T> e) {
-            T item = e.Object as T;
-            if (!SelectableItems.Contains(item)) SelectableItems.Add(item);
-            if (!SelectedItems.Contains(item)) {
-                SelectedItems.Add(item);
-                //FIRE an event... or not.... use NotifyPropChanged?
-                //ACTUALLY, FOR better DISTRIBUTION,
-                //BETTER if this class just calls TreeVM to update itself!
-                DbContext.SaveChanges();
-                MainVM.UpdateEntries();
+        public void This_InputConfirmed(object sender, MessageEventArgs args) {
+            if (!SelectableItems.Any(n => n.Name == args.Message)) {
+                AddNewItem(args.Message);
+            }
+            if (!SelectedItems.Any(e => e.Name == args.Message)) {
+                //HEYHEY! It seems like when you create an entry,
+                //It gets added to the tree. EVEN if dont add it to DbSet.
+                //SO REALLY just want to find it, then wrap it.
+                AddItem(args.Message);
             }
         }
 

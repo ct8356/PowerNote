@@ -8,7 +8,7 @@ using System.Data.Entity;
 using PowerNote.DAL;
 using PowerNote.Migrations;
 using System.Windows.Data;
-using PowerNote.Models;
+using CJT.Models;
 
 namespace PowerNote.ViewModels {
     public class OptionsPanelVM {

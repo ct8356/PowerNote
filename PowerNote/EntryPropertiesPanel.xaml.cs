@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using PowerNote.ViewModels;
-using PowerNote.Models;
+using CJT.Models;
 using CJT;
 using ListBox = CJT.ListBox;
 using TextBlock = CJT.TextBlock;
@@ -75,8 +75,12 @@ namespace PowerNote {
                             propertyPanel.Children.Add(linkedTextBlock);
                             break;
                         case InfoType.TextBox:
-                            propertyPanel.Children.Add(new TextBox() 
-                            { Text = property.Value.ToString() });
+                            TextBox textBox = new TextBox();
+                            bindTextBox(textBox, selectedEntryVM.Entry, property.Name);
+                            propertyPanel.Children.Add(textBox);
+                            textBox.VerticalContentAlignment = VerticalAlignment.Center;
+                            //propertyPanel.Children.Add(new TextBox() 
+                            //{ Text = property.Value.ToString() });
                             break;
                         case InfoType.ComboBox:
                             break;

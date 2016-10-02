@@ -13,11 +13,10 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Data.Entity;
 using PowerNote.DAL;
-using PowerNote.Models;
 using PowerNote.ViewModels;
 using PowerNote.Migrations;
 using System.Collections.ObjectModel;
-using CJT;
+using CJT.Models;
 
 namespace PowerNote.ViewModels {
     public class PartInstanceVM : EntryVM {
@@ -55,17 +54,17 @@ namespace PowerNote.ViewModels {
 
         protected override void initializePropertyList() {
             base.initializePropertyList();
-            ImportantProperties.Add(new Property("FunctionText", (Entry as PartInstance).FunctionText, InfoType.TextBox, true, DbContext));
-            ImportantProperties.Add(new Property("PartClass", (Entry as PartInstance).PartClass, InfoType.TextBlock, false, DbContext));
-            ImportantProperties.Add(new Property("ParentPartInstance", (Entry as PartInstance).ParentPartInstance, InfoType.TextBlock, false, DbContext));
-            ImportantProperties.Add(new Property("Children parts", (Entry as PartInstance).ChildPartInstances, InfoType.ListBox, false, DbContext));
+            ImportantProperties.Add(new Property("Name", (Entry as PartInstance).Name, InfoType.TextBox, true, DbContext));
+            ImportantProperties.Add(new Property("PartClass", (Entry as PartInstance).PartClass, InfoType.LinkedTextBlock, false, DbContext));
+            ImportantProperties.Add(new Property("ParentPartInstance", (Entry as PartInstance).ParentPartInstance, InfoType.LinkedTextBlock, false, DbContext));
+            ImportantProperties.Add(new Property("ChildPartInstances", (Entry as PartInstance).ChildPartInstances, InfoType.ListBox, false, DbContext));
             ImportantProperties.Add(new Property("Tasks", (Entry as PartInstance).ChildTasks, InfoType.ListBox, false, DbContext));
-            ImportantProperties.Add(new Property("Sensor", (Entry as PartInstance).Sensor, InfoType.TextBlock, false, DbContext));
+            ImportantProperties.Add(new Property("Sensor", (Entry as PartInstance).Sensor, InfoType.LinkedTextBlock, false, DbContext));
         }
 
         public void addPartClassToEntry(string text) {
             IQueryable<PartClass> partClasses = DbContext.Parts;
-            PartClass partClass = partClasses.Where(pc => pc.NickName == text).First();
+            PartClass partClass = partClasses.Where(pc => pc.Name == text).First();
             (Entry as PartInstance).PartClass = partClass;
             DbContext.SaveChanges();
             TreeVM.UpdateEntries();
@@ -79,7 +78,7 @@ namespace PowerNote.ViewModels {
         }
 
         public override void insertSubEntry(EntryVM parentVM) {
-            PartInstanceVM entryVM = new PartInstanceVM((parentVM.Entry as PartInstance).FunctionText + " child", 
+            PartInstanceVM entryVM = new PartInstanceVM((parentVM.Entry as PartInstance).Name + " child", 
                 TreeVM); //create part.
             insertSubEntry(entryVM, parentVM);
         }

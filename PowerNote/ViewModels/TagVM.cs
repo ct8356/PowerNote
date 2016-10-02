@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CJT;
+using CJT.Models;
 
 namespace PowerNote.ViewModels {
     public class TagVM : EntryVM {
@@ -34,7 +35,7 @@ namespace PowerNote.ViewModels {
         }
 
         public override void insertSubEntry(EntryVM selectedVM) {
-            TagVM entryVM = new TagVM((selectedVM.Entry as Tag).Title + " child", TreeVM);
+            TagVM entryVM = new TagVM((selectedVM.Entry as Tag).Name + " child", TreeVM);
             //this creates an entry too!
             insertSubEntry(entryVM, selectedVM);
         }

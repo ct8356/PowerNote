@@ -6,6 +6,7 @@ using CJT;
 using System.ComponentModel; //this allows INotifyPropertyChanged
 using System.Collections.ObjectModel;
 using PowerNote.DAL;
+using DbContext = PowerNote.DAL.DbContext;
 
 namespace PowerNote.ViewModels {
     public class Property : BaseClass {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 using PowerNote.DAL;
-using PowerNote.Models;
+using CJT.Models;
 using PowerNote.ViewModels;
 using System.Collections.ObjectModel;
 using System.Reflection;

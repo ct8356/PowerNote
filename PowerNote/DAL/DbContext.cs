@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.ComponentModel; //this allows INotifyPropertyChanged
 using CJT;
+using CJT.Models;
 using AutoCompleteBox = CJT.AutoCompleteBox;
 
 namespace PowerNote.DAL { //DAL stands for Data Access Layer.

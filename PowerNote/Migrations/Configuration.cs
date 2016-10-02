@@ -4,7 +4,9 @@ using System.Data.Entity.Migrations;
 using System.Linq;
 using PowerNote.Models;
 using PowerNote.DAL;
-using CJT;
+using CJT.Models;
+using System.Collections.ObjectModel;
+using DbContext = PowerNote.DAL.DbContext;
 
 namespace PowerNote.Migrations {
 
@@ -27,42 +29,42 @@ namespace PowerNote.Migrations {
             //NOT the create context instantiation...
             //(I guess create(), will still do the trick. but NOT context instantiation...nec.) ??
             var tags = new List<Tag> {
-                new Tag {Title = "Question"},
-                new Tag {Title = "IT"},
-                new Tag {Title = "Bike"},
-                new Tag {Title = "Room"},
-                new Tag {Title = "Ebay"},
-                new Tag {Title = "Laura"},
-                new Tag {Title = "Jon"},
-                new Tag {Title = "Part"},
+                new Tag("Question"),
+                new Tag("IT"),
+                new Tag("Bike"),
+                new Tag("Room"),
+                new Tag("Ebay"),
+                new Tag("Laura"),
+                new Tag("Jon"),
+                new Tag("Part"),
                 new Tag("J5693"),
                 new Tag("Nissan infinity headliner NR")
             };
-            tags.ForEach(tag => context.Tags.AddOrUpdate(c => c.Title, tag));
+            tags.ForEach(tag => context.Tags.AddOrUpdate(t => t.Name, tag));
             context.SaveChanges();
-            
+
             var tasks = new List<Task> {
-                new Task { Contents = "Return ipod"},
-                new Task { Contents = "Check ipod on Jon's PC"},
-                new Task { Contents = "Fix bottom bracket"},
-                new Task { Contents = "Straighten back wheel"},
-                new Task { Contents = "Ask for roller chair"},
-                new Task { Contents = "Ask for TV remote"},
-                new Task { Contents = "Ask for shelves"},
-                new Task { Contents = "Fix your pannier"}
+                CreateEntryWithTags<Task>("Return ipod nano", "Ebay", context),
+                CreateEntryWithTags<Task>("Check ipod nano on Jon's PC", "Ebay", context),
+                CreateEntryWithTags<Task>("Fix bottom bracket", "Bike", context),
+                CreateEntryWithTags<Task>("Straighten back wheel", "Bike", context),
+                CreateEntryWithTags<Task>("Ask for roller chair", "Question", context),
+                CreateEntryWithTags<Task>("Ask for TV remote", "Question", context),
+                CreateEntryWithTags<Task>("Ask for shelves", "Room", context),
+                CreateEntryWithTags<Task>("Fix your pannier", "Bike", context)
             };
-            tasks.ForEach(student => context.Tasks.AddOrUpdate(s => s.Contents, student));
+            tasks.ForEach(student => context.Tasks.AddOrUpdate(s => s.Name, student));
             context.SaveChanges();
 
             var partClasses = new List<PartClass>();
-            partClasses.Add(new PartClass { NickName = "FU54", Manufacturer = "Keyence"});
-            partClasses.Add(new PartClass { NickName = "FU35", Manufacturer = "Keyence"});
-            partClasses.Add(new PartClass { NickName = "IE5827", Manufacturer = "IFM"});
-            partClasses.Add(new PartClass { NickName = "MFS200", Manufacturer = "IFM"});
-            partClasses.Add(new PartClass { NickName = "ME5010", Manufacturer = "IFM"});
-            partClasses.Add(new PartClass { NickName = "M8 Proxy", Manufacturer = "Balluff"});
-            partClasses.Add(new PartClass { NickName = "LH mid HIC", Manufacturer = "Grupo" });
-            partClasses.ForEach(partClass => context.Parts.AddOrUpdate(p => p.NickName, partClass));
+            partClasses.Add(new PartClass { Name = "FU54", Manufacturer = "Keyence"});
+            partClasses.Add(new PartClass { Name = "FU35", Manufacturer = "Keyence"});
+            partClasses.Add(new PartClass { Name = "IE5827", Manufacturer = "IFM"});
+            partClasses.Add(new PartClass { Name = "MFS200", Manufacturer = "IFM"});
+            partClasses.Add(new PartClass { Name = "ME5010", Manufacturer = "IFM"});
+            partClasses.Add(new PartClass { Name = "M8 Proxy", Manufacturer = "Balluff"});
+            partClasses.Add(new PartClass { Name = "LH mid HIC", Manufacturer = "Grupo" });
+            partClasses.ForEach(partClass => context.Parts.AddOrUpdate(p => p.Name, partClass));
             context.SaveChanges();
             PartInstance parent = createPartInstance("Parent", "FU54", new List<string> { "J5693" }, context);
             PartInstance part = createPartInstance("Part present", "FU54", new List<string> { "J5693" }, context);
@@ -74,31 +76,11 @@ namespace PowerNote.Migrations {
             parent.Children.Add(part);
             context.SaveChanges();
 
-            AddOrUpdateTag(context, 1, "Ebay");
-            AddOrUpdateTag(context, 2, "Question");
-            AddOrUpdateTag(context, 3, "Bike");
-            AddOrUpdateTag(context, 4, "Bike");
-            AddOrUpdateTag(context, 5, "Question");
-            AddOrUpdateTag(context, 6, "Question");
-            //AddOrUpdateTag(context, 7, "Question");
-            //AddOrUpdateTag(context, 8, "Question");
-            AddOrUpdateTag(context, 2, "IT");
-            AddOrUpdateTag(context, 6, "Room");
-            //AddOrUpdateTag(context, 7, "Room");
-            //AddOrUpdateTag(context, 8, "Part");
-            AddOrUpdateTag(context, 9, "Part");
-            AddOrUpdateTag(context, 10, "Part");
-            AddOrUpdateTag(context, 11, "Part");
-            AddOrUpdateTag(context, 12, "Part");
-            AddOrUpdateTag(context, 13, "Part");
-            AddOrUpdateTag(context, 14, "Part");
-            context.SaveChanges();
-
             //FORCE SOME CHILDREN IN
             var entry = context.Entries.SingleOrDefault(e => e.EntryID == 9);
             Entry newEntry;
-            entry.Children.Add( newEntry = new PartClass { NickName = "child" } );
-            newEntry.Children.Add(new PartClass { NickName = "child child" });
+            entry.Children.Add( newEntry = new PartClass { Name = "child" } );
+            newEntry.Children.Add(new PartClass { Name = "child child" });
             context.SaveChanges();
             //CHILD is defo there, it just is not being shown. //AHAH
             //ACTUALLY, it was NOT there, not in the DATABASE at least!
@@ -107,9 +89,9 @@ namespace PowerNote.Migrations {
 
         public PartInstance createPartInstance(string functionText, string partClassNickName, List<string> tags, DbContext context) {
             PartInstance part = new PartInstance(functionText);
-            context.PartInstances.AddOrUpdate(p => p.FunctionText, part);
+            context.PartInstances.AddOrUpdate(p => p.Name, part);
             context.SaveChanges(); //must save it before adding partClass and tags?
-            part.PartClass = context.Parts.Where(pc => pc.NickName == partClassNickName).First();
+            part.PartClass = context.Parts.Where(pc => pc.Name == partClassNickName).First();
             foreach (string tag in tags) {
                 AddOrUpdateTag(context, part.EntryID, tag);
             }
@@ -119,9 +101,21 @@ namespace PowerNote.Migrations {
 
         public void AddOrUpdateTag(DbContext context, int entryID, string tagTitle) {
             var entry = context.Entries.SingleOrDefault(e => e.EntryID == entryID);
-            var tag = entry.Tags.SingleOrDefault(t => t.Title == tagTitle);
+            var tag = entry.Tags.SingleOrDefault(t => t.Name == tagTitle);
             if (tag == null)
-                entry.Tags.Add(context.Tags.Single(t => t.Title == tagTitle));
+                entry.Tags.Add(context.Tags.Single(t => t.Name == tagTitle));
+        }
+
+        public T CreateEntryWithTags<T>(string entryName, string tagTitle, DbContext context) 
+            where T : Entry, new() {
+            T entry = new T();
+            entry.Name = entryName;
+            Tag tag = context.Tags.First(t => t.Name == tagTitle);
+            if (tag == null)
+                context.Tags.Add(context.Tags.Single(t => t.Name == tagTitle));
+            entry.Tags.Add(tag);
+            context.SaveChanges();
+            return entry;
         }
 
     }

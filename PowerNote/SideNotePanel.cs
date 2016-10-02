@@ -6,7 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Data.Entity;
 using PowerNote.DAL;
-using PowerNote.Models;
+using CJT.Models;
 using PowerNote.Migrations;
 using System.Windows.Data;
 using System.Windows.Input;
