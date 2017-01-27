@@ -128,12 +128,10 @@ C:\Users\Ella's-Notebook\OneDrive\Documents\Visual Studio 2010\Projects\PowerNot
 C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\bin\Debug\PowerNote.exe.config
 C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PowerNote.exe
 C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PowerNote.pdb
-C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PowerNote.csprojResolveAssemblyReference.cache
 C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\App.baml
 C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\DisplayPanel.g.cs
 C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\EntryPropertiesPanel.g.cs
 C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\MainPanel.g.cs
-C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\OptionsPanel.g.cs
 C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\MainWindow.g.cs
 C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\EntriesTreeView.g.cs
 C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\App.g.cs
@@ -143,7 +141,6 @@ C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\
 C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\DisplayPanel.baml
 C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\EntryPropertiesPanel.baml
 C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\MainPanel.baml
-C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\OptionsPanel.baml
 C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\MainWindow.baml
 C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\EntriesTreeView.baml
 C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PowerNote.g.resources
@@ -166,3 +163,10 @@ C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNot
 C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\bin\Debug\CJT.pdb
 C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\bin\Debug\EntityFramework.xml
 C:\Users\Admin\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\PowerNote.csprojResolveAssemblyReference.cache
+C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\NewRelationPanel.g.cs
+C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\NewRelationPanel.baml
+C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\TreeSettingsPanel.g.cs
+C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\obj\x86\Debug\TreeSettingsPanel.baml
+C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\bin\Debug\HardCJT.dll
+C:\Users\CJT\OneDrive\Documents\Visual Studio 2010\Projects\PowerNote\PowerNote\bin\Debug\HardCJT.pdb

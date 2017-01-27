@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CJT;
+using CJT.ViewModels;
 using PowerNote.ViewModels;
 using System.Windows.Controls;
 using System.Windows.Markup;
@@ -20,7 +21,7 @@ namespace PowerNote {
         //AND should make your entryVMs have properties to bind to, RATHER than binding to Entry.
         //BUT as a quick hack, I am going to make this take Entry as a DataContext
         //OR maybe I will allow it to take both... (with if statement).
-        public MainVM MainVM { get; set; } //NEED THIS!
+        public IMainVM MainVM { get; set; } //NEED THIS!
         
         public LinkedTextBlock() : base() {
             Loaded += This_Loaded;

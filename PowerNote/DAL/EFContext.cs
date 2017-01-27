@@ -1,5 +1,4 @@
-﻿using PowerNote.Models;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.ComponentModel; //this allows INotifyPropertyChanged
 using CJT;
@@ -14,16 +13,11 @@ namespace PowerNote.DAL { //DAL stands for Data Access Layer.
     //NOTE, it also has a Database property.
     //Apparently, if call database.Create, creates a database that matches this schema.
     //SO, don't even need InitialCreate file??? No, you don't.
-    public class DbContext : System.Data.Entity.DbContext {
-        public DbSet<Task> Tasks { get; set; }
-        public DbSet<Tag> Tags { get; set; }
-        public DbSet<PartClass> Parts { get; set; }
-        public DbSet<PartInstance> PartInstances { get; set; }
-        public DbSet<Entry> Entries { get; set; }
+    public class EFContext : CJT.EFContext {
 
         public delegate PropertyChangedEventHandler Handler(PropertyChangedEventArgs args);
 
-        public DbContext() : base() {
+        public EFContext() : base() {
             //Problem is, I want it to handle prop changed every time ANY student changes.
             //which means, subscribing to EVERY student.
             //AND don't just want to save database,

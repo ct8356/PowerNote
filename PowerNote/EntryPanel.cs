@@ -10,6 +10,7 @@ using System.Windows.Data;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using CJT.Models;
+using CJT.ViewModels;
 using PowerNote.ViewModels;
 using PowerNote.DAL;
 using System.Windows.Controls.Primitives;
@@ -48,35 +49,24 @@ namespace PowerNote {
         //MIGHT be worth putting it in A SPECIAL CLASS as a static method!
 
         public void conditionalSubscribe() {
-            if ((DataContext as EntryVM).TreeVM.WaitingForParentSelection)
+            //if ((DataContext as EntryVM).TreeVM.WaitingForParentSelection)
                 this.MouseUp += sendToFosterParent;
         }
 
         public void changeParent_Click(object sender, RoutedEventArgs e) {
             //Entry entry = sender as Entry;
-            (DataContext as EntryVM).changeParent();
+            //(DataContext as EntryVM).changeParent();
         }
 
         public void deleteEntry_Click(object sender, RoutedEventArgs e) {
             (DataContext as EntryVM).deleteEntry();
         }
 
-        public void filterAndSortTagsShown() {
-            IEnumerable<int> filterCourseIDs = 
-                (DataContext as EntryVM).TagsVM.SelectableItems.Select(c => (c as Tag).EntryID);
-            var alphabeticalCourses = (DataContext as EntryVM)
-                .Entry.Tags.Where(c => !filterCourseIDs.Contains(c.EntryID)).OrderBy(c => c.Name);
-        }
-
-        public void courseList_PropertyChanged(Object sender, EventArgs e) {
-            updateTagLabels();
-        }
-
         public void sendToFosterParent(object sender, RoutedEventArgs e) {
-            (DataContext as EntryVM).TreeVM.WaitingForParentSelection = false;
+            //(DataContext as EntryVM).TreeVM.WaitingForParentSelection = false;
             this.MouseUp -= sendToFosterParent; //unsubscribe
             EntryPanel selectedParentPanel = sender as EntryPanel;
-            (selectedParentPanel.DataContext as EntryVM).adoptChildFromTreeVM();
+            //(selectedParentPanel.DataContext as EntryVM).adoptChildFromTreeVM();
         }
 
         public void This_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e) {
@@ -101,16 +91,13 @@ namespace PowerNote {
         }
 
         public void this_MouseUp(object sender, EventArgs e) {
-            (DataContext as EntryVM).updateSelectedEntry(DataContext as EntryVM);
+            (DataContext as EntryVM).UpdateSelectedEntryVM(DataContext as EntryVM);
         } //AHAH! perhaps you just need to call the DATACONTEXT of this,
         //THEN CALL the datacontext of the treeview,
         //THEN to the datacontext of the propertiesPanel,
         //THEN properties panel SEES it has changed, and so updates itself...
         //AND THAT is the case when THEN need a listener!!! listening to Datacontext, property changed!
 
-        public void updateTagLabels() {
-            filterAndSortTagsShown();
-        }
 
     }
 }

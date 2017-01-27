@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using PowerNote.DAL;
 using CJT.Models;
+using CJT.ViewModels;
 using PowerNote.ViewModels;
 using System.Collections.ObjectModel;
 using System.Reflection;
@@ -22,11 +23,11 @@ namespace PowerNote {
         }
 
         public void ShowAllChildren_Click(object sender, EventArgs e) {
-            (DataContext as EntriesTreeVM).UpdateEntries();
+            (DataContext as ITreeVM).UpdateEntries();
         }
 
         public void ShowAllEntries_Click(object sender, EventArgs e) {
-            (DataContext as EntriesTreeVM).UpdateEntries();
+            (DataContext as ITreeVM).UpdateEntries();
         }
 
     }

@@ -6,11 +6,12 @@ using System.Windows;
 using System.Windows.Controls;
 using PowerNote.DAL;
 using System.Collections.ObjectModel;
+using CJT;
 
 namespace PowerNote.ViewModels {
     public class EntryClassOptionsVM {
         MainVM ParentVM { get; set; }
-        DbContext context;
+        CJT.DbContext context;
         Type Type { get; set; }
         ObservableCollection<object> Properties { get; set; } //Prop Names better for now, since you use
         //strings to specify your columnNames!

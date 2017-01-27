@@ -108,11 +108,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ControlPanel.cs" />
+    <Compile Include="TreeSettingsPanel.xaml.cs">
+      <DependentUpon>TreeSettingsPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DisplayPanel.xaml.cs">
       <DependentUpon>DisplayPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GenericEntryPanel.cs" />
     <Compile Include="EntryPropertiesPanel.xaml.cs">
       <DependentUpon>EntryPropertiesPanel.xaml</DependentUpon>
     </Compile>
@@ -121,34 +122,21 @@
     <Compile Include="MainPanel.xaml.cs">
       <DependentUpon>MainPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="OptionsPanel.xaml.cs">
-      <DependentUpon>OptionsPanel.xaml</DependentUpon>
+    <Compile Include="NewRelationPanel.xaml.cs">
+      <DependentUpon>NewRelationPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PropertyPanel.cs" />
-    <Compile Include="DAL\DbContext.cs" />
+    <Compile Include="DAL\EFContext.cs" />
     <Compile Include="EntryPanel.cs" />
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\TaggedObject.cs" />
     <Compile Include="EntriesTreeView.xaml.cs">
       <DependentUpon>EntriesTreeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="SideEntry.cs" />
-    <Compile Include="SideNotePanel.cs" />
-    <Compile Include="TagListPanel.cs" />
-    <Compile Include="ViewModels\InfoType.cs" />
-    <Compile Include="ViewModels\EntriesTreeVM.cs" />
-    <Compile Include="ViewModels\Property.cs" />
     <Compile Include="ViewModels\Filter.cs" />
-    <Compile Include="ViewModels\OldEntryVM.cs" />
-    <Compile Include="ViewModels\ListBoxPanelVM.cs" />
     <Compile Include="ViewModels\EntryClassOptionsVM.cs" />
-    <Compile Include="ViewModels\OptionsPanelVM.cs" />
-    <Compile Include="ViewModels\ComboBoxVM.cs" />
-    <Compile Include="ViewModels\PartInstanceVM.cs" />
-    <Compile Include="ViewModels\EntryVM.cs" />
-    <Compile Include="ViewModels\PartClassVM.cs" />
-    <Compile Include="ViewModels\TagVM.cs" />
-    <Compile Include="ViewModels\TaskVM.cs" />
+    <Page Include="TreeSettingsPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="DisplayPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -161,7 +149,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="OptionsPanel.xaml">
+    <Page Include="NewRelationPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -235,6 +223,15 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\HardPowerNote\HardCJT\HardCJT.csproj">
+      <Project>{96ef7562-6a80-4a80-9536-96ff6809287e}</Project>
+      <Name>HardCJT</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

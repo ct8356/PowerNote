@@ -15,7 +15,6 @@ using PowerNote.ViewModels;
 
 namespace PowerNote {
     public partial class MainPanel : DockPanel {
-        public ControlPanel ControlPanel { get; set; }
         public List<DisplayPanel> DisplayPanels { get; set; }
 
         public MainPanel() {
@@ -26,12 +25,6 @@ namespace PowerNote {
             //Children.Add(sideNotePanel);
             //SetDock(sideNotePanel, Dock.Bottom);
             InitializeComponent();
-        }
-
-        public void updateEntries() {
-            foreach (DisplayPanel panel in DisplayPanels) {
-                panel.updateEntries(); //Should not have to, since I will only delete ones with NO attachments. For now.
-            }
         }
 
         public void Seed_Click(object sender, RoutedEventArgs args) {

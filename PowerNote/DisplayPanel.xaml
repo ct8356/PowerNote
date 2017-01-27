@@ -8,29 +8,6 @@
              mc:Ignorable="d"
              Width="400">
     <CJT:TextBlock FontWeight="Bold" DockPanel.Dock="Top">Display Panel</CJT:TextBlock>
-    <CJT:TextBlock DockPanel.Dock="Top">Children to show:</CJT:TextBlock>
-    <local:PropertyPanel DockPanel.Dock="Top">
-        <CJT:TextBlock Width="150">Filter by type:</CJT:TextBlock>
-        <ComboBox x:Name="TypePanel" 
-                  DataContext="{Binding TypePanelVM}" 
-                  Width="150"
-                  ItemsSource="{Binding Objects}" SelectedItem="{Binding SelectedObject}" 
-                  SelectionChanged="ComboBox_SelectionChanged" />
-    </local:PropertyPanel>
-    <local:PropertyPanel DockPanel.Dock="Top">
-        <CJT:TextBlock Width="150">Structure by properties:</CJT:TextBlock>
-        <ComboBox x:Name="StructurePanel" 
-                  Width="150"
-                  DataContext="{Binding StructurePanelVM}"
-                  ItemsSource="{Binding Objects}" SelectedItem="{Binding SelectedObject}" 
-                  SelectionChanged="StructurePanel_SelectionChanged" />
-    </local:PropertyPanel>
-    <local:PropertyPanel DataContext="{Binding FilterPanelVM}" DockPanel.Dock="Top">
-        <CJT:TextBlock Width="150">Filter by tags:</CJT:TextBlock>
-        <CJT:ListBox ItemsSource="{Binding SelectedItems}"
-                     ItemTemplate="{StaticResource LinkedTextBlock}"/>
-        <CJT:AutoCompleteBox ItemsSource="{Binding SelectableItems}"/>
-    </local:PropertyPanel>
-    <local:OptionsPanel x:Name="OptionsPanel" DataContext="{Binding OptionsPanelVM}" DockPanel.Dock="Top"/>
+    <local:TreeSettingsPanel DockPanel.Dock="Top"></local:TreeSettingsPanel>
     <local:EntriesTreeView x:Name="TreeView" DockPanel.Dock="Top"></local:EntriesTreeView>
 </DockPanel>

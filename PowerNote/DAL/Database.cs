@@ -57,7 +57,7 @@ namespace PowerNote {
                 //Ah, cool, so SQLStatement is not even needed...
                 command.CommandText = "CREATE TABLE mytable (id INT NOT NULL IDENTITY(1,1) PRIMARY KEY, mycolname NVARCHAR(255) NOT NULL)";
                 command.ExecuteNonQuery();
-                return sqlStatement;
+                return sqlStatement;      
             }
         }
 
